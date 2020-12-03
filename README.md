@@ -1,0 +1,1 @@
+# daniela_store_web
