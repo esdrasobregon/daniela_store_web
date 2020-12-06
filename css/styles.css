@@ -100,3 +100,29 @@ button{
     letter-spacing: 1px;
     color: #999;
 }
+/*
+    use to give style to buttons
+*/
+.btn-default
+ 
+{
+ 
+    background-color: #68889E;
+     
+    color:#606060;
+     
+    border-color: #FFCCE5;
+ 
+}
+ 
+.btn-default:hover, .btn-default:focus, .btn-default:active, .btn-default.active, .open .dropdown-toggle.btn-default {
+ 
+ 
+ 
+    background-color: #FFCCE5;
+     
+    color:#FFF;
+     
+    border-color: #31347B;
+ 
+}

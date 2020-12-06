@@ -1,0 +1,89 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <script src="https://www.gstatic.com/firebasejs/5.0.3/firebase-app.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/5.0.3/firebase-firestore.js"></script>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+        
+    </head>
+    </head>
+    <body>
+        <div class="container-fluid">
+            <div class="card" >
+                <div class="card" >
+                <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                        <a href="index.html" class="navbar-brand">Daniela store</a>
+                    </div>
+                    <div class="navbar-nav" id="header"></div>
+                </nav>
+            
+            <h1>Cloud Cafe</h1>
+
+            <div class="row">
+                <div class="form-group">
+                    <form id="update-cafe-form" class="form-inline">
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="cafeName" name="name" placeholder="Cafe name">
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" name="city" id="cafeCity" placeholder="Cafe city">
+                        </div>
+                    <button type="Submit" class="btn btn-default" >Submit</button>
+                    <button type="button" class="btn btn-warning" onclick="comeBack()">Cancel</button>
+                </form>
+                </div>
+
+            </div>
+
+            <script src="../../js/credentials.js"></script>
+            <script>
+                const updateForm = document.querySelector('#update-cafe-form');
+                var url = document.URL;var split = url.split('?');
+                var idCafe = split[1].split('=')[1];
+                window.onload = function() {
+                    var _name;
+                    var _cafe;
+                    db.collection("cafes").doc(idCafe).get()
+                    .then(function(doc) {
+                        if (doc.exists) {
+                            console.log("Document data:", doc.data());
+                            _name = doc.data();
+                            updateForm.cafeName.value = doc.data().name;
+                            updateForm.cafeCity.value = doc.data().city;
+
+                         } else {
+                         // doc.data() will be undefined in this case
+                            console.log("No such document!");
+                     }
+                    }).catch(function(error) {
+                        console.log("Error getting document:", error);
+                    });
+                };
+                updateForm.addEventListener('submit', async (e) =>  {
+                    e.preventDefault();
+                    await db.collection('cafes').doc(idCafe).update({
+                        name: updateForm.cafeName.value,
+                        city: updateForm.cafeCity.value
+                    });
+                    alert('updated '+idCafe);
+                    comeBack();
+                });
+                function comeBack(){
+                    window.location.href = '../../index.html';
+                } 
+            </script>
+            <script>
+                window.rootFile = "../../";
+            </script>
+            <script src="../../shared/header.js"></script>
+        </div>
+    </div>
+    </body>
+</html>
