@@ -71,7 +71,7 @@ function renderCafe(doc){
     // updating data
     btnUpdate.addEventListener('click', (e) => {
         idCafe = doc.id;
-        window.location.href = 'pages./products/update.html?id='+idCafe;
+        window.location.href = 'pages/products/update.html?id='+idCafe;
     });
 }
 

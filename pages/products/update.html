@@ -12,23 +12,22 @@
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
         
     </head>
-    </head>
-    <body>
-        <div class="container-fluid">
-            <div class="card" >
-                <div class="card" >
-                <nav class="navbar navbar-expand-lg navbar-light bg-light">
-                    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-                        <a href="index.html" class="navbar-brand">Daniela store</a>
-                    </div>
-                    <div class="navbar-nav" id="header"></div>
-                </nav>
-            
-            <h1>Cloud Cafe</h1>
+    <BODY>
+        <div class="pos-f-t" id="header"></div>
 
-            <div class="row">
-                <div class="form-group">
-                    <form id="update-cafe-form" class="form-inline">
+        <div class="container">
+            
+            
+
+            <br><b></b>
+            <div class="card border-success mb-10" style="max-width: 85rem;">
+                <br><br>
+                <div class="container-fluid">
+                    <div class="container-fluid">
+                         <br>
+                        <h5 class="text-info">Add a product</h5>
+                        <div class="card">
+                    <form id="update-cafe-form" class="container">
                         <div class="form-group">
                             <input type="text" class="form-control" id="cafeName" name="name" placeholder="Cafe name">
                         </div>
@@ -38,11 +37,37 @@
                     <button type="Submit" class="btn btn-default" >Submit</button>
                     <button type="button" class="btn btn-warning" onclick="comeBack()">Cancel</button>
                 </form>
+                <br><br>
+                            <button class="btn btn-outline-success my-2 my-sm-0" onclick="redirectToUploadImage()">Change image</button>
                 </div>
+                <br><br>
+                        <div class="card mx-auto border-success mb-10" style="width: 200px;" >
+                            <br>
+                            <img class="mx-auto" id="imageFirebase" src="#" alt="your image" />
+                            <br>
+                        </div>
+                        <br><br>
 
             </div>
+            </div>
+         
+           
+    
+        </div> 
+        <br><br><br>
+        <!--
+            importing the commun footer
+         -->
+        <div class="card border-success mb-10" id="footer" style="max-width: 85rem;"></div>
 
-            <script src="../../js/credentials.js"></script>
+        <script src="../../js/credentials.js"></script>
+        <script src="../../js/app.js"></script>
+        <script src="../../shared/customFormControllers.js"></script>
+        <script>
+            window.rootFile = '../../';
+        </script>
+        <script src="../../shared/header.js"></script>
+        <script src="../../shared/footer.js"></script>
             <script>
                 const updateForm = document.querySelector('#update-cafe-form');
                 var url = document.URL;var split = url.split('?');
@@ -78,12 +103,9 @@
                 function comeBack(){
                     window.location.href = '../../index.html';
                 } 
+                function redirectToUploadImage(){
+                    window.location.href = 'product.html?id='+idCafe+'?name='+updateForm.cafeName.value;
+                }
             </script>
-            <script>
-                window.rootFile = "../../";
-            </script>
-            <script src="../../shared/header.js"></script>
-        </div>
-    </div>
     </body>
 </html>
