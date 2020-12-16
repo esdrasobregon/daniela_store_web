@@ -2,8 +2,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <script src="https://www.gstatic.com/firebasejs/5.0.3/firebase-app.js"></script>
-        <script src="https://www.gstatic.com/firebasejs/5.0.3/firebase-firestore.js"></script>
+        
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
 
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -14,15 +13,34 @@
     </head>
     <BODY>
         <div class="pos-f-t" id="header"></div>
-
-        <div class="container">
-            
-            
-
+        
             <br><b>
-            <div class="card border-success mb-10" style="max-width: 85rem;">
+        <div class="container">
+
+            <div class="row">
+                <img class="img-fluid" alt="Lights" style="width:100%" src="./../shared/images/homebanne.jpg">
+
+            </div>
+            <div class="page-header">
+                <h1 class="h1 text-info">Wellcome to "Daniela store"
+                    <small class="text-muted">we are on your service</small>
+                </h1>
+                <p>
+                    We are please to count with your
+                    visit, please enjoy while your our guest. 
+                </p>
+                <p>
+                    On this web site you will find all kind of products that can easy your life... so please checkout what we have to offer.
+                </p>
+
+            </div>
+            <div id="content" class="container border-success mb-10" style="max-width: 850px;">
                 <!-- 
                     the content goes here
+                -->
+                
+                <!-- 
+                    end content
                 -->
             </div>
          
@@ -34,13 +52,14 @@
             importing the commun footer
          -->
         <div class="card border-success mb-10" id="footer" style="max-width: 85rem;"></div>
-        <script src="./../js/credentials.js"></script>
-        <script src="./../js/app.js"></script>
+        <script src="./../js/appClient.js"></script>
         <script src="./../shared/customFormControllers.js"></script>
+        <script src="./../js/appClient.js"></script>
         <script>
             window.rootFile = './../';
         </script>
         <script src="./../shared/header.js"></script>
         <script src="./../shared/footer.js"></script>
+        <script src="./home.js"></script>
     </body>
 </html>

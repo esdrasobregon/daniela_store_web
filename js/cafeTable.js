@@ -21,9 +21,14 @@ form.addEventListener('submit', (e) => {
     db.collection('cafes').add({
         name: form.name.value,
         city: form.city.value
+    }).then(function(docRef) {
+        form.name.value = '';
+        form.city.value = '';
+        console.log("Document written with ID: ", docRef.id);
+        window.location.href = 'shared/uploadImages.html?id='+docRef.id;
+    }).catch(function(error) {
+        console.error("Error adding document: ", error);
     });
-    form.name.value = '';
-    form.city.value = '';
 }); 
 
 // create element & render cafe
@@ -71,7 +76,7 @@ function renderCafe(doc){
     // updating data
     btnUpdate.addEventListener('click', (e) => {
         idCafe = doc.id;
-        window.location.href = 'pages/products/update.html?id='+idCafe;
+        window.location.href = '../../pages/products/update.html?id='+doc.id+'?imageUrl='+'https://firebasestorage.googleapis.com/v0/b/daniela-store.appspot.com/o/'+doc.id;
     });
 }
 

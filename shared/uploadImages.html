@@ -29,20 +29,13 @@
                 <div class="container-fluid">
                     <div class="container-fluid">
                         <br>
-                        <h5 class="text-info">Add a product</h5>
+                        <h5 class="text-info">Upload an image to:</h5>
                         <div class="card">
 
                             <form id="updateForm" class="container">
                                 <div class="form-group">
-                                    <label for="formGroupExampleInput">Product name</label>
-                                    <input type="text" class="form-control" name="name" placeholder="Cafe name">
+                                    <label class="text-info" id="name"></label>
                                 </div>
-                                <div class="form-group">
-                                    <label for="formGroupExampleInput">Price</label>
-                                    <input type="text" class="form-control" name="city" placeholder="Cafe city">
-                                </div>
-                                
-                        
                                 <div class="input-group mb-3">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text">Upload</span>
@@ -63,7 +56,7 @@
                             <div class="overflow-auto p-3 mb-3 mb-md-0 mr-md-3 bg-light" style="max-width: 800px; max-height: 350px;">
         
                                 <br>
-                                <img class="mx-auto" id="imageFirebase" src="#" alt="your image" /><br>
+                                <img class="img-fluid" alt="Responsive image" id="imageFirebase" src="#"/><br>
                             </div>
                         </div>
                         <br><br>        
@@ -77,28 +70,34 @@
         <!--
             importing the commun footer
          -->
-        <div class="card border-success mb-10" id="footer" style="max-width: 85rem;"></div>
-        <script src="../../js/app.js"></script>
-        <script src="../../shared/customFormControllers.js"></script>
-        <script>
-            window.rootFile = '../../';
+         <script>
+            window.rootFile = '../';
         </script>
-        <script src="../../js/firestoreCredentials.js"></script>
-        <script src="../../shared/header.js"></script>
-        <script src="../../shared/footer.js"></script>
-        <script src="../../shared/uploadImages.js"></script>
+        <div class="card border-success mb-10" id="footer" style="max-width: 85rem;"></div>
+        <script src="../js/app.js"></script>
+        <script src="customFormControllers.js"></script>
+        
+        <script src="../js/firestoreCredentials.js"></script>
+        <script src="header.js"></script>
+        <script src="footer.js"></script>
+        <script src="uploadImages.js"></script>
+        <script src="./pleaseWait.js"></script>
+        <script src="./keys.js"></script>
         <script>
             const updateForm = document.querySelector('#updateForm');
-            var url = document.URL;
-            var split = url.split('?');
+            const lbidProducto = document.querySelector('#name');
+
+            var DocUrl = document.URL;
+            var split = DocUrl.split('?');
             var idProducto = split[1].split('=')[1];
-            var imageUrl = split[2].split('=')[1]+'?alt=media&token=7055f2ae-fdfa-4871-89c8-f37785b8568e';
-            $('#imageFirebase').attr('src', imageUrl);
+            var productName =  split[2].split('=')[1];
+            productName = strReplace(productName, '%20');
+            $('#imageFirebase').attr('src', url+idProducto+urlPlus);
 
                 
-            updateForm.name.value = idProducto; 
+            lbidProducto.innerHTML = productName; 
             async function callUploadImage(){
-                await uploadImage(idCafe);
+                await uploadImage(idProducto);
                 alert('Image upload');
                 window.history.back();
             }

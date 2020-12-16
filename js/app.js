@@ -1,4 +1,6 @@
 window.rootFile;
+
+window.content;
 // updating records (console demo)
 //db.collection('cafes').doc('DOgwUvtEQbjZohQNIeMr').update({
   //   name: 'mario world'

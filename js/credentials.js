@@ -1,12 +1,12 @@
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional const 
 firebaseConfig = {
-  apikey : "AIzaSyCibjmmD8yvLi5vrH9tS6Y7ALAX3ndTzBw" ,   
-  authDomain : "daniela-store-a5654.firebaseapp.com" ,   
-  projectId : "daniela-store-a5654" ,
-  storageBucket : "daniela-store-a5654.appspot.com" ,   
-  messagingSenderId : "770307470724" ,   
-  appId : "1: 770307470724: web: 34765deae97865e8df19d1" ,   
-  measurementId : "G-FQ2WZMXXWD" 
+  apiKey: "AIzaSyAFE3Bgf0HKetXNk8JIi5p67LqjC7b93lo",
+  authDomain: "daniela-store.firebaseapp.com",
+  databaseURL: "https://daniela-store.firebaseio.com",
+  projectId: "daniela-store",
+  storageBucket: "daniela-store.appspot.com",
+  messagingSenderId: "233633068106",
+  appId: "1:233633068106:web:a33e58c8ab8415bbf9a2b3" 
 };
  
 firebase.initializeApp(firebaseConfig);
