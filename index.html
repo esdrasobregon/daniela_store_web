@@ -13,78 +13,56 @@
         
     </head>
     <BODY>
-        <!--
-            importing the commun header
-         -->
         <div class="pos-f-t" id="header"></div>
 
         <div class="container">
+            
+            
 
-            <br><br></br>
-            <div class="card border-success mb-10">
-
-                <div class="container-fluid">
-                    <br>
-                    <h5 class="text-info">
-                        Add some coffees
-                    </h5>
-
-                    <div class="form-group">
-                        <form id="add-cafe-form" class="form-inline">
-                        <div class="form-group">
-                            <input type="text" class="form-control" name="name" placeholder="Cafe name">
-                        </div>
-                        <div class="form-group">
-                            <input type="text" class="form-control" name="city" placeholder="Cafe city">
-                        </div>
-                        <button type="submit" class="btn btn-outline-success my-2 my-sm-0">Submit</button>
-                    </form>
-                    </div>
-
-
-                </div>
+            <br><b></b>
+            <div class="card border-success mb-10" style="max-width: 85rem;">
+                <!-- 
+                    the content goes here
+                -->
             </div>
-
-                <br><b></b>
-            <div class="card border-success mb-10" >
-                
-                <div class="container-fluid">
-                    <br>
-                    <h5 class="text-info">
-                        Actual coffee list
-                    </h5>
-
-                    <div class="table-responsive">          
-                      <table id="cafe-table-list" class="table">
-                        <thead>
-                          <tr>
-                            <th class="text-warning">#</th>
-                            <th class="text-warning">Cafe</th>
-                            <th class="text-warning">Country</th>
-                            <th class="text-warning">Delete</th>
-                            <th class="text-warning">Update</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                        </tbody>
-                      </table>
-                    </div>
-                </div>
-            </div>
-        </div>
+         
+           
+    
+        </div> 
         <br><br><br>
         <!--
             importing the commun footer
          -->
-        <div class="card border-success mb-10" id="footer" style="max-width: 85rem;"></div> 
-        <script src="js/credentials.js"></script>
-        <script src="js/app.js"></script>
-        <script src="shared/customFormControllers.js"></script>
+        <div class="card border-success mb-10" id="footer" style="max-width: 85rem;"></div>
+        <script src="./js/credentials.js"></script>
+        <script src="./js/app.js"></script>
+        <script src="./shared/customFormControllers.js"></script>
+        <script src="./shared/pleaseWait.js"></script>
+        <script src="./js/models/products.js"></script>
+        <script src="./js/models/categories.js"></script>
+        <!--
+            this rootfile must be modified depending of the root directory 
+            of the implementation
+        -->
+        <script>
+            //getting all the product data
+            var allProducts;  
+            var categories;        
+            window.onload = async function(){
+                showPleaseWait();
+                allProducts = await getAllProducts();
+                sessionStorage.setItem('allProducts', JSON.stringify(allProducts));
+                categories = await getAllCategories();
+                sessionStorage.setItem('categories', JSON.stringify(categories));
+                hidePleaseWait();
+                window.location.href= './pages/store.html';
+            }
+        </script>
+        
         <script>
             window.rootFile = './';
         </script>
-        <script src="js/cafeTable.js"></script>
-        <script src="shared/header.js"></script>
-        <script src="shared/footer.js"></script>
+        <script src="./shared/header.js"></script>
+        <script src="./shared/footer.js"></script>
     </body>
 </html>

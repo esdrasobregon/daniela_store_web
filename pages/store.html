@@ -3,46 +3,49 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         
+        <link rel="stylesheet" type="text/css" href="./../css/styles.css">
+
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
 
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+        <!--Floating WhatsApp css-->  
+        <link rel="stylesheet" href="./../shared/whatappSuport/floating-wpp.min.css">  
+        <!--Floating WhatsApp javascript-->  
+        <script type="text/javascript" src="./../shared/whatappSuport/floating-wpp.min.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/material-design-iconic-font/2.2.0/css/material-design-iconic-font.min.css">
         
     </head>
-    <BODY>
+    <body id="home"> 
         <div class="pos-f-t" id="header"></div>
-        
-            <br><b>
+
         <div class="container">
-
-            <div class="row">
-                <img class="img-fluid" alt="Lights" style="width:100%" src="./../shared/images/homebanne.jpg">
-
-            </div>
-            <div class="page-header">
-                <h1 class="h1 text-info">Wellcome to "Daniela store"
-                    <small class="text-muted">we are on your service</small>
-                </h1>
-                <p>
-                    We are please to count with your
-                    visit, please enjoy while your our guest. 
-                </p>
-                <p>
-                    We are just a family bussiness company, aur objetive is grow day by day, creating a new solution for the every day problems of aur clients.
-                </p>
-
-            </div>
-            <div id="content" class="container border-success mb-10" style="max-width: 850px;">
-                <!-- 
-                    the content goes here
-                -->
+            
+            
                 
-                <!-- 
-                    end content
-                -->
+            <div class="page-header" style="margin: 20px">
+                <h1 class="h1 text-info">Product list
+                    <br>
+                    <small class="text-muted">&ensp;&ensp;Daniela store</small>
+                </h1>
             </div>
+
+            <br><b>
+            <div class="card border-success mb-10" style="max-width: 85rem;">
+                    <!-- 
+                        the content goes here
+                    -->
+
+                
+                <div class="container" id="product-container">
+                    <div class="row clearfix" >
+                    </div>
+                </div>
+                
+                <!--Div where the WhatsApp will be rendered-->
+                <div id="WAButton"></div></div>
          
            
     
@@ -52,7 +55,6 @@
             importing the commun footer
          -->
         <div class="card border-success mb-10" id="footer" style="max-width: 85rem;"></div>
-        <script src="./../js/appClient.js"></script>
         <script src="./../shared/customFormControllers.js"></script>
         <script src="./../js/appClient.js"></script>
         <script>
@@ -60,6 +62,11 @@
         </script>
         <script src="./../shared/header.js"></script>
         <script src="./../shared/footer.js"></script>
-        <script src="./home.js"></script>
+        <script src="./../shared/keys.js"></script>
+        <script src="./store.js"></script>
+        <!--
+                https://blog.toky.co/es/agrega-un-boton-de-click-to-chat-para-whatsapp-a-tu-sitio-web/
+        -->
+        <script src="./../shared/whatappSuport/wppFunctions.js"></script>  
     </body>
 </html>

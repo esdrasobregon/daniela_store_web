@@ -21,20 +21,20 @@ $(document).ready(function(){
     var home = createCustomVarItem('list-inline-item');
     var about = createCustomVarItem('list-inline-item');
     var contact = createCustomVarItem('list-inline-item');
+    var store = createCustomVarItem('list-inline-item');
         //anchors
-    var aHome = createCustomAnchor('Home', window.rootFile+'index.html', 'nav-link');
+    var aHome = createCustomAnchor('Home', window.rootFile+'pages/home.html', 'nav-link');
     var aAbout = createCustomAnchor('about', window.rootFile+ 'pages/about.html', 'nav-link');
     var aContact = createCustomAnchor('Contact', window.rootFile+'pages/contact.html', 'btn-floating btn-fb mx-1');
+    var aStore = createCustomAnchor('Store', window.rootFile+'pages/store.html', 'btn-floating btn-fb mx-1');
         //append the anchors to the list
     home.appendChild(aHome);
     about.appendChild(aAbout);
     contact.appendChild(aContact);
+    store.appendChild(aStore);
         //append the nav bar list items 
-    liststart.appendChild(home);
-    liststart.appendChild(about);
-    liststart.appendChild(contact);
-    liststart.appendChild(facebook);
-    content.appendChild(liststart);
+    appendChildListTag([home, about, contact, facebook, aStore], liststart);
+    
     centralDiv.appendChild(liststart);
     darkDiv.appendChild(centralDiv);
 

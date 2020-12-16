@@ -1,4 +1,5 @@
 
+
  $(document).ready(function(){     
     
     var content = document.createElement('ul');
@@ -54,8 +55,7 @@
     itemsProfile.setAttribute('aria-labelledby', 'navbarDropdownMenuLink-4');
     var myAcount = createCustomAnchor('My acount', '#', 'dropdown-item');
     var logout = createCustomAnchor('Log out', '#', 'dropdown-item');
-    itemsProfile.appendChild(myAcount);
-    itemsProfile.appendChild(logout);
+    appendChildListTag([myAcount, logout], itemsProfile);
     aProfile.appendChild(itemsProfile);
     profile.appendChild(aProfile);
 
@@ -68,21 +68,19 @@
     var home = createCustomVarItem('nav-item');
     var about = createCustomVarItem('nav-item');
     var contact = createCustomVarItem('nav-item');
+    var store = createCustomVarItem('nav-item');
         //anchors
-    var aHome = createCustomAnchor('Home', window.rootFile+'index.html', 'nav-link');
+    var aHome = createCustomAnchor('Home', window.rootFile+'pages/home.html', 'nav-link');
     var aAbout = createCustomAnchor('about', window.rootFile+ 'pages/about.html', 'nav-link');
     var aContact = createCustomAnchor('Contact', window.rootFile+'pages/contact.html', 'nav-link');
+    var aStore = createCustomAnchor('Store', window.rootFile+'pages/store.html', 'nav-link');
         //append the anchors to the list
     home.appendChild(aHome);
     about.appendChild(aAbout);
     contact.appendChild(aContact);
+    store.appendChild(aStore);
         //append the nav bar list items 
-    liststart.appendChild(innerDiv);
-    liststart.appendChild(home);
-    liststart.appendChild(about);
-    liststart.appendChild(contact);
-    liststart.appendChild(facebook);
-    liststart.appendChild(profile);
+    appendChildListTag([innerDiv, home, about, contact, facebook, store, profile], liststart);
     content.appendChild(liststart);
     centralDiv.appendChild(content);
     
