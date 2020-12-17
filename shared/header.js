@@ -73,7 +73,7 @@
     var aHome = createCustomAnchor('Home', window.rootFile+'pages/home.html', 'nav-link');
     var aAbout = createCustomAnchor('about', window.rootFile+ 'pages/about.html', 'nav-link');
     var aContact = createCustomAnchor('Contact', window.rootFile+'pages/contact.html', 'nav-link');
-    var aStore = createCustomAnchor('Store', window.rootFile+'pages/store.html', 'nav-link');
+    var aStore = createCustomAnchor('Store', window.rootFile+'pages/categories/categories.html', 'nav-link');
         //append the anchors to the list
     home.appendChild(aHome);
     about.appendChild(aAbout);
