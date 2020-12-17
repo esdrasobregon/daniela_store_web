@@ -3,13 +3,13 @@
 categories.forEach(category => {
 	var br = document.createElement('br');
 	var catIdText = category.idCategory;
-	var categoryCol = createCustomNonTextTag('div', 'row clearfix border border-success');
+	var categoryCol = createCustomNonTextTag('div', 'row clearfix');
 	categoryCol.setAttribute('id', catIdText);
 	categoryCol.style.marginLeft = "5px";
 	categoryCol.style.marginRight = "5px";
 	categoryCol.style.marginTop = "10px";
 	categoryCol.style.marginBottom = "10px";
-	var headder = createCustomTextTag('h3', 'text-info', category.description);
+	var headder = createCustomTextTag('h3', 'text-info', category.name);
 
 	//categoryCol.appendChild(headder);
 	appendChildListTag([br, br, br, headder], document.getElementById('product-container'));
