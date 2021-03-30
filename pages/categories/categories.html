@@ -17,8 +17,10 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
         integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
         crossorigin="anonymous"></script>
-
-    <link rel="stylesheet" href="./css/styles.css">
+    <!--Floating WhatsApp css-->
+    <link rel="stylesheet" href="../../shared/whatappSuport/floating-wpp.min.css">
+    <!--Floating WhatsApp javascript-->
+    <script type="text/javascript" src="../../shared/whatappSuport/floating-wpp.min.js"></script>
     <title></title>
 </head>
 
@@ -40,43 +42,33 @@
         </nav>
     </div>
     <!-- 
-        end header 
+        end header
     -->
-    <div class="container" style="margin-bottom: 50px; margin-top: 50px;">
+
+    <div class="container" style="margin-bottom: 50px; margin-top: 50px">
         <div class="overflow-auto p-3 mb-3 mb-md-0 mr-md-3 bg-light" style="max-width: 100%; max-height: 450px;">
             <div class="row">
-                <img class="img-fluid" alt="Lights" style="width:100%" src="./../shared/images/homebanne.jpeg">
+                <div class="card" style="max-width: 85rem;">
+                    <img class="img-fluid" alt="Lights" style="width:100%" src="../../shared/images/homebanne.jpeg">
+
+                    <h1 class="h1 text-info" id="categoryListH1" style="margin: 10px;">
+
+                    </h1>
+                    <h1 class="h1 text-info">
+                        <small class="text-muted" id="webSiteName">&ensp;&ensp;</small>
+                    </h1>
+                    <div id="category-container" class="border border-success" style="margin: 20px; padding: 20px;">
+
+                    </div>
+
+                </div>
 
             </div>
-            <div class="page-header">
-                <h1 class="h1 text-info">Wellcome to
-                    <br>
-                    <a href="./pages/categories/categories.html"><small class="text-muted"
-                            id="webSiteName">&ensp;&ensp;</small>
-                    </a>
-                </h1>
-                <h1 class="h1 text-info"><small class="text-muted">we are on your service</small>
-                </h1>
-                <p>
-                    We are please to count with your
-                    visit, please enjoy while your our guest.
-                </p>
-                <p>
-                    On this web site you will find all kind of products that can easy your life... so please
-                    checkout what we have to offer.
-                </p>
 
-            </div>
-            <div id="content" class="container border-success mb-10" style="max-width: 850px;">
-                <!-- 
-                    the content goes here
-                -->
-
-                <!-- 
-                    end content
-                -->
-            </div>
         </div>
+    </div>
+    <!--Div where the WhatsApp will be rendered-->
+    <div id="WAButton" style="margin-bottom: 90px;"></div>
     </div>
     <!--
         importing the commun footer
@@ -97,35 +89,19 @@
     <!--
         end footer
     -->
-    <script src="./shared/customFormControllers.js"></script>
-
+    <script src="../../shared/customFormControllers.js"></script>
+    <script src="../../shared/keys.js"></script>
     <script>
-        window.rootFile = './';
-    </script>
-    <script src="./shared/header.js"></script>
-    <script src="./shared/footer.js"></script>
-    <script src="./shared/keys.js"></script>
-    <script src="./shared/pleaseWait.js"></script>
-    <script src="./js/ajax/category.js"></script>
-    <script src="./js/ajax/product.js"></script>
-    <script src="./js/ajax/user.js"></script>
-    <script>
-        document.title = webSiteName + " home";
+        window.rootFile = '../../';
         document.getElementById("footerMenuText").innerHTML = footerMenuText;
         document.getElementById("headerMenuText").innerHTML = headerMenuText;
-        document.getElementById("webSiteName").innerHTML = webSiteName;
-        window.onload = async function () {
-            showPleaseWait();
-            sessionStorage.getItem('allProducts') == null ? await getProducts() : console.log('products allready loaded');
-            sessionStorage.getItem("categories") == null ? await getCategories() : console.log('categories allready loaded');
-            //sessionStorage.getItem('currentUser') == null ? await getUser() : console.log('products allready loaded');
-            var prods = sessionStorage.getItem('allProducts');
-            prods = JSON.parse(prods);
-            var categories = sessionStorage.getItem('categories');
-            categories = JSON.parse(categories);
-            hidePleaseWait();
-        }
     </script>
+    <script src="../../shared/header.js"></script>
+    <script src="../../shared/pleaseWait.js"></script>
+    <script src="../../shared/footer.js"></script>
+    <script src="../../js/appClient.js"></script>
+    <script src="./categories.js"></script>
+    <script src="../../shared/whatappSuport/wppFunctions.js"></script>
 </body>
 
 </html>

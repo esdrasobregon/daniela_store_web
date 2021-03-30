@@ -1,67 +1,127 @@
 <html>
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
 
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <link rel="stylesheet" href="./../css/styles.css">
-        
-    </head>
-    <BODY>
-        <div class="pos-f-t" id="header"></div>
-        
-            <br><b>
-        <div class="container">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
+        integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
+        integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
+        integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
+        crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" href="./../css/styles.css">
+    <title></title>
+</head>
+
+<body style="background-color: #e3f2fd;">
+    <!-- 
+        header
+    -->
+    <div class="pos-f-t">
+        <nav class="navbar navbar-dark bg-dark">
+            <a class="navbar-brand" href="#" id="headerMenuText" data-toggle="collapse" data-target="#header"
+                aria-controls="header" aria-expanded="false" aria-label="Toggle navigation">Navbar</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#header"
+                aria-controls="header" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="header">
+            </div>
+        </nav>
+    </div>
+    <!-- 
+        end header
+    -->
+    <div class="container" style="margin-bottom: 50px; margin-top: 50px;">
+        <div class="overflow-auto p-3 mb-3 mb-md-0 mr-md-3 bg-light" style="max-width: 100%; max-height: 450px;">
 
             <div class="row">
-                <img class="img-fluid" alt="Lights" style="width:100%" src="./../shared/images/homebanne.jpg">
+                <img class="img-fluid" alt="Lights" style="width:100%" src="./../shared/images/homebanne.jpeg">
 
             </div>
             <div class="page-header">
-                <h1 class="h1 text-info">Wellcome to "Daniela store"
+                <h1 class="h1 text-info">About us
+                    <br>
+                    <a href="./categories/categories.html"><small class="text-muted"
+                            id="webSiteName">&ensp;&ensp;</small>
+                    </a>
+                </h1>
+                <h1 class="h1 text-info">
                     <small class="text-muted">we are on your service</small>
                 </h1>
-                <p>
-                    We are please to count with your
-                    visit, please enjoy while your our guest. 
-                </p>
-                <p>
-                    We are just a family bussiness company, aur objetive is grow day by day, creating a new solution for the every day problems of aur clients.
-                </p>
+
 
             </div>
             <div id="content" class="container border-success mb-10" style="max-width: 850px;">
                 <!-- 
                     the content goes here
                 -->
-                
+                <p>
+                    We are please to count with your
+                    visit, please enjoy while your our guest.
+                </p>
+                <p>
+                    We are just a family bussiness company, aur objetive is grow day by day, creating a new solution for
+                    the every day problems of aur clients.
+                </p>
                 <!-- 
                     end content
                 -->
             </div>
-         
-           
-    
-        </div> 
-        <br><br><br>
-        <!--
-            importing the commun footer
-         -->
-        <div class="card border-success mb-10" id="footer" style="max-width: 85rem;"></div>
-        <script src="./../js/appClient.js"></script>
-        <script src="./../shared/customFormControllers.js"></script>
-        <script src="./../js/appClient.js"></script>
-        <script>
-            window.rootFile = './../';
-        </script>
-        <script src="./../shared/header.js"></script>
-        <script src="./../shared/footer.js"></script>
-        <script src="./home.js"></script>
-    </body>
+        </div>
+
+
+
+
+
+    </div>
+    <script src="./../shared/keys.js"></script>
+    <script src="./../shared/pleaseWait.js"></script>
+    <!--
+        importing the commun footer
+    -->
+    <div class="pos-f-t">
+        <nav class="navbar navbar-dark bg-dark">
+            <a class="navbar-brand" href="#" id="footerMenuText" data-toggle="collapse" data-target="#footer"
+                aria-controls="footer" aria-expanded="false" aria-label="Toggle navigation">Navbar</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#footer"
+                aria-controls="footer" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="footer">
+            </div>
+        </nav>
+    </div>
+    <!--
+        end footer
+    -->
+    <script src="./../js/appClient.js"></script>
+    <script src="./../shared/customFormControllers.js"></script>
+
+    <script>
+        window.rootFile = './../';
+    </script>
+    <script src="./../shared/header.js"></script>
+    <script src="./../shared/footer.js"></script>
+
+    <script>
+        document.title = webSiteName + " " + aboutText;
+        //document.getElementById("webSiteName").innerHTML = webSiteName;
+        document.getElementById("footerMenuText").innerHTML = footerMenuText;
+        document.getElementById("headerMenuText").innerHTML = headerMenuText;
+
+    </script>
+</body>
+
 </html>

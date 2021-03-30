@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://www.gstatic.com/firebasejs/8.1.2/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.1.2/firebase-storage.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.1.2/firebase-firestore.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
+        integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
+        integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
+        integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
+        crossorigin="anonymous"></script>
+
+</head>
+
+<body style="background-color: #e3f2fd;">
+    <!-- 
+        header
+    -->
+    <div class="pos-f-t" style="margin-bottom: 85px;">
+        <nav class="navbar navbar-dark bg-dark">
+            <a class="navbar-brand" href="#" id="headerMenuText" data-toggle="collapse" data-target="#header"
+                aria-controls="header" aria-expanded="false" aria-label="Toggle navigation">Navbar</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#header"
+                aria-controls="header" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="header">
+            </div>
+        </nav>
+    </div>
+    <!-- 
+        end header
+    -->
+
+    <div class="container" style="margin-bottom: 50px; margin-top: 50px;">
+        <div class="overflow-auto p-3 mb-3 mb-md-0 mr-md-3 bg-light" style="max-width: 100%; max-height: 450px;">
+            <div class="card border-success mb-10" style="margin-top: 20px">
+
+                <div class="card" style="margin: 10px;">
+                    <h3 class="text-info" style="margin: 5px;">Login</h3>
+                </div>
+                <div id="container-add-product-form" class="row border border-light">
+                    <div class="col-sm w-50 p-3">
+                        <div class="form-group" style="margin: 5px">
+                            <form id="login-form">
+                                <div class="form-group">
+                                    <input type="email" class="form-control" , id="userEmail" name="userEmail"
+                                        placeholder="Email" required>
+                                </div>
+                                <div class="form-group">
+                                    <input type="password" class="form-control" name="userPassword"
+                                        placeholder="Password">
+                                </div>
+
+
+                                <div class="form-group">
+                                    <button type="submit" class="btn btn-outline-success">Submit</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="col-sm w-50 p-3">
+                        <div class="overflow-auto p-3 mb-3 mb-md-0 mr-md-3 bg-light"
+                            style="max-width: 100%; max-height: 350px;">
+                            <img class="img-fluid" alt="Responsive image" id="imageFirebase"
+                                src="./../shared/images/login.png" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+    <!--
+        importing the commun footer
+    -->
+    <div class="pos-f-t" style="margin-top: 85px;">
+        <nav class="navbar navbar-dark bg-dark">
+            <a class="navbar-brand" href="#" id="footerMenuText" data-toggle="collapse" data-target="#footer"
+                aria-controls="footer" aria-expanded="false" aria-label="Toggle navigation">Navbar</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#footer"
+                aria-controls="footer" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="footer">
+            </div>
+        </nav>
+    </div>
+    <!--
+    end footer
+-->
+    <script src="./..//shared/customFormControllers.js"></script>
+    <script src="./../shared/keys.js"></script>
+    <script src="./../shared/pleaseWait.js"></script>
+    <script src="./../js/ajax/user.js"></script>
+    <script>
+        window.rootFile = './../';
+        document.getElementById("footerMenuText").innerHTML = footerMenuText;
+        document.getElementById("headerMenuText").innerHTML = headerMenuText;
+        //add or update products
+        loginForm = document.getElementById("login-form");
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            var credentials = {
+                userEmail: loginForm.userEmail.value,
+                userPassword: loginForm.userPassword.value
+            };
+            await getUser(credentials);
+            loginForm.reset();
+        });
+    </script>
+    <script src="./../shared/header.js"></script>
+    <script src="./../shared/footer.js"></script>
+    <script src="./../js/commonFunctions.js"></script>
+
+</body>
+
+</html>
