@@ -1,42 +1,54 @@
-$(document).ready(function(){     
-    
-    var content = document.createElement('ul');
-    content.innerHTML = "";
+
+$(document).ready(function () {
+    showPleaseWait();
+
     var liststart = document.createElement('ul');
-    liststart.setAttribute('class', 'list-unstyled list-inline text-center');
-    var darkDiv = document.createElement('div');
-    darkDiv.setAttribute('class', 'bg-dark p-4');
-    var footerContainer = document.createElement('footer');
-    footerContainer.setAttribute('class', 'page-footer font-small mdb-color darken-3 pt-4');
-    darkDiv.appendChild(footerContainer);
-    var centralDiv = document.createElement('div');
-    centralDiv.setAttribute('class', 'navbar navbar-expand-lg navbar-light bg-light');
-    //list
+    liststart.setAttribute("class", "navbar-nav mr-auto");
+    var aBrand = createCustomAnchor('Lillian store', window.rootFile + 'index.html', 'navbar-brand');
+    //profile header
+    var profile = document.createElement('li');
+    profile.setAttribute('class', 'nav-item dropdown');
+    var aProfile = createCustomAnchor('Profile', '#', 'nav-link dropdown-toggle');
+    aProfile.setAttribute('id', 'navbarDropdownMenuLink-4');
+    aProfile.setAttribute('data-toggle', 'dropdown');
+    aProfile.setAttribute('aria-haspopup', 'true');
+    aProfile.setAttribute('aria-expanded', 'false');
+    var itemsProfile = document.createElement('div');
+    itemsProfile.setAttribute('class', 'dropdown-menu dropdown-menu-right dropdown-info');
+    itemsProfile.setAttribute('aria-labelledby', 'navbarDropdownMenuLink-4');
+    var myAcount = createCustomAnchor('My acount', '#', 'dropdown-item');
+    var logout = createCustomAnchor('Log out', '#', 'dropdown-item');
+    appendChildListTag([myAcount, logout], itemsProfile);
+    aProfile.appendChild(itemsProfile);
+    profile.appendChild(aProfile);
+
     //facebook item 
     var facebook = document.createElement('li');
-    facebook.setAttribute('class', 'list-inline-item');
-    var aFacebook = createCustomAnchor('Facebook', 'http://wwww.facebook.com', 'nav-item');
+    facebook.setAttribute('class', 'nav-item active');
+    var aFacebook = createCustomAnchor('Facebook', 'http://wwww.facebook.com', 'nav-link');
     facebook.appendChild(aFacebook);
 
-    var home = createCustomVarItem('list-inline-item');
-    var about = createCustomVarItem('list-inline-item');
-    var contact = createCustomVarItem('list-inline-item');
-    var store = createCustomVarItem('list-inline-item');
-        //anchors
-    var aHome = createCustomAnchor('Home', window.rootFile+'pages/home.html', 'nav-link');
-    var aAbout = createCustomAnchor('about', window.rootFile+ 'pages/about.html', 'nav-link');
-    var aContact = createCustomAnchor('Contact', window.rootFile+'pages/contact.html', 'btn-floating btn-fb mx-1');
-    var aStore = createCustomAnchor('Store', window.rootFile+'pages/store.html', 'btn-floating btn-fb mx-1');
-        //append the anchors to the list
-    home.appendChild(aHome);
-    about.appendChild(aAbout);
-    contact.appendChild(aContact);
-    store.appendChild(aStore);
-        //append the nav bar list items 
-    appendChildListTag([home, about, contact, facebook, aStore], liststart);
-    
-    centralDiv.appendChild(liststart);
-    darkDiv.appendChild(centralDiv);
+    var about = createCustomVarItem('nav-item');
+    var home = createCustomVarItem('nav-item');
+    var contact = createCustomVarItem('nav-item');
+    var store = createCustomVarItem('nav-item');
+    //anchors
+    var aAbout = createCustomAnchor(aboutText, window.rootFile + 'pages/about.html', 'nav-link');
+    var aHome = document.createElement("a");
+    aHome.href = localHost;
+    aHome.innerHTML = homeText;
+    aHome.setAttribute("class", "nav-link");
+    var aContact = createCustomAnchor(contactText, window.rootFile + 'pages/contact.html', 'nav-link');
+    var aStore = createCustomAnchor(storeText, window.rootFile + 'pages/categories/categories.html', 'nav-link');
+    //append the anchors to the list
+    aHome.href == document.location.href != true ? home.appendChild(aHome) : aHome.setAttribute("class", "nav-link disabled");
+    aAbout.href == document.location.href != true ? about.appendChild(aAbout) : about.setAttribute("class", "nav-link disabled");
+    aContact.href == document.location.href != true ? contact.appendChild(aContact) : contact.setAttribute("class", "nav-link disabled");
+    aStore.href == document.location.href != true ? store.appendChild(aStore) : store.setAttribute("class", "nav-link disabled");
 
-    $("#footer").append(darkDiv);
+    //append the nav bar list items 
+    appendChildListTag([home, about, contact, facebook, store], liststart);
+
+    $("#footer").append(liststart);
+    hidePleaseWait();
 });

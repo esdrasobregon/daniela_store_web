@@ -1,5 +1,5 @@
 class Product {
-  constructor(name, price, image, creationDate, activ, category, idProduc, idUser, modificationDate, inventory, description) {
+  constructor(name, price, image, creationDate, activ, category, idProduc, idUser, modificationDate, inventory, description, showPrice) {
     this.name = name;
     this.price = price;
     this.image = creationDate;
@@ -10,6 +10,7 @@ class Product {
     this.id = idProduc;
     this.idUser;
     this.description = description;
+    this.showPrice = showPrice;
   }
   getname(){
     return this.name;
@@ -19,8 +20,8 @@ class Product {
  //functions
 
  //getting all products data
- async function getAllProducts(){
-    var allProducts=[];
+var allProducts = async function(db){
+    var allProd=[];
     await db.collection("products").get()
     .then(function(querySnapshot) {
       querySnapshot.forEach(function(doc) {
@@ -33,14 +34,17 @@ class Product {
           modificationDate: doc.data().modificationDate,
           activ: doc.data().activ,
           inventory: doc.data().inventory,
-          description: doc.data().description
+          description: doc.data().description,
+          showPrice: doc.data().showPrice
         };
-        allProducts.push(product);
-        console.log(doc.id, " => ", doc.data());
+        allProd.push(product);
       });
     })
     .catch(function(error) {
       console.log("Error getting documents: ", error);
     });
-    return allProducts;
+    return allProd;
  }
+module.exports = {
+  allProducts: allProducts
+}
