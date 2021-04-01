@@ -9,12 +9,14 @@ var categoryToUpdate = null;
 var productsList;
 var isUpdating = false;
 var imageToFirebase = false;
+var currentUser = null;
 
 window.onload = async function () {
-    if (sessionStorage.getItem('currentUser') == null) {
+    currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
+    if (currentUser == null) {
         document.location.replace(localHost + "/pages/login.html");
     } else {
-        if (sessionStorage.getItem('categories') == null) {
+        if (!currentUser.userState) {
             document.location.replace(localHost + "/pages/login.html");
         }
         loadingPageSettings();
@@ -55,6 +57,7 @@ categoriesform.addEventListener('submit', async (e) => {
                 await uploadImage(categoryToUpdate.idCategory);
             }
             document.getElementById(categoryToUpdate.idCategory).remove();
+            document.getElementById("action" + categoryToUpdate.idCategory).remove();
             renderCategories(categoryToUpdate);
             categoryList.push(categoryToUpdate);
             sessionStorage.setItem('categories', JSON.stringify(categoryList));
@@ -84,31 +87,41 @@ categoriesform.addEventListener('submit', async (e) => {
 
 });
 
-// create element & render cafe
 function renderCategories(doc) {
-    let tr = document.createElement('tr');
-    tr.setAttribute('id', doc.idCategory);
-    tr.setAttribute('class', 'table-success');
-    let blank = document.createElement('td');
-    blank.setAttribute('class', 'table-success');
-    let idCategory = createCustomTextTag('td', 'table-success', doc.idCategory);
-    let name = createCustomTextTag('td', 'table-success', doc.name);
-    let price = createCustomTextTag('td', 'table-success', doc.price);
-    let state = createCustomTextTag('td', 'table-success', doc.status);
 
-    let tdActions = createCustomNonTextTag('td', 'row');
+    let tdActions = createCustomNonTextTag('div', 'container');
+    let actionsMessage = createCustomTextTag('h5', 'text-success', thActionsCategoryTable);
     var btnDelete = createCustomTextTag('button', 'btn btn-danger', 'X');
     btnDelete.setAttribute('style', 'margin-right:5px');
     var btnUpdate = createCustomTextTag('button', 'btn btn-warning', '!');
-    appendChildListTag([btnDelete, btnUpdate], tdActions);
 
-    tr.setAttribute('data-id', doc.idProduct);
+    appendChildListTag([actionsMessage, btnDelete, btnUpdate], tdActions);
 
-    appendChildListTag([blank, idCategory, name, state], tr);
 
-    tr.appendChild(tdActions);
-
-    categoryTableList.appendChild(tr);
+    var divBtnHide = createCustomNonTextTag('div', 'card');
+    divBtnHide.setAttribute("id", "action" + doc.idCategory);
+    divBtnHide.setAttribute("style", "margin: 10px;");
+    var btnHide = document.createElement("button");
+    divBtnHide.appendChild(btnHide);
+    btnHide.setAttribute("class", "btn btn-info btn-lg");
+    btnHide.innerHTML = doc.name;
+    let idCategory = createCustomTextTag('p', 'text-success', thIdCategoryTable + ": " + doc.idCategory);
+    let state = createCustomTextTag('p', 'text-success', thStateCategoryTable + ": " + doc.status);
+    var mainContainer = document.createElement("div");
+    mainContainer.setAttribute("class", "row border border-primary rounded");
+    mainContainer.setAttribute("style", "margin:20px; padding:10px; display:none;");
+    appendChildListTag([idCategory, state, tdActions], mainContainer);
+    btnHide.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (mainContainer.style.display === "none") {
+            mainContainer.style.display = "block";
+        } else {
+            mainContainer.style.display = "none";
+        }
+    });
+    mainContainer.setAttribute("id", doc.idCategory);
+    document.getElementById("categoryContainer").appendChild(divBtnHide);
+    document.getElementById("categoryContainer").appendChild(mainContainer);
 
     // deleting data
     btnDelete.addEventListener('click', async (e) => {
@@ -133,7 +146,9 @@ function renderCategories(doc) {
             }
             categoryList.splice(i, 1);
             sessionStorage.setItem('categories', JSON.stringify(categoryList));
+            document.getElementById("action" + doc.idCategory).remove();
             document.getElementById(doc.idCategory).remove();
+
             hidePleaseWait();
             //location.reload();
         } else {
@@ -170,10 +185,6 @@ function loadingPageSettings() {
     activeOption.innerHTML = categoryActiveOption;
     categoriesform.activ.appendChild(unActiveOption);
     categoriesform.activ.appendChild(activeOption);
-    document.getElementById("thIdCategoryTable").innerHTML = thIdCategoryTable;
-    document.getElementById("thNameCategoryTable").innerHTML = thNameCategoryTable;
-    document.getElementById("thStateCategoryTable").innerHTML = thStateCategoryTable;
-    document.getElementById("thActionsCategoryTable").innerHTML = thActionsCategoryTable;
 
     document.getElementById("categoryStateLabelMessage").innerHTML = categoryStateLabelMessage;
     document.getElementById("submitCategoryForm").innerHTML = submitCategoryForm;

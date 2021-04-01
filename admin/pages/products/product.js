@@ -9,15 +9,16 @@ var productToUpdate = null;
 var indexCategorySelected;
 var imageToFirebase = false;
 var isUpdating = false;
-
+var currentUser = null;
 
 window.onload = async function () {
-    if (sessionStorage.getItem('currentUser') == null) {
+    currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
+    if (!currentUser.userState) {
         document.location.replace(localHost + "/pages/login.html");
     } else {
         productForm.creationDate.valueAsDate = new Date();
         productForm.modificationDate.valueAsDate = new Date();
-        if (sessionStorage.getItem('categories') == null) {
+        if (!currentUser.userState) {
             document.location.replace(localHost + "/pages/login.html");
         }
         if (sessionStorage.getItem('allProducts') == null) {
@@ -96,24 +97,28 @@ productForm.addEventListener('submit', async (e) => {
     }
 });
 
-//create category list
 function renderCategoryList(item) {
-    var divCat = createDivTagClassStyle('row', 'margin: 10px');
-    var divHeadder = document.createElement('div');
-    var headder = document.createElement('h5');
-    var aHeader = createCustomTextTag('a', 'btn btn-info btn-lg', item.name);
-    aHeader.setAttribute('role', 'button');
-    headder.appendChild(aHeader);
-    var catList = createCustomNonTextTag('ul', 'row');
-    var divHide = createDivTagClassStyle('container', 'display: none');
-    divHide.setAttribute('id', 'catList' + item.idCategory);
-    headder.setAttribute('onClick', 'hideAndShowDiv(catList' + item.idCategory + ')');
-    catList.setAttribute('style', 'list-style: none;');
-    catList.setAttribute('id', item.idCategory);
-    divHeadder.appendChild(headder);
-    divHide.appendChild(catList);
-    appendChildListTag([divHeadder, divHide], divCat);
-    productcategoryList.appendChild(divCat);
+    var divBtnHide = createCustomNonTextTag('div', 'card');
+    divBtnHide.setAttribute("style", "margin: 10px;");
+    var btnHide = document.createElement("button");
+    divBtnHide.appendChild(btnHide);
+    btnHide.setAttribute("class", "btn btn-info btn-lg");
+    btnHide.innerHTML = item.name;
+    var mainContainer = document.createElement("div");
+    mainContainer.setAttribute("class", "row");
+    mainContainer.setAttribute("style", "margin:10px; padding:5px; display:none;");
+    btnHide.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (mainContainer.style.display === "none") {
+            mainContainer.style.display = "block";
+        } else {
+            mainContainer.style.display = "none";
+        }
+    });
+    mainContainer.setAttribute("id", item.idCategory);
+    productcategoryList.appendChild(divBtnHide);
+    productcategoryList.appendChild(mainContainer);
+
 };
 
 //create a list for every category
@@ -142,8 +147,8 @@ function renderProductList(doc) {
     var pModification = createCustomTextTag('p', 'lead', lastModificationMessage + ": " + + d.getFullYear() + '-' + d.getMonth() + '-' + d.getDate());
     appendChildListTag([pName, pidProduct, pidProduct, pPrice, pShowPrice, pInventory, pState, pCreation, pModification, btnDelete, btnUpdate, btnPurchse], divProdDetails);
 
-    var prodli = document.createElement('li');
-    prodli.setAttribute('list-style-type', 'none');
+    var prodli = document.createElement('div');
+    prodli.setAttribute('class', 'col-sm');
     prodli.setAttribute('id', doc.idProduct);
     prodli.appendChild(divProdDetails);
 
@@ -169,6 +174,7 @@ function renderProductList(doc) {
     btnUpdate.addEventListener('click', (e) => {
         e.stopPropagation();
         hideAndShowDivFuction();
+        clearForm();
         btnResetForm.setAttribute('style', 'visibility: visible;')
         productFormMessage.innerHTML = updatingFormMessage;
         productToUpdate = doc;

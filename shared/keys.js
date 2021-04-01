@@ -52,9 +52,6 @@ var aAdminCategoriesMenu = "Categories";
 var categoryListH1 = "Category list";
 var categoryDescriptionListTitle = "Description";
 var showMoreMessage = "Show more";
-
-
-//new 
 //product modal labels
 var prodModaldetailsName = "Name: ";
 var prodModaldetailsPrice = "Price: ₡";
@@ -118,3 +115,8 @@ var purchaseCreationDateLabel = "Creation date";
 var purchaseModificationDateLabel = "Last modification";
 var btnPurchaseSubmit = "Submit";
 var purchasePageHeader = "Add a purchase for";
+
+//new
+var createShortCutMessage = "Drag this icon to your desktop or bookmark bar to create a shortcut";
+var createShortCutTitle = "Create a shorcut to " + webSiteName;
+

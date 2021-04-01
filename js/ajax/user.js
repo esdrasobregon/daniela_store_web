@@ -7,7 +7,8 @@ async function getUser(puser) {
     HttpUser.send();
     HttpUser.onreadystatechange = (e) => {
         var user = HttpUser.responseText;
-        if (user.length > 3) {
+        var currentUser = JSON.parse(HttpUser.responseText);
+        if (user.length > 4 || currentUser != null) {
             sessionStorage.setItem('currentUser', user);
             console.log(user);
             loginForm.reset();
