@@ -1,0 +1,84 @@
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
+        integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
+        integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
+        integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
+        crossorigin="anonymous"></script>
+    <!--Floating WhatsApp css-->
+    <link rel="stylesheet" href="./../shared/whatappSuport/floating-wpp.min.css">
+    <!--Floating WhatsApp javascript-->
+    <script type="text/javascript" src="./../shared/whatappSuport/floating-wpp.min.js"></script>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="./../css/styles.css">
+    <script src="./../shared/keys.js"></script>
+
+    <title>
+        <%=keys.key.webSiteName + " " + keys.pagesNames.contactText%>
+    </title>
+</head>
+
+<body style="background-color: #e3f2fd;">
+    <!--header-->
+    <%- include('../shared/header') %>
+        <!--end header-->
+        <div class="container" style="margin-bottom: 100px; margin-top: 50px;">
+            <div class="overflow-auto p-3 mb-3 mb-md-0 mr-md-3 bg-light" style="max-width: 100%; max-height: 600px;">
+                <div class="row">
+                    <img class="img-fluid" alt="Lights" style="width:100%" src="./../shared/images/homebanne.jpeg">
+
+                </div>
+                <h1 class="h1 text-info">
+                    <%=keys.key.btnContactText%>
+                        <br>
+                        <a href="./categories/categories"><small class="text-muted" style="margin-left: 20px;">
+                                <%=keys.key.webSiteName%>
+                            </small>
+                        </a>
+                </h1>
+                <%- include('../shared/shortCut')%>
+                    <div style="margin: 20">
+                        <p>You can send us an email or whatsapp message</p>
+                    </div>
+                    <div class="card border-success mb-10" style="max-width: 85rem;">
+
+
+                        <!--the content goes here-->
+                        <%- include('../shared/emailModalForm')%>
+
+                    </div>
+            </div>
+        </div>
+        <!--Div where the WhatsApp will be rendered-->
+        <div id="WAButton" style="margin-bottom: 90px;"></div>
+        <!--footer-->
+        <%- include('../shared/footer') %>
+            <!--end footer-->
+            <script src="./../shared/customFormControllers.js"></script>
+            <script src="./../shared/pleaseWait.js"></script>
+            <script src="./../js/appClient.js"></script>
+            <script src="./../js/commonFunctions.js"></script>
+
+            <script>
+                window.rootFile = './../';
+                isMobile() ? emailForm.hidden = true : emailForm.hidden = false;
+            </script>
+            <!--
+                https://blog.toky.co/es/agrega-un-boton-de-click-to-chat-para-whatsapp-a-tu-sitio-web/
+        -->
+            <script src="./../shared/whatappSuport/wppFunctions.js"></script>
+</body>
+
+</html>

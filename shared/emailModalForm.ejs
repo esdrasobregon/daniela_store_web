@@ -1,0 +1,43 @@
+<!-- Button trigger modal -->
+<button type="button" id="btnContact" class="btn btn-primary" data-toggle="modal" data-target="#contactModal">
+    <%=keys.key.btnContactText%>
+</button>
+<div class="modal fade" id="contactModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true" style="display: none;">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">
+                    <%=keys.key.sendEmailMessage%>
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container">
+                    <div class="card" style="margin: 20px" id="emailContent"><br>
+                        <form class="container" action="mailto:firebasebusinessstore@gmail.com" method="post"
+                            enctype="text/plain" id="emailForm">
+                            <div class="form-group"></div>
+                            <div class="form-group"><input class="form-control" type="text" id="emailId"
+                                    placeholder="<%=keys.key.enterNameForEmal%>" name="emailId"></div>
+                            <div class="form-group"><textarea class="form-control" type="text" id="emailComment"
+                                    placeholder="<%=keys.key.enterCommentForEmal%>" name="emailComment" rows="6"
+                                    cols="20"></textarea></div>
+                            <div class="form-group"><input class="btn btn-primary"
+                                    value="<%=keys.key.btnSendForEmailText%>" type="submit" name="submit"></div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="btnCloseEmailModal" onclick="emailForm.reset();" class="btn btn-secondary"
+                    data-dismiss="modal">
+                    <%=keys.key.btnCloseLabel%>
+                </button>
+            </div>
+        </div>
+    </div>
+
+</div>

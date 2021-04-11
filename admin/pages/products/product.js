@@ -13,21 +13,24 @@ var currentUser = null;
 
 window.onload = async function () {
     currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
-    if (!currentUser.userState) {
-        document.location.replace(localHost + "/pages/login.html");
-    } else {
-        productForm.creationDate.valueAsDate = new Date();
-        productForm.modificationDate.valueAsDate = new Date();
+    if (currentUser != null) {
         if (!currentUser.userState) {
-            document.location.replace(localHost + "/pages/login.html");
-        }
-        if (sessionStorage.getItem('allProducts') == null) {
-            document.location.replace(localHost + "/pages/login.html");
+            document.location.replace("/pages/login");
         } else {
-            console.log('getting the local sessionStorage');
-            getInformation();
+            productForm.creationDate.valueAsDate = new Date();
+            productForm.modificationDate.valueAsDate = new Date();
+            if (!currentUser.userState) {
+                document.location.replace("/pages/login");
+            }
+            if (sessionStorage.getItem('allProducts') == null) {
+                document.location.replace(localHost + "/pages/login");
+            } else {
+                console.log('getting the local sessionStorage');
+                getInformation();
+            }
         }
-        loadingPageSettings();
+    } else {
+        document.location.replace("/pages/login");
     }
 
 }
@@ -188,7 +191,7 @@ function renderProductList(doc) {
     });
     btnPurchse.addEventListener('click', (e) => {
         e.stopPropagation();
-        window.location.href = window.rootFile + 'pages/purchases/purchase.html?id=' + doc.idProduct;
+        window.location.href = '/admin/pages/purchases/purchase?id=' + doc.idProduct;
     });
     //show product image
     pShowImage.addEventListener('click', async (e) => {
@@ -250,22 +253,7 @@ function loadProductForm(doc) {
     $('#imageFirebase')
         .attr('src', url + doc.idProduct + urlPlus);
 }
-function loadingPageSettings() {
-    document.getElementById("btnCloseModal").innerHTML = btnCloseLabel;
-    document.getElementById("btnProductPormSubmit").innerHTML = btnProductPormSubmit;
-    document.getElementById("hideAndShowButtonMessage").innerHTML = hideAndShowButtonMessage;
-    document.getElementById("productListH1").innerHTML = productListH1;
-    document.getElementById("addUpdateProducts").innerHTML = addUpdateProducts;
-    document.getElementById("selectProductCategoryMessage").innerHTML = selectProductCategoryMessage;
-    document.getElementById("showProductPriceMessage").innerHTML = showProductPriceMessage;
-    document.getElementById("creationdateMessage").innerHTML = creationdateMessage;
-    document.getElementById("lastModificationMessage").innerHTML = lastModificationMessage;
-    document.getElementById("productStateMessage").innerHTML = productStateMessage;
-    document.getElementById("inputImage").innerHTML = chooseFileMessage;
-    productForm.name.setAttribute("placeholder", placeHolderProductName);
-    productForm.price.setAttribute("placeholder", placeHolderProductPrice);
-    productForm.description.setAttribute("placeholder", placeHolderProductDescription);
-}
+
 function clearForm() {
     productForm.reset();
     productForm.inputGroupFile01.innerHTML = chooseFileMessage;

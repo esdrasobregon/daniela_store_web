@@ -10,7 +10,7 @@ async function getCategories() {
     cat = Http.responseText;
     console.log(Http.responseText);
     sessionStorage.setItem('categories', cat);
-    window.location.href = './pages/categories/categories.html';
+    window.location.href = './pages/categories/categories';
   }
 }
 

@@ -1,0 +1,41 @@
+<div class="pos-f-t">
+    <nav class="navbar navbar-dark bg-dark">
+        <a class="navbar-brand collapsed" href="#" data-toggle="collapse" data-target="#footer" aria-controls="footer"
+            aria-expanded="false" aria-label="Toggle navigation"><%= keys.key.footerMenuText%></a>
+        <button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#footer"
+            aria-controls="footer" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="navbar-collapse collapse" id="footer">
+            <ul class="navbar-nav mr-auto" id="footerItemBar">
+                <li class="nav-item" id="footerHomeLink">
+                    <a href="/" id="afooterHomeLink" class="nav-link">
+                        <%=keys.pagesNames.homeText%>
+                    </a>
+                </li>
+                <li class="nav-item" id="footerAboutLink">
+                    <a href="/pages/about" id="afooterAboutLink" class="nav-link">
+                        <%=keys.pagesNames.aboutText%>
+                    </a>
+                </li>
+                <li class="nav-item" id="footerContactLink">
+                    <a href="/pages/contact" id="afooterContactLink" class="nav-link">
+                        <%=keys.pagesNames.contactText%>
+                    </a>
+                </li>
+                <li class="nav-item" id="footerStoreLink">
+                    <a href="/pages/categories/categories" id="afooterStoreLink" class="nav-link">
+                        <%=keys.pagesNames.storeText%>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</div>
+<script>
+    document.getElementById("afooterContactLink").href == document.location.href != true ? console.log("no es contact") : document.getElementById("footerContactLink").setAttribute("class", "nav-link disabled");
+    document.getElementById("afooterAboutLink").href == document.location.href != true ? console.log("no es about") : document.getElementById("footerAboutLink").setAttribute("class", "nav-link disabled");
+    document.getElementById("afooterHomeLink").href == document.location.href != true ? console.log("no es Home") : document.getElementById("footerHomeLink").setAttribute("class", "nav-link disabled");
+    document.getElementById("afooterStoreLink").href == document.location.href != true ? console.log("no es Home") : document.getElementById("footerStoreLink").setAttribute("class", "nav-link disabled");
+</script>

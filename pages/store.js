@@ -1,11 +1,4 @@
 //show jus one category and its products
-document.getElementById("webSiteName").innerHTML = webSiteName;
-document.getElementById("footerMenuText").innerHTML = footerMenuText;
-document.getElementById("headerMenuText").innerHTML = headerMenuText;
-document.getElementById("productListH1").innerHTML = productListH1;
-
-document.title = webSiteName + " " + storeText;
-document.getElementById("modalWebSiteName").innerHTML = webSiteName;
 var localUrl = document.URL;
 var split = localUrl.split('?');
 var idCategory = split[1].split('=')[1];

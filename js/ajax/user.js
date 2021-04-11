@@ -12,7 +12,7 @@ async function getUser(puser) {
             sessionStorage.setItem('currentUser', user);
             console.log(user);
             loginForm.reset();
-            document.location.replace('../admin/pages/products/product.html');
+            document.location.replace('/admin/pages/products/product');
         }
     };
 

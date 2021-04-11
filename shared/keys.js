@@ -1,22 +1,12 @@
 var url = "https://firebasestorage.googleapis.com/v0/b/daniela-store.appspot.com/o/";
 var urlPlus = "?alt=media&token=9433b1c7-130b-4dbf-a946-ed5108628f1a";
 var localHost = window.location.protocol + '//' + document.location.host;
-//menu pages titles
-var aloginText = "Login";
-var aboutText = "About";
-var homeText = "Home";
-var storeText = "Store";
-var contactText = "Contact";
-
-
 //website user info
 var whatsAppNumber = "506+60232356";
 var webSiteEmail = "firebasebusinessstore@gmail.com";
 
 //commun tag labels and messages
 var webSiteName = "My store";
-var footerMenuText = "Menu options";
-var headerMenuText = "Menu options";
 var btnContactText = "Contact us";
 var btnSaveLabel = "Save";
 var btnShowFormabel = "Open form";
@@ -34,10 +24,10 @@ var credentialsErrorMessage = "Your credentials are wrong";
 //this can't be done here, please do it manually
 var pleaseWaitMessage = "Please wait";
 //whatsapp messages
-var whatsappTitleMessage = "Chat with us on WhatsApp!";
-var popupMessageText = "Hello, how can we help you?";
+var whatsappTitleMessage = "Chatea con nosotros por WhatsApp!";
+var popupMessageText = "Hola, como podemos ayudarte?";
 
-var wellcomeUser = "Wellcome ";
+var wellcomeUser = "Bienvenido ";
 //database collection
 var dataCollections = {
     products: "products",
