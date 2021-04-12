@@ -22,7 +22,10 @@
         crossorigin="anonymous"></script>
     <link rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/css/bootstrap-datetimepicker.min.css">
-
+    <script src="../../../shared/viewKeys.js"></script>
+    <title>
+        <%= keys.pagesNames.adminCategoriesText%>
+    </title>
 </head>
 
 <body style="background-color: #e3f2fd;">
@@ -36,30 +39,39 @@
                 <div class="card border-success mb-10">
                     <div class="card border-success mb-10">
                         <button id="hideAndShowButtonMessage" class="btn btn-info btn-lg"
-                            onclick="hideAndShowDivFuction()"></button>
+                            onclick="hideAndShowDivFuction()">
+                            <%= keys.key.hideAndShowButtonMessage%>
+                        </button>
                     </div>
                     <div id="container-add-product-form" class="container-fluid" style="display: none;">
                         <br>
                         <div class="d-flex justify-content-center">
-                            <h3 class="text-info" id="addUpdateCategory"></h3>
+                            <h3 class="text-info" id="addUpdateCategory">
+                                <%= keys.key.addUpdateCategory%>
+                            </h3>
                         </div>
                         <div class="d-flex justify-content-center">
                             <h5 class="text-danger" id="categoryFormMessage" style="margin: 20px;"></h5>
                             <button class="btn btn-warning" id="btnResetForm" onclick="clearForm()"
-                                style="visibility: hidden;"></button>
+                                style="visibility: hidden;">
+                                <%= keys.key.btnResetFormText%>
+                            </button>
                         </div>
                         <div class="form-group">
                             <form id="add-category-form" class="container">
                                 <div class="form-group">
-                                    <input type="text" class="form-control" , id="name" name="name" required>
+                                    <input type="text" placeholder="<%= keys.key.placeHolderCategoryName%>"
+                                        class="form-control" , id="name" name="name" required>
                                 </div>
                                 <div class="form-group">
-                                    <label for="activ" id="categoryStateLabelMessage"></label>
+                                    <label for="activ" id="categoryStateLabelMessage">
+                                        <%= keys.key.categoryStateLabelMessage%>
+                                    </label>
                                     <select class="form-control" name="activ" id="activ"></select>
                                 </div>
                                 <div class="form-group">
-                                    <textarea type="text" class="form-control" , id="description" name="description"
-                                        required></textarea>
+                                    <textarea type="text" placeholder="<%= keys.key.placeHolderCategoryDescription%>"
+                                        class="form-control" , id="description" name="description" required></textarea>
                                 </div>
                                 <div class="input-group mb-3">
                                     <div class="input-group-prepend">
@@ -69,6 +81,7 @@
                                         <input type='file' accept=".jpg, .jpeg|image/*" class='custom-file-input'
                                             id='inputGroupFile01' onchange="readURL(this);" />
                                         <label id="inputImage" class="custom-file-label" for="inputGroupFile01">
+                                            <%= keys.key.chooseFileMessage%>
                                         </label>
                                     </div>
                                 </div>
@@ -80,7 +93,9 @@
                                 </div>
                                 <div class="container-fluid">
                                     <button type="submit" class="btn btn-outline-success my-2 my-sm-0"
-                                        id="submitCategoryForm"></button>
+                                        id="submitCategoryForm">
+                                        <%= keys.key.submitCategoryForm%>
+                                    </button>
                                 </div>
                             </form>
                         </div>
@@ -94,7 +109,7 @@
                     <div class="container-fluid" id="categoryContainer">
                         <br>
                         <h5 class="text-info" id="categoryListH1">
-                            Actual category list
+                            <%= keys.key.categoryListH1%>
                         </h5>
                     </div>
                 </div>
@@ -106,7 +121,6 @@
             <script src="../../js/credentials.js"></script>
             <script src="../../js/app.js"></script>
             <script src="../../../shared/customFormControllers.js"></script>
-            <script src="../../../shared/keys.js"></script>
             <script>
                 window.rootFile = '../../';
             </script>

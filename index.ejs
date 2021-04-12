@@ -19,7 +19,7 @@
         crossorigin="anonymous"></script>
 
     <link rel="stylesheet" href="./css/styles.css">
-    <script src="./shared/keys.js"></script>
+    <script src="./shared/viewKeys.js"></script>
     <title>
         <%=keys.pagesNames.homeText%>
     </title>
@@ -36,12 +36,13 @@
 
                 </div>
                 <div class="page-header">
-                    <h1 class="h1 text-info">Wellcome
-                        <br>
-                        <a href="./pages/categories/categories.html"><small class="text-muted">
-                                <%=keys.key.webSiteName%>
-                            </small>
-                        </a>
+                    <h1 class="h1 text-info">
+                        <%= keys.key.greetings%>
+                            <br>
+                            <a href="./pages/categories/categories"><small class="text-muted">
+                                    <%=keys.key.webSiteName%>
+                                </small>
+                            </a>
                     </h1>
                     <!--the content goes here-->
                     <%- include('./shared/shortCut') %>

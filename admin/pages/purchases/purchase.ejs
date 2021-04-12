@@ -20,8 +20,10 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
         integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
         crossorigin="anonymous"></script>
-    <script src="../../../shared/keys.js"></script>
-
+    <script src="../../../shared/viewKeys.js"></script>
+    <title>
+        <%= keys.pagesNames.adminPurchaseText%>
+    </title>
 </head>
 
 <body style="background-color: #e3f2fd;">
@@ -37,7 +39,9 @@
                     <div id="container-add-purchase-form" class="container-fluid">
                         <br>
                         <div class="d-flex justify-content-center">
-                            <h3 class="text-info" id="purchaseHeader"></h3>
+                            <h3 class="text-info" id="purchaseHeader">
+                                <%= keys.key.purchasePageHeader%>
+                            </h3>
                         </div>
                         <div class="d-md-flex" style="padding: 20px;">
                             <div class="overflow-auto p-3 mb-3 mb-md-0 mr-md-3 bg-light"
@@ -49,20 +53,30 @@
                         <div class="form-group" style="margin: 20px">
                             <form id="add-purchase-form" class="container">
                                 <div class="form-group">
-                                    <label for="name" id="receiptLabel"></label>
-                                    <input type="text" class="form-control" , id="receipt" name="receipt" required>
+                                    <label for="name" id="receiptLabel">
+                                        <%= keys.key.purchaseRecieptLabel%>
+                                    </label>
+                                    <input type="text" class="form-control"
+                                        placeholder="<%= keys.key.purchaseRecieptLabel%>" id="receipt" name="receipt"
+                                        required>
                                 </div>
                                 <div class="form-group" style="display: none;">
                                     <input type="text" class="form-control" name="idpurchase" placeholder="Id product">
                                 </div>
                                 <div class="form-group">
-                                    <label for="unitPrice" id="unitPriceLabel"></label>
-                                    <input type="number" class="form-control" name="unitPrice" id="unitPrice" required>
+                                    <label for="unitPrice" id="unitPriceLabel">
+                                        <%= keys.key.purchaseUnitPriceLabel%>
+                                    </label>
+                                    <input type="number" placeholder="<%= keys.key.purchaseUnitPriceLabel%>"
+                                        class="form-control" name="unitPrice" id="unitPrice" required>
                                 </div>
                                 <div class="form-group">
-                                    <label for="tottalUnits" id="tottalUnitsLabel"></label>
-                                    <input type="number" class="form-control" name="tottalUnits" id="tottalUnits"
-                                        min="1" max="100" required>
+                                    <label for="tottalUnits" id="tottalUnitsLabel">
+                                        <%= keys.key.purchaseTottalUnitsLabel%>
+                                    </label>
+                                    <input type="number" placeholder="<%= keys.key.purchaseTottalUnitsLabel%>"
+                                        class="form-control" name="tottalUnits" id="tottalUnits" min="1" max="100"
+                                        required>
 
                                 </div>
                                 <div class="form-group">
@@ -71,25 +85,34 @@
                                     </select>
                                 </div>
                                 <div class="form-group">
-                                    <label for="description" id="descriptionLabel"></label>
-                                    <textarea type="text" class="form-control" , id="description" name="description"
-                                        required=""></textarea>
+                                    <label for="description" id="descriptionLabel">
+                                        <%= keys.key.purchaseDescriptionLabel%>
+                                    </label>
+                                    <textarea type="text" class="form-control"
+                                        placeholder="<%= keys.key.purchaseDescriptionLabel%>" id="description"
+                                        name="description" required=""></textarea>
                                 </div>
                                 <div class="form-group" data-provide="datepicker">
-                                    <label for="creationDate" id="creationDateLabel"></label>
+                                    <label for="creationDate" id="creationDateLabel">
+                                        <%= keys.key.purchaseCreationDateLabel%>
+                                    </label>
                                     <input type="date" id="creationDate" name="creationDate" disabled="true"
                                         class="form-control">
 
                                 </div>
                                 <div class="form-group" data-provide="datepicker">
-                                    <label for="modificationDate" id="modificationDateLabel"></label>
+                                    <label for="modificationDate" id="modificationDateLabel">
+                                        <%= keys.key.purchaseModificationDateLabel%>
+                                    </label>
                                     <input type="date" id="modificationDate" name="modificationDate" disabled="true"
                                         class="form-control">
 
                                 </div>
                                 <div class="container-fluid">
                                     <button type="submit" class="btn btn-outline-success my-2 my-sm-0"
-                                        id="btnPurchaseSubmit"></button>
+                                        id="btnPurchaseSubmit">
+                                        <%= keys.key.btnPurchaseSubmit%>
+                                    </button>
                                 </div>
                             </form>
                         </div>
@@ -155,7 +178,9 @@
                                                 id="salesTottalUnit" placeholder="Tottal units" min="1" required>
                                         </div>
                                         <div class="form-group">
-                                            <label for="paymentMethod">Choose purchase state:</label>
+                                            <label for="paymentMethod">
+                                                <%= keys.key.paymentStateLabel%>
+                                            </label>
                                             <select class="form-control" name="paymentMethod" id="paymentMethod">
                                                 <option value="Sinpe">Sinpe</option>
                                                 <option value="Cash">Cash</option>

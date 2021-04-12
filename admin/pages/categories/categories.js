@@ -185,15 +185,6 @@ function loadingPageSettings() {
     activeOption.innerHTML = categoryActiveOption;
     categoriesform.activ.appendChild(unActiveOption);
     categoriesform.activ.appendChild(activeOption);
-
-    document.getElementById("categoryStateLabelMessage").innerHTML = categoryStateLabelMessage;
-    document.getElementById("submitCategoryForm").innerHTML = submitCategoryForm;
-    document.getElementById("btnResetForm").innerHTML = btnResetFormText;
-    document.getElementById("hideAndShowButtonMessage").innerHTML = hideAndShowButtonMessage;
-    document.getElementById("addUpdateCategory").innerHTML = addUpdateCategory;
-    document.getElementById("inputImage").innerHTML = chooseFileMessage;
-    categoriesform.name.setAttribute("placeholder", placeHolderCategoryName);
-    categoriesform.description.setAttribute("placeholder", placeHolderCategoryDescription);
 }
 function setcategoryToUpdate() {
 

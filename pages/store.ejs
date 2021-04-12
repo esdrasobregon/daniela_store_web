@@ -26,6 +26,7 @@
     <link rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/material-design-iconic-font/2.2.0/css/material-design-iconic-font.min.css">
     <link rel="stylesheet" href="./../css/styles.css">
+    <script src="./../shared/viewKeys.js"></script>
     <title>
         <%= keys.key.webSiteName +" "+ keys.pagesNames.storeText%>
     </title>
@@ -51,20 +52,20 @@
                                     style="margin: 20px">
                             </div>
                             <div class="page-header">
-                                <h1 class="h1 text-info">
+                                <h3 class="h3 text-info">
                                     <%=keys.key.productListH1%>
                                         <br>
                                         <small class="text-muted">&ensp;&ensp;
                                             <%=keys.key.webSiteName%>
                                         </small>
-                                </h1>
+                                </h3>
                             </div>
-                            <div id="shortcutDiv" style="padding: 20px;"></div>
+                            <div style="margin: 20px;">
+                                <%- include('../shared/shortCut')%>
+                            </div>
                         </div>
                         <div class="card border-success mb-10" style="max-width: 85rem;">
-                            <!-- 
-                        the content goes here
-                    -->
+                            <!--the content goes here-->
 
 
                             <div class="container" id="product-container">
@@ -135,8 +136,11 @@
                                         <div class="modal-footer">
 
 
-                                            <button type="button" class="btn btn-secondary"
-                                                data-dismiss="modal">Close</button>
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                                <%= keys.key.btnCloseLabel%>
+                                            </button>
+
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
@@ -154,15 +158,11 @@
                     <script>
                         window.rootFile = './../';
                     </script>
-                    <script src="./../shared/keys.js"></script>
-                    <script src="./../shared/shortCut.js"></script>
                     <script src="./../shared/pleaseWait.js"></script>
 
                     <script src="./../js/appClient.js"></script>
                     <script src="./store.js"></script>
-                    <!--
-                https://blog.toky.co/es/agrega-un-boton-de-click-to-chat-para-whatsapp-a-tu-sitio-web/
-        -->
+                    <!--https://blog.toky.co/es/agrega-un-boton-de-click-to-chat-para-whatsapp-a-tu-sitio-web/-->
                     <script src="./../shared/whatappSuport/wppFunctions.js"></script>
                     </body>
 
