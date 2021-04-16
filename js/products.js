@@ -12,26 +12,26 @@ class Product {
     this.description = description;
     this.showPrice = showPrice;
   }
-  getname(){
+  getname() {
     return this.name;
-  } 
+  }
 
 }
- //functions
+//functions
 
- //getting all products data
-var allProducts = async function(db){
-    var allProd=[];
-    await db.collection("products").get()
-    .then(function(querySnapshot) {
-      querySnapshot.forEach(function(doc) {
+//getting all products data
+var allProducts = async function (db) {
+  var allProd = [];
+  await db.collection("products").get()
+    .then(function (querySnapshot) {
+      querySnapshot.forEach(function (doc) {
         var product = {
-          idProduct: doc.id, 
-          name: doc.data().name, 
+          idProduct: doc.id,
+          name: doc.data().name,
           price: doc.data().price,
           category: doc.data().category,
-          creationDate: doc.data().creationDate,
-          modificationDate: doc.data().modificationDate,
+          creationDate: getCustomDate(doc.data().creationDate),
+          modificationDate: getCustomDate(doc.data().modificationDate),
           activ: doc.data().activ,
           inventory: doc.data().inventory,
           description: doc.data().description,
@@ -40,11 +40,18 @@ var allProducts = async function(db){
         allProd.push(product);
       });
     })
-    .catch(function(error) {
+    .catch(function (error) {
       console.log("Error getting documents: ", error);
     });
-    return allProd;
- }
+  return allProd;
+}
+function getCustomDate(pDateObject) {
+  var dateResult = { year: "", date: "", month: "" };
+  dateResult.year = pDateObject.toDate().getFullYear();
+  pDateObject.toDate().getMonth() < 10 ? dateResult.month = "0" + pDateObject.toDate().getMonth() : dateResult.month += pDateObject.toDate().getMonth();
+  pDateObject.toDate().getDate() < 10 ? dateResult.date = "0" + pDateObject.toDate().getDate() : dateResult.date += pDateObject.toDate().getDate();
+  return dateResult;
+}
 module.exports = {
   allProducts: allProducts
 }

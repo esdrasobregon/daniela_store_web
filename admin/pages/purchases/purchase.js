@@ -1,7 +1,6 @@
 const productcategoryList = document.querySelector('#category-product-list');
 const purchaseTable = document.querySelector('#purchase-table');
 const purchaseForm = document.querySelector('#add-purchase-form');
-const btnResetForm = document.querySelector('#btnResetForm');
 var purchaseList;
 var productList;
 var purchasetToUpdate;
@@ -198,7 +197,6 @@ function clearForm() {
     purchaseForm.reset();
     purchasetToUpdate = null;
     this.isUpdating = false;
-    btnResetForm.setAttribute('style', 'visibility: hidden;');
     creationDate.valueAsDate = new Date();
     modificationDate.valueAsDate = new Date();
     hideAndShowDivFuction();

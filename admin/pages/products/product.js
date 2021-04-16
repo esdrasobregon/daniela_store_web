@@ -145,9 +145,9 @@ function renderProductList(doc) {
     var pInventory = createCustomTextTag('p', 'lead', placeHolderProductInventory + doc.inventory);
     var pState = createCustomTextTag('p', 'lead', placeHolderProductState + doc.activ);
     var d = new Date(doc.creationDate);
-    var pCreation = createCustomTextTag('p', 'lead', creationdateMessage + ": " + d.getFullYear() + '-' + d.getMonth() + '-' + d.getDate());
+    var pCreation = createCustomTextTag('p', 'lead', creationdateMessage + ": " + doc.creationDate.year + '-' + doc.creationDate.date + '-' + doc.creationDate.month);
     d = new Date(doc.modificationDate);
-    var pModification = createCustomTextTag('p', 'lead', lastModificationMessage + ": " + + d.getFullYear() + '-' + d.getMonth() + '-' + d.getDate());
+    var pModification = createCustomTextTag('p', 'lead', lastModificationMessage + ": " + doc.modificationDate.year + '-' + doc.modificationDate.date + '-' + doc.modificationDate.month);
     appendChildListTag([pName, pidProduct, pidProduct, pPrice, pShowPrice, pInventory, pState, pCreation, pModification, btnDelete, btnUpdate, btnPurchse], divProdDetails);
 
     var prodli = document.createElement('div');
@@ -245,7 +245,7 @@ function loadProductForm(doc) {
     productForm.name.value = doc.name;
     productForm.price.value = doc.price;
     productForm.stateSelect.value = doc.category;
-    productForm.creationDate.valueAsDate = new Date(doc.creationDate);
+    productForm.creationDate.value = doc.creationDate.year + "-" + doc.creationDate.month + "-" + doc.creationDate.date;
     productForm.modificationDate.valueAsDate = new Date();
     productForm.activ.value = doc.activ;
     productForm.description.value = doc.description;
