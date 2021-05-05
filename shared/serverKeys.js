@@ -1,4 +1,6 @@
-﻿var key = {
+﻿const user = require("../js/user")
+
+var key = {
     webSiteName: "My store",
     footerMenuText: "Opciones",
     headerMenuText: "Opciones",
@@ -64,8 +66,10 @@ var pagesNames = {
     adminCategoriesText: "Administrar categorías",
     adminPurchaseText: "Administrar compras"
 }
+var currentUser = null;
 //new from the 85 line on
 module.exports = {
     key: key,
-    pagesNames: pagesNames
+    pagesNames: pagesNames,
+    currentUser: currentUser
 }

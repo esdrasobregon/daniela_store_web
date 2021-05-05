@@ -47,3 +47,4 @@ var fileNotDeletedMessage = "Archivo no eliminado";
 var addImageMessage = "Por favor agregue una imagen";
 //purchase
 var purchasePaymentStateLabel = "Elija el estado de la compra";
+var credentialsErrorMessage = "Credenciales incorrectos";
