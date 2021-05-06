@@ -71,10 +71,11 @@ productForm.addEventListener('submit', async (e) => {
         await updateProduct(productToUpdate).then(async () => {
             if (imageToFirebase) {
                 console.log('se agrega imagen');
-                await uploadImage(product.idProduct);
+                await uploadImage(productToUpdate.idProduct);
             }
 
             console.log("rendering");
+            productToUpdate.modificationDate = getCustomDateNew(productToUpdate.modificationDate);
             productList.push(productToUpdate);
             renderProductList(productToUpdate);
             sessionStorage.setItem('allProducts', JSON.stringify(productList));
@@ -89,6 +90,8 @@ productForm.addEventListener('submit', async (e) => {
             showPleaseWait();
             await addProduct(product);
             await uploadImage(product.idProduct);
+            product.creationDate = getCustomDateNew(product.creationDate);
+            product.modificationDate = getCustomDateNew(product.modificationDate);
             productList.push(product);
             sessionStorage.setItem('allProducts', JSON.stringify(productList));
             renderProductList(product);
