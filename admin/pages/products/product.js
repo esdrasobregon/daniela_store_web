@@ -10,29 +10,14 @@ var indexCategorySelected;
 var imageToFirebase = false;
 var isUpdating = false;
 var currentUser = null;
-
+//if the current user is not set up
+//it returns to the client side
 window.onload = async function () {
     currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
-    if (currentUser != null) {
-        if (!currentUser.userState) {
-            document.location.replace("/pages/login");
-        } else {
-            productForm.creationDate.valueAsDate = new Date();
-            productForm.modificationDate.valueAsDate = new Date();
-            if (!currentUser.userState) {
-                document.location.replace("/pages/login");
-            }
-            if (sessionStorage.getItem('allProducts') == null) {
-                document.location.replace(localHost + "/pages/login");
-            } else {
-                console.log('getting the local sessionStorage');
-                getInformation();
-            }
-        }
-    } else {
-        document.location.replace("/pages/login");
-    }
-
+    productForm.creationDate.valueAsDate = new Date();
+    productForm.modificationDate.valueAsDate = new Date();
+    verifyUserCredentials();
+    getInformation();
 }
 productForm.inputGroupFile01.addEventListener('change', (e) => {
     imageToFirebase = !imageToFirebase;

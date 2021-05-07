@@ -13,16 +13,10 @@ var currentUser = null;
 
 window.onload = async function () {
     currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
-    if (currentUser == null) {
-        document.location.replace("/pages/login");
-    } else {
-        if (!currentUser.userState) {
-            document.location.replace("/pages/login");
-        }
-        loadingPageSettings();
-        getInformation();
-        loadCategories();
-    }
+    verifyUserCredentials();
+    loadingPageSettings();
+    getInformation();
+    loadCategories();
 }
 async function getInformation() {
     console.log('getting the categories from sessionStorage');
