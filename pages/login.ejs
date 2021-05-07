@@ -39,7 +39,7 @@
                     <div id="container-add-product-form" class="row border border-light">
                         <div class="col-sm w-50 p-3">
                             <div class="form-group" style="margin: 5px">
-                                <form id="login-form"   class="login">
+                                <form id="login-form" class="login">
                                     <div class="form-group">
                                         <input type="email" class="form-control" , id="userEmail" name="userEmail"
                                             placeholder="Email" required>
@@ -76,17 +76,12 @@
             <script src="./../shared/pleaseWait.js"></script>
             <script src="./../js/ajax/user.js"></script>
             <script>
-                window.rootFile = './../';
-                //var test = '<%- JSON.stringify(keys.user) %>'
-                //add or update products
                 loginForm = document.getElementById("login-form");
                 loginForm.addEventListener('submit', async (e) => {
                     e.preventDefault();
-                    var credentials = {
-                        userEmail: loginForm.userEmail.value,
-                        userPassword: loginForm.userPassword.value
-                    };
-                    await getUserWithPost(credentials);
+
+                    await getUserWithPost();
+
                     loginForm.reset();
                 });
             </script>

@@ -20,7 +20,7 @@ async function getUser(puser) {
 //getting the actual user with a post request
 //get user
 async function getUserWithPost() {
-
+    showPleaseWait();
     var data = {
         userEmail: loginForm.userEmail.value,
         userPassword: loginForm.userPassword.value
@@ -35,11 +35,10 @@ async function getUserWithPost() {
     fetch(localHost + "/user", options).then(
         result => result.json()
     ).then((result) => {
-        //console.log(result);
         sessionStorage.setItem('currentUser', JSON.stringify(result));
         result == null ? alert(credentialsErrorMessage) : document.location.replace('/admin/pages/products/product');
     });
-
+    hidePleaseWait();
 }
 // $('form.login').on('submit', function () {
 //     var that = $(this),

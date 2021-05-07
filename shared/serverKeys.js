@@ -41,6 +41,8 @@ var key = {
     lastModificationMessage: "Última modificación",
     productStateMessage: "Estado del producto",
     btnProductPormSubmit: "Cargar",
+    chooseFileMessage: "Escoge imagen",
+    categoryNameLabel: "Nombre de categoría",
     placeHolderCategoryDescription: "Descripción",
     categoryStateLabelMessage: "Estado de categoría",
     submitCategoryForm: "Cargar",

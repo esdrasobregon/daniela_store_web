@@ -179,11 +179,11 @@ function renderProductList(doc) {
     // updating data
     btnUpdate.addEventListener('click', (e) => {
         e.stopPropagation();
-        hideAndShowDivFuction();
         clearForm();
         btnResetForm.setAttribute('style', 'visibility: visible;')
         productFormMessage.innerHTML = updatingFormMessage;
         productToUpdate = doc;
+        indexCategorySelected = doc.category;
         var i = 0;
         while (productList[i] != doc) {
             i++;
@@ -269,5 +269,6 @@ function clearForm() {
     btnResetForm.setAttribute('style', 'visibility: hidden;');
     productForm.creationDate.valueAsDate = new Date();
     productForm.modificationDate.valueAsDate = new Date();
+    indexCategorySelected = categoryList[0].idCategory;
     hideAndShowDivFuction();
 }

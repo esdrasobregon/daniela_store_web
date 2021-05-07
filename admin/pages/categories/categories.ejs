@@ -60,7 +60,10 @@
                         <div class="form-group">
                             <form id="add-category-form" class="container">
                                 <div class="form-group">
-                                    <input type="text" placeholder="<%= keys.key.placeHolderCategoryName%>"
+                                    <label for="activ" id="categoryStateLabelMessage">
+                                        <%= keys.key.categoryNameLabel%>
+                                    </label>
+                                    <input type="text" placeholder="<%= keys.key.categoryNameLabel%>"
                                         class="form-control" , id="name" name="name" required>
                                 </div>
                                 <div class="form-group">
@@ -70,6 +73,9 @@
                                     <select class="form-control" name="activ" id="activ"></select>
                                 </div>
                                 <div class="form-group">
+                                    <label for="activ" id="categoryStateLabelMessage">
+                                        <%= keys.key.placeHolderCategoryDescription%>
+                                    </label>
                                     <textarea type="text" placeholder="<%= keys.key.placeHolderCategoryDescription%>"
                                         class="form-control" , id="description" name="description" required></textarea>
                                 </div>
