@@ -60,6 +60,7 @@ productForm.addEventListener('submit', async (e) => {
             }
 
             console.log("rendering");
+            productToUpdate.creationDate = getCustomDateNew(productToUpdate.creationDate);
             productToUpdate.modificationDate = getCustomDateNew(productToUpdate.modificationDate);
             productList.push(productToUpdate);
             renderProductList(productToUpdate);
@@ -218,16 +219,13 @@ function setProductToUpdate() {
         var del = document.getElementById(productToUpdate.idProduct);
         document.getElementById(indexCategorySelected).removeChild(del);
     }
-    var md = new Date(productForm.modificationDate.value);
-    var priceFlag;
-    productForm.showPrice.value == "true" ? priceFlag = true : priceFlag = false;
-    productToUpdate.name = productForm.name.value;
-    productToUpdate.price = productForm.price.value;
-    productToUpdate.category = indexCategorySelected;
-    productToUpdate.modificationDate = md;
-    productToUpdate.activ = productForm.activ.value;
-    productToUpdate.description = productForm.description.value;
-    productToUpdate.showPrice = priceFlag;
+    var up = {
+        inventory: productToUpdate.inventory,
+        idProduct: productToUpdate.idProduct
+    };
+    productToUpdate = createProduct();
+    productToUpdate.inventory = up.inventory;
+    productToUpdate.idProduct = up.idProduct;
 }
 function loadProductForm(doc) {
     productForm.name.value = doc.name;
