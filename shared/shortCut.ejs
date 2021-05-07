@@ -1,0 +1,27 @@
+<div>
+    <p class="text-primary" id="showShortCutModal" style="text-decoration: underline;">
+        <%= keys.key.createShortCutTitle%>
+    </p>
+    <div style="display: none" id="shortcutDiv">
+        <p>
+            <%= keys.key.createShortCutMessage%>
+        </p>
+        <a href="/">
+            <div style="background-image:url(./..//shared/images/homebanne.jpeg);width:32px;height:32px;"></div>
+            <div id="showLocalHost"></div>
+        </a>
+    </div>
+</div>
+<script>
+    var pTitleMessage = document.getElementById("showShortCutModal");
+    var shortcutDiv = document.getElementById("shortcutDiv");
+    document.getElementById("showLocalHost").innerHTML = localHost;
+    pTitleMessage.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (shortcutDiv.style.display === "none") {
+            shortcutDiv.style.display = "block";
+        } else {
+            shortcutDiv.style.display = "none";
+        }
+    });
+</script>

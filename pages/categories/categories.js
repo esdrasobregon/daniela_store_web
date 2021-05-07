@@ -1,15 +1,9 @@
-//categories settings
-
-document.title = webSiteName + " categories";
-document.getElementById("categoryListH1").innerHTML += categoryListH1;
-document.getElementById("webSiteName").innerHTML += webSiteName;
-
 
 categories.forEach(category => {
     if (category.status == 1) {
         var productcount = prods.find((element) => element.category == category.idCategory);
         if (productcount != null) {
-            var storeLink = '../' + 'store.html?id=' + category.idCategory;
+            var storeLink = '../' + 'store?id=' + category.idCategory;
             var catIdText = category.idCategory;
 
             var listCategoryDescription = category.description.split(".");

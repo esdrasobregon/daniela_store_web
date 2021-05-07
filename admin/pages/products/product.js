@@ -9,26 +9,15 @@ var productToUpdate = null;
 var indexCategorySelected;
 var imageToFirebase = false;
 var isUpdating = false;
-
-
+var currentUser = null;
+//if the current user is not set up
+//it returns to the client side
 window.onload = async function () {
-    if (sessionStorage.getItem('currentUser') == null) {
-        document.location.replace(localHost + "/pages/login.html");
-    } else {
-        productForm.creationDate.valueAsDate = new Date();
-        productForm.modificationDate.valueAsDate = new Date();
-        if (sessionStorage.getItem('categories') == null) {
-            document.location.replace(localHost + "/pages/login.html");
-        }
-        if (sessionStorage.getItem('allProducts') == null) {
-            document.location.replace(localHost + "/pages/login.html");
-        } else {
-            console.log('getting the local sessionStorage');
-            getInformation();
-        }
-        loadingPageSettings();
-    }
-
+    currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
+    productForm.creationDate.valueAsDate = new Date();
+    productForm.modificationDate.valueAsDate = new Date();
+    verifyUserCredentials();
+    getInformation();
 }
 productForm.inputGroupFile01.addEventListener('change', (e) => {
     imageToFirebase = !imageToFirebase;
@@ -67,10 +56,12 @@ productForm.addEventListener('submit', async (e) => {
         await updateProduct(productToUpdate).then(async () => {
             if (imageToFirebase) {
                 console.log('se agrega imagen');
-                await uploadImage(product.idProduct);
+                await uploadImage(productToUpdate.idProduct);
             }
 
             console.log("rendering");
+            productToUpdate.creationDate = getCustomDateNew(productToUpdate.creationDate);
+            productToUpdate.modificationDate = getCustomDateNew(productToUpdate.modificationDate);
             productList.push(productToUpdate);
             renderProductList(productToUpdate);
             sessionStorage.setItem('allProducts', JSON.stringify(productList));
@@ -85,6 +76,8 @@ productForm.addEventListener('submit', async (e) => {
             showPleaseWait();
             await addProduct(product);
             await uploadImage(product.idProduct);
+            product.creationDate = getCustomDateNew(product.creationDate);
+            product.modificationDate = getCustomDateNew(product.modificationDate);
             productList.push(product);
             sessionStorage.setItem('allProducts', JSON.stringify(productList));
             renderProductList(product);
@@ -96,24 +89,28 @@ productForm.addEventListener('submit', async (e) => {
     }
 });
 
-//create category list
 function renderCategoryList(item) {
-    var divCat = createDivTagClassStyle('row', 'margin: 10px');
-    var divHeadder = document.createElement('div');
-    var headder = document.createElement('h5');
-    var aHeader = createCustomTextTag('a', 'btn btn-info btn-lg', item.name);
-    aHeader.setAttribute('role', 'button');
-    headder.appendChild(aHeader);
-    var catList = createCustomNonTextTag('ul', 'row');
-    var divHide = createDivTagClassStyle('container', 'display: none');
-    divHide.setAttribute('id', 'catList' + item.idCategory);
-    headder.setAttribute('onClick', 'hideAndShowDiv(catList' + item.idCategory + ')');
-    catList.setAttribute('style', 'list-style: none;');
-    catList.setAttribute('id', item.idCategory);
-    divHeadder.appendChild(headder);
-    divHide.appendChild(catList);
-    appendChildListTag([divHeadder, divHide], divCat);
-    productcategoryList.appendChild(divCat);
+    var divBtnHide = createCustomNonTextTag('div', 'card');
+    divBtnHide.setAttribute("style", "margin: 10px;");
+    var btnHide = document.createElement("button");
+    divBtnHide.appendChild(btnHide);
+    btnHide.setAttribute("class", "btn btn-info btn-lg");
+    btnHide.innerHTML = item.name;
+    var mainContainer = document.createElement("div");
+    mainContainer.setAttribute("class", "row");
+    mainContainer.setAttribute("style", "margin:10px; padding:5px; display:none;");
+    btnHide.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (mainContainer.style.display === "none") {
+            mainContainer.style.display = "block";
+        } else {
+            mainContainer.style.display = "none";
+        }
+    });
+    mainContainer.setAttribute("id", item.idCategory);
+    productcategoryList.appendChild(divBtnHide);
+    productcategoryList.appendChild(mainContainer);
+
 };
 
 //create a list for every category
@@ -137,13 +134,13 @@ function renderProductList(doc) {
     var pInventory = createCustomTextTag('p', 'lead', placeHolderProductInventory + doc.inventory);
     var pState = createCustomTextTag('p', 'lead', placeHolderProductState + doc.activ);
     var d = new Date(doc.creationDate);
-    var pCreation = createCustomTextTag('p', 'lead', creationdateMessage + ": " + d.getFullYear() + '-' + d.getMonth() + '-' + d.getDate());
+    var pCreation = createCustomTextTag('p', 'lead', creationdateMessage + ": " + doc.creationDate.year + '-' + doc.creationDate.date + '-' + doc.creationDate.month);
     d = new Date(doc.modificationDate);
-    var pModification = createCustomTextTag('p', 'lead', lastModificationMessage + ": " + + d.getFullYear() + '-' + d.getMonth() + '-' + d.getDate());
+    var pModification = createCustomTextTag('p', 'lead', lastModificationMessage + ": " + doc.modificationDate.year + '-' + doc.modificationDate.date + '-' + doc.modificationDate.month);
     appendChildListTag([pName, pidProduct, pidProduct, pPrice, pShowPrice, pInventory, pState, pCreation, pModification, btnDelete, btnUpdate, btnPurchse], divProdDetails);
 
-    var prodli = document.createElement('li');
-    prodli.setAttribute('list-style-type', 'none');
+    var prodli = document.createElement('div');
+    prodli.setAttribute('class', 'col-sm');
     prodli.setAttribute('id', doc.idProduct);
     prodli.appendChild(divProdDetails);
 
@@ -168,10 +165,11 @@ function renderProductList(doc) {
     // updating data
     btnUpdate.addEventListener('click', (e) => {
         e.stopPropagation();
-        hideAndShowDivFuction();
+        clearForm();
         btnResetForm.setAttribute('style', 'visibility: visible;')
         productFormMessage.innerHTML = updatingFormMessage;
         productToUpdate = doc;
+        indexCategorySelected = doc.category;
         var i = 0;
         while (productList[i] != doc) {
             i++;
@@ -182,7 +180,7 @@ function renderProductList(doc) {
     });
     btnPurchse.addEventListener('click', (e) => {
         e.stopPropagation();
-        window.location.href = window.rootFile + 'pages/purchases/purchase.html?id=' + doc.idProduct;
+        window.location.href = '/admin/pages/purchases/purchase?id=' + doc.idProduct;
     });
     //show product image
     pShowImage.addEventListener('click', async (e) => {
@@ -221,22 +219,19 @@ function setProductToUpdate() {
         var del = document.getElementById(productToUpdate.idProduct);
         document.getElementById(indexCategorySelected).removeChild(del);
     }
-    var md = new Date(productForm.modificationDate.value);
-    var priceFlag;
-    productForm.showPrice.value == "true" ? priceFlag = true : priceFlag = false;
-    productToUpdate.name = productForm.name.value;
-    productToUpdate.price = productForm.price.value;
-    productToUpdate.category = indexCategorySelected;
-    productToUpdate.modificationDate = md;
-    productToUpdate.activ = productForm.activ.value;
-    productToUpdate.description = productForm.description.value;
-    productToUpdate.showPrice = priceFlag;
+    var up = {
+        inventory: productToUpdate.inventory,
+        idProduct: productToUpdate.idProduct
+    };
+    productToUpdate = createProduct();
+    productToUpdate.inventory = up.inventory;
+    productToUpdate.idProduct = up.idProduct;
 }
 function loadProductForm(doc) {
     productForm.name.value = doc.name;
     productForm.price.value = doc.price;
     productForm.stateSelect.value = doc.category;
-    productForm.creationDate.valueAsDate = new Date(doc.creationDate);
+    productForm.creationDate.value = doc.creationDate.year + "-" + doc.creationDate.month + "-" + doc.creationDate.date;
     productForm.modificationDate.valueAsDate = new Date();
     productForm.activ.value = doc.activ;
     productForm.description.value = doc.description;
@@ -244,22 +239,7 @@ function loadProductForm(doc) {
     $('#imageFirebase')
         .attr('src', url + doc.idProduct + urlPlus);
 }
-function loadingPageSettings() {
-    document.getElementById("btnCloseModal").innerHTML = btnCloseLabel;
-    document.getElementById("btnProductPormSubmit").innerHTML = btnProductPormSubmit;
-    document.getElementById("hideAndShowButtonMessage").innerHTML = hideAndShowButtonMessage;
-    document.getElementById("productListH1").innerHTML = productListH1;
-    document.getElementById("addUpdateProducts").innerHTML = addUpdateProducts;
-    document.getElementById("selectProductCategoryMessage").innerHTML = selectProductCategoryMessage;
-    document.getElementById("showProductPriceMessage").innerHTML = showProductPriceMessage;
-    document.getElementById("creationdateMessage").innerHTML = creationdateMessage;
-    document.getElementById("lastModificationMessage").innerHTML = lastModificationMessage;
-    document.getElementById("productStateMessage").innerHTML = productStateMessage;
-    document.getElementById("inputImage").innerHTML = chooseFileMessage;
-    productForm.name.setAttribute("placeholder", placeHolderProductName);
-    productForm.price.setAttribute("placeholder", placeHolderProductPrice);
-    productForm.description.setAttribute("placeholder", placeHolderProductDescription);
-}
+
 function clearForm() {
     productForm.reset();
     productForm.inputGroupFile01.innerHTML = chooseFileMessage;
@@ -272,5 +252,6 @@ function clearForm() {
     btnResetForm.setAttribute('style', 'visibility: hidden;');
     productForm.creationDate.valueAsDate = new Date();
     productForm.modificationDate.valueAsDate = new Date();
+    indexCategorySelected = categoryList[0].idCategory;
     hideAndShowDivFuction();
 }

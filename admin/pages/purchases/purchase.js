@@ -1,7 +1,6 @@
 const productcategoryList = document.querySelector('#category-product-list');
 const purchaseTable = document.querySelector('#purchase-table');
 const purchaseForm = document.querySelector('#add-purchase-form');
-const btnResetForm = document.querySelector('#btnResetForm');
 var purchaseList;
 var productList;
 var purchasetToUpdate;
@@ -190,27 +189,14 @@ function renderPurchaseList(item) {
 function loadingPageSettings() {
     purchaseForm.creationDate.valueAsDate = new Date();
     purchaseForm.modificationDate.valueAsDate = new Date();
-    document.getElementById("receiptLabel").innerHTML = purchaseRecieptLabel;
-    purchaseForm.receipt.setAttribute("placeholder", purchaseRecieptLabel);
-    document.getElementById("unitPriceLabel").innerHTML = purchaseUnitPriceLabel;
-    purchaseForm.unitPrice.setAttribute("placeholder", purchaseUnitPriceLabel);
-    document.getElementById("tottalUnitsLabel").innerHTML = purchaseTottalUnitsLabel;
-    purchaseForm.tottalUnits.setAttribute("placeholder", purchaseTottalUnitsLabel);
     document.getElementById("paymentStateLabel").innerHTML = purchasePaymentStateLabel;
     purchaseForm.paymentState.setAttribute("placeholder", purchasePaymentStateLabel);
-    document.getElementById("descriptionLabel").innerHTML = purchaseDescriptionLabel;
-    purchaseForm.description.setAttribute("placeholder", purchaseDescriptionLabel);
-    document.getElementById("creationDateLabel").innerHTML = purchaseCreationDateLabel;
-    document.getElementById("modificationDateLabel").innerHTML = purchaseModificationDateLabel;
-    document.getElementById("btnPurchaseSubmit").innerHTML = btnPurchaseSubmit;
-    document.getElementById("purchaseHeader").innerHTML = purchasePageHeader;
 }
 
 function clearForm() {
     purchaseForm.reset();
     purchasetToUpdate = null;
     this.isUpdating = false;
-    btnResetForm.setAttribute('style', 'visibility: hidden;');
     creationDate.valueAsDate = new Date();
     modificationDate.valueAsDate = new Date();
     hideAndShowDivFuction();
