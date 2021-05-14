@@ -15,3 +15,15 @@ function getCustomDateNew(pDateObject) {
     pDateObject.getDate() < 10 ? dateResult.date = "0" + pDateObject.getDate() : dateResult.date += pDateObject.getDate();
     return dateResult;
 }
+//this method is replicated
+function isNotValid(pCredentialToValidate) {
+    var flag = false;
+    flag = pCredentialToValidate.includes('(');
+    flag == false ? flag = pCredentialToValidate.includes(')') : console.log(flag);
+    flag == false ? flag = pCredentialToValidate.includes('{') : console.log(flag);
+    flag == false ? flag = pCredentialToValidate.includes('}') : console.log(flag);
+    flag == false ? flag = pCredentialToValidate.includes('/') : console.log(flag);
+    flag == false ? flag = pCredentialToValidate.includes('[') : console.log(flag);
+    flag == false ? flag = pCredentialToValidate.includes(']') : console.log(flag);
+    return flag;
+}
