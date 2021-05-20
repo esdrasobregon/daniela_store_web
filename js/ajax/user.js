@@ -25,8 +25,10 @@ async function getUserWithPost() {
         userEmail: loginForm.userEmail.value.replace(/\s/g, ""),
         userPassword: loginForm.userPassword.value.replace(/\s/g, "")
     };
+    if (data.userEmail.length < 50) { }
     isNotValid(data.userEmail) ? alert("You can't type this characters") :
-        isNotValid(data.userPassword) ? alert("You can't type this characters") : callServer(data);
+        isNotValid(data.userPassword) ? alert("You can't type this characters")
+            : callServer(data);
     hidePleaseWait();
 
 }
