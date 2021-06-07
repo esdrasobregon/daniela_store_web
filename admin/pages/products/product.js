@@ -1,4 +1,3 @@
-
 const productcategoryList = document.querySelector('#category-product-list');
 const productForm = document.querySelector('#add-product-form');
 const productFormMessage = document.querySelector('#productFormMessage');
@@ -19,6 +18,7 @@ window.onload = async function () {
     verifyUserCredentials();
     getInformation();
 }
+
 productForm.inputGroupFile01.addEventListener('change', (e) => {
     imageToFirebase = !imageToFirebase;
 });
@@ -41,53 +41,97 @@ async function getInformation() {
         renderProductList(item);
     });
 }
+
 function chageIndexSelected(sel) {
     indexCategorySelected = categoryList[sel.selectedIndex].idCategory;
 }
 productForm.price.addEventListener("keypress", (ev) => noLetters(ev));
 
-//add or update products
+//adding and updating product registers
 productForm.addEventListener('submit', async (e) => {
     e.preventDefault();
-    if (isUpdating) {
-        console.log('updating');
-        setProductToUpdate();
+
+    if (productForm.idProduct.value == "") {
         showPleaseWait();
-        await updateProduct(productToUpdate).then(async () => {
-            if (imageToFirebase) {
-                console.log('se agrega imagen');
-                await uploadImage(productToUpdate.idProduct);
-            }
-
-            console.log("rendering");
-            productToUpdate.creationDate = getCustomDateNew(productToUpdate.creationDate);
-            productToUpdate.modificationDate = getCustomDateNew(productToUpdate.modificationDate);
-            productList.push(productToUpdate);
-            renderProductList(productToUpdate);
-            sessionStorage.setItem('allProducts', JSON.stringify(productList));
-            productToUpdate = null;
-            clearForm();
-            hidePleaseWait();
-        });
-
+        callServer();
+        hidePleaseWait();
     } else {
-        var product = createProduct();
-        if (imageToFirebase) {
+        if (isUpdating) {
             showPleaseWait();
-            await addProduct(product);
-            await uploadImage(product.idProduct);
-            product.creationDate = getCustomDateNew(product.creationDate);
-            product.modificationDate = getCustomDateNew(product.modificationDate);
-            productList.push(product);
-            sessionStorage.setItem('allProducts', JSON.stringify(productList));
-            renderProductList(product);
-            clearForm();
+            callServer();
             hidePleaseWait();
-        } else {
+        } else
             alert(addImageMessage);
-        }
     }
+
 });
+
+//call the server
+function callServer() {
+    const formData = createFormDataProduct();
+    const options = {
+        method: 'POST',
+        body: formData
+    }
+    fetch(localHost + "/addProduct", {
+            method: 'POST',
+            body: formData
+        }).then(response => response.json())
+        .then(result => {
+            result.idProduct == "" ?
+                alert(addImageMessage) :
+                afterServerCallsettings(result);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+}
+//call the server
+function callDeleteServer(idProductToDelete) {
+
+    var data = {
+        idProduct: idProductToDelete
+    }
+    const options = {
+        method: 'POST',
+        headers: {
+            'Content-type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    }
+    fetch(localHost + "/deleteProduct", options).then(
+        result => result.json()
+    ).then((result) => {
+        alert("Product id: " + result + " deleted");
+    });
+    hidePleaseWait();
+
+}
+
+function afterServerCallsettings(productResult) {
+    console.log('Success:', productResult);
+    productResult.creationDate = getCustomDateNew(new Date(productForm.creationDate.value));
+    productResult.modificationDate = getCustomDateNew(new Date(productForm.modificationDate.value));
+    if (isUpdating) {
+        var p = productList.find(element =>
+            element.idProduct == productResult.idProduct);
+        var indexCategory = categoryList.find(element =>
+            element.idCategory == p.category).idCategory;
+        var del = document.getElementById(productResult.idProduct);
+        document.getElementById(indexCategory).removeChild(del);
+        var i = 0;
+        while (productList[i].idProduct != productResult.idProduct) {
+            i++;
+        }
+        productList.splice(i, 1);
+        productList.push(createProductFromCallServerResult(productResult));
+    } else {
+        productList.push(createProductFromCallServerResult(productResult));
+    }
+    sessionStorage.setItem('allProducts', JSON.stringify(productList));
+    renderProductList(productResult);
+    clearForm();
+}
 
 function renderCategoryList(item) {
     var divBtnHide = createCustomNonTextTag('div', 'card');
@@ -151,7 +195,7 @@ function renderProductList(doc) {
         e.stopPropagation();
         let id = doc.idProduct;
         showPleaseWait();
-        await deleteProduct(id);
+        await callDeleteServer(id);
         var i = 0;
         while (productList[i] != doc) {
             i++;
@@ -168,13 +212,13 @@ function renderProductList(doc) {
         clearForm();
         btnResetForm.setAttribute('style', 'visibility: visible;')
         productFormMessage.innerHTML = updatingFormMessage;
-        productToUpdate = doc;
-        indexCategorySelected = doc.category;
-        var i = 0;
-        while (productList[i] != doc) {
-            i++;
-        }
-        productList.splice(i, 1);
+        // productToUpdate = doc;
+        // indexCategorySelected = doc.category;
+        // var i = 0;
+        // while (productList[i] != doc) {
+        //     i++;
+        // }
+        // productList.splice(i, 1);
         isUpdating = true;
         loadProductForm(doc);
     });
@@ -191,6 +235,23 @@ function renderProductList(doc) {
         $('#productDetailsModLabel').modal('show');
     });
 }
+
+function createProductFromCallServerResult(productResult) {
+    var p = {
+        idProduct: productResult.idProduct,
+        name: productResult.name,
+        activ: productResult.activ,
+        description: productResult.description,
+        category: productResult.category,
+        showPrice: productResult.showPrice,
+        inventory: productResult.inventory,
+        price: productResult.price,
+        modificationDate: productResult.modificationDate,
+        creationDate: productResult.creationDate
+    };
+    return p;
+}
+
 function createProduct() {
     var cd = new Date(productForm.creationDate.value);
     var md = new Date(productForm.modificationDate.value);
@@ -209,6 +270,32 @@ function createProduct() {
     };
     return product;
 }
+
+function createFormDataProduct() {
+    formdata = new FormData();
+    var cd = new Date(productForm.creationDate.value);
+    var md = new Date(productForm.modificationDate.value);
+    var priceFlag;
+    productForm.showPrice.value == "true" ?
+        priceFlag = true :
+        priceFlag = false;
+
+    formdata.append('isUpdating', isUpdating);
+    formdata.append('idProduct', productForm.idProduct.value);
+    formdata.append('imageToFirebase', imageToFirebase);
+    formdata.append('name', productForm.name.value);
+    formdata.append('price', productForm.price.value);
+    formdata.append('inventory', 0);
+    formdata.append('category', indexCategorySelected);
+    formdata.append('creationDate', cd);
+    formdata.append('modificationDate', md);
+    formdata.append('activ', productForm.activ.value);
+    formdata.append('description', productForm.description.value);
+    formdata.append('showPrice', priceFlag);
+    formdata.append('inputGroupFile01', productForm.inputGroupFile01.files[0]);
+    return formdata;
+}
+
 function setProductToUpdate() {
     if (productToUpdate.category != indexCategorySelected) {
         console.log('removing');
@@ -227,7 +314,9 @@ function setProductToUpdate() {
     productToUpdate.inventory = up.inventory;
     productToUpdate.idProduct = up.idProduct;
 }
+
 function loadProductForm(doc) {
+    productForm.idProduct.value = doc.idProduct;
     productForm.name.value = doc.name;
     productForm.price.value = doc.price;
     productForm.stateSelect.value = doc.category;
@@ -247,7 +336,6 @@ function clearForm() {
     productToUpdate == null ? console.log("reseting the form") : productList.push(productToUpdate);
     productToUpdate = null;
     this.isUpdating = false;
-    this.imageToFirebase = false;
     productFormMessage.innerHTML = '';
     btnResetForm.setAttribute('style', 'visibility: hidden;');
     productForm.creationDate.valueAsDate = new Date();

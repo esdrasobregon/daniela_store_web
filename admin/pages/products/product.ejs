@@ -59,8 +59,8 @@
 
 
 
-                        <div class="form-group" style="margin: 20px">
-                            <form id="add-product-form" class="container">
+                        <div class="form-group">
+                            <form id="add-product-form" class="container" style="margin: 20px">
                                 <div class="form-group">
                                     <label for="name">
                                         <%= keys.key.placeHolderProductName%>
@@ -125,8 +125,8 @@
                                     <label for="modificationDate" id="lastModificationMessage">
                                         <%= keys.key.lastModificationMessage%>
                                     </label>
-                                    <input type="date" id="modificationDate" name="modificationDate" disabled="true"
-                                        class="form-control">
+                                    <input type="date" name="modificationDate" id="modificationDate"
+                                        name="modificationDate" disabled="true" class="form-control">
 
                                 </div>
 
@@ -136,7 +136,7 @@
                                     </div>
                                     <div class="custom-file">
                                         <input type='file' accept=".jpg, .jpeg|image/*" class='custom-file-input'
-                                            id='inputGroupFile01' onchange="readURL(this);" />
+                                            id='inputGroupFile01' name="inputGroupFile01" onchange="readURL(this);" />
                                         <label id="inputImage" class="custom-file-label" for="inputGroupFile01">
                                             <%= keys.key.chooseFileMessage%>
                                         </label>
