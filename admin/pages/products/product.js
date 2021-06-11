@@ -4,7 +4,6 @@ const productFormMessage = document.querySelector('#productFormMessage');
 const btnResetForm = document.querySelector('#btnResetForm');
 var categoryList;
 var productList;
-var productToUpdate = null;
 var indexCategorySelected;
 var imageToFirebase = false;
 var isUpdating = false;
@@ -45,7 +44,8 @@ async function getInformation() {
 function chageIndexSelected(sel) {
     indexCategorySelected = categoryList[sel.selectedIndex].idCategory;
 }
-productForm.price.addEventListener("keypress", (ev) => noLetters(ev));
+productForm.price
+    .addEventListener("keypress", (ev) => noLetters(ev));
 
 //adding and updating product registers
 productForm.addEventListener('submit', async (e) => {
@@ -66,46 +66,16 @@ productForm.addEventListener('submit', async (e) => {
 
 });
 
-//call the server
-function callServer() {
-    const formData = createFormDataProduct();
-    const options = {
-        method: 'POST',
-        body: formData
+function afterDeletingSettings(productDeleted) {
+    var i = 0;
+    while (productList[i].idProduct != productDeleted.idProduct) {
+        i++;
     }
-    fetch(localHost + "/addProduct", {
-            method: 'POST',
-            body: formData
-        }).then(response => response.json())
-        .then(result => {
-            result.idProduct == "" ?
-                alert(addImageMessage) :
-                afterServerCallsettings(result);
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
-}
-//call the server
-function callDeleteServer(idProductToDelete) {
-
-    var data = {
-        idProduct: idProductToDelete
-    }
-    const options = {
-        method: 'POST',
-        headers: {
-            'Content-type': 'application/json'
-        },
-        body: JSON.stringify(data)
-    }
-    fetch(localHost + "/deleteProduct", options).then(
-        result => result.json()
-    ).then((result) => {
-        alert("Product id: " + result + " deleted");
-    });
-    hidePleaseWait();
-
+    productList.splice(i, 1);
+    sessionStorage.setItem('allProducts', JSON.stringify(productList));
+    var prodli = document.getElementById(productDeleted.idProduct);
+    document.getElementById(productDeleted.category).removeChild(prodli);
+    alert("Product deleted");
 }
 
 function afterServerCallsettings(productResult) {
@@ -193,18 +163,7 @@ function renderProductList(doc) {
     // deleting data
     btnDelete.addEventListener('click', async (e) => {
         e.stopPropagation();
-        let id = doc.idProduct;
-        showPleaseWait();
-        await callDeleteServer(id);
-        var i = 0;
-        while (productList[i] != doc) {
-            i++;
-        }
-        productList.splice(i, 1);
-        sessionStorage.setItem('allProducts', JSON.stringify(productList));
-        hidePleaseWait();
-        document.getElementById(doc.category).removeChild(prodli);
-
+        await callDeleteServer(doc);
     });
     // updating data
     btnUpdate.addEventListener('click', (e) => {
@@ -212,13 +171,6 @@ function renderProductList(doc) {
         clearForm();
         btnResetForm.setAttribute('style', 'visibility: visible;')
         productFormMessage.innerHTML = updatingFormMessage;
-        // productToUpdate = doc;
-        // indexCategorySelected = doc.category;
-        // var i = 0;
-        // while (productList[i] != doc) {
-        //     i++;
-        // }
-        // productList.splice(i, 1);
         isUpdating = true;
         loadProductForm(doc);
     });
@@ -237,7 +189,7 @@ function renderProductList(doc) {
 }
 
 function createProductFromCallServerResult(productResult) {
-    var p = {
+    var result = {
         idProduct: productResult.idProduct,
         name: productResult.name,
         activ: productResult.activ,
@@ -249,26 +201,7 @@ function createProductFromCallServerResult(productResult) {
         modificationDate: productResult.modificationDate,
         creationDate: productResult.creationDate
     };
-    return p;
-}
-
-function createProduct() {
-    var cd = new Date(productForm.creationDate.value);
-    var md = new Date(productForm.modificationDate.value);
-    var priceFlag;
-    productForm.showPrice.value == "true" ? priceFlag = true : priceFlag = false;
-    var product = {
-        name: productForm.name.value,
-        price: productForm.price.value,
-        inventory: 0,
-        category: indexCategorySelected,
-        creationDate: cd,
-        modificationDate: md,
-        activ: productForm.activ.value,
-        description: productForm.description.value,
-        showPrice: priceFlag
-    };
-    return product;
+    return result;
 }
 
 function createFormDataProduct() {
@@ -296,25 +229,6 @@ function createFormDataProduct() {
     return formdata;
 }
 
-function setProductToUpdate() {
-    if (productToUpdate.category != indexCategorySelected) {
-        console.log('removing');
-        var del = document.getElementById(productToUpdate.idProduct);
-        document.getElementById(productToUpdate.category).removeChild(del);
-    } else {
-        console.log('removing');
-        var del = document.getElementById(productToUpdate.idProduct);
-        document.getElementById(indexCategorySelected).removeChild(del);
-    }
-    var up = {
-        inventory: productToUpdate.inventory,
-        idProduct: productToUpdate.idProduct
-    };
-    productToUpdate = createProduct();
-    productToUpdate.inventory = up.inventory;
-    productToUpdate.idProduct = up.idProduct;
-}
-
 function loadProductForm(doc) {
     productForm.idProduct.value = doc.idProduct;
     productForm.name.value = doc.name;
@@ -333,8 +247,6 @@ function clearForm() {
     productForm.reset();
     productForm.inputGroupFile01.innerHTML = chooseFileMessage;
     productForm.imageFirebase.setAttribute('src', '#');
-    productToUpdate == null ? console.log("reseting the form") : productList.push(productToUpdate);
-    productToUpdate = null;
     this.isUpdating = false;
     productFormMessage.innerHTML = '';
     btnResetForm.setAttribute('style', 'visibility: hidden;');

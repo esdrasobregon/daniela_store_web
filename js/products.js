@@ -60,23 +60,28 @@ function getCustomDate(pDateObject) {
 
 //adding products
 var addProduct = async function (db, pProduct) {
-  await db.collection('products').add({
-    name: pProduct.name,
-    price: parseFloat(pProduct.price),
-    inventory: pProduct.inventory,
-    category: pProduct.category,
-    creationDate: new Date(),
-    modificationDate: new Date(),
-    activ: pProduct.activ,
-    description: pProduct.description,
-    showPrice: pProduct.showPrice
-  }).then(function (docRef) {
-    pProduct.idProduct = docRef.id;
-    console.log('added');
-  }).catch(function (error) {
-    console.error("Error adding document: ", error);
-    return null;
-  });
+  try {
+    await db.collection('products').add({
+      name: pProduct.name,
+      price: parseFloat(pProduct.price),
+      inventory: pProduct.inventory,
+      category: pProduct.category,
+      creationDate: new Date(),
+      modificationDate: new Date(),
+      activ: pProduct.activ,
+      description: pProduct.description,
+      showPrice: pProduct.showPrice
+    }).then(function (docRef) {
+      pProduct.idProduct = docRef.id;
+      console.log('added');
+    }).catch(function (error) {
+      console.error("Error adding document: ", error);
+      return null;
+    });
+  } catch (error) {
+    console.log("error adding product register");
+    return error;
+  }
 }
 
 //get a pruduct
@@ -114,6 +119,10 @@ var updateProduct = async function (db, pProduct) {
     activ: pProduct.activ,
     description: pProduct.description,
     showPrice: pProduct.showPrice
+  }).then((result) => {
+    console.log("product updated: " + result);
+  }).catch((error) => {
+    console.log("Error updating product: " + error)
   });
 }
 //update stock
@@ -129,8 +138,12 @@ var updateProductStock = async function (pIdProduct, pQuantityToAdd) {
 }
 //delete product
 var deleteProduct = async function (db, pidProduct) {
-  await db.collection('products').doc(pidProduct).delete();
-  return pidProduct;
+  await db.collection('products').doc(pidProduct).delete().then(() => {
+    console.log("Product " + pidProduct + " deleted");
+  }).catch((error) => {
+    console.log("error deleting product register: " + error);
+  });
+
 }
 
 module.exports = {
