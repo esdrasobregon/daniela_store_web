@@ -5,7 +5,6 @@ const btnResetForm = document.querySelector('#btnResetForm');
 const categoriesform = document.querySelector('#add-category-form');
 const imageFi = document.querySelector('#imageFirebase');
 var categoryList;
-var categoryToUpdate = null;
 var productsList;
 var isUpdating = false;
 var imageToFirebase = false;
@@ -41,45 +40,73 @@ imageInput.addEventListener('change', (e) => {
 categoriesform.addEventListener('submit', async (e) => {
     e.preventDefault();
 
-    if (isUpdating) {
-        console.log('updating');
-        setcategoryToUpdate();
+    if (categoriesform.idCategory.value == "") {
         showPleaseWait();
-        await updateCategory(categoryToUpdate).then(async () => {
-            if (imageToFirebase) {
-                console.log('se agrega imagen');
-                await uploadImage(categoryToUpdate.idCategory);
-            }
-            document.getElementById(categoryToUpdate.idCategory).remove();
-            document.getElementById("action" + categoryToUpdate.idCategory).remove();
-            renderCategories(categoryToUpdate);
-            categoryList.push(categoryToUpdate);
-            sessionStorage.setItem('categories', JSON.stringify(categoryList));
-            categoryToUpdate = null;
-            clearForm();
-            hidePleaseWait();
-        });
+        callServer();
+        hidePleaseWait();
     } else {
-        var category = {
-            name: categoriesform.name.value,
-            status: categoriesform.activ.value,
-            description: categoriesform.description.value
-        };
-        if (imageToFirebase) {
+        if (isUpdating) {
             showPleaseWait();
-            await addCategory(category);
-            await uploadImage(category.idCategory);
-            categoryList.push(category);
-            renderCategories(category);
-            sessionStorage.setItem('categories', JSON.stringify(categoryList));
-            clearForm();
+            callServer();
             hidePleaseWait();
-        } else {
+        } else
             alert(addImageMessage);
-        }
     }
 
 });
+
+function createFormDataCategory() {
+    formdata = new FormData();
+    formdata.append('isUpdating', isUpdating);
+    formdata.append('imageToFirebase', imageToFirebase);
+    formdata.append('idCategory', categoriesform.idCategory.value);
+    formdata.append('name', categoriesform.name.value);
+    formdata.append('description', categoriesform.description.value);
+    formdata.append('status', categoriesform.activ.value);
+    formdata.append('inputGroupFile01', categoriesform.inputGroupFile01.files[0]);
+    return formdata;
+}
+
+function afterDeletingSettings(categoryDeleted) {
+    var i = 0;
+    while (categoryList[i].idCategory != categoryDeleted.idCategory) {
+        i++;
+    }
+    categoryList.splice(i, 1);
+    sessionStorage.setItem('categories', JSON.stringify(categoryList));
+    document.getElementById(categoryDeleted.idCategory).remove();
+    document.getElementById("action" + categoryDeleted.idCategory).remove();
+    alert("Product deleted");
+}
+
+function afterServerCallsettings(categoryResult) {
+    console.log('Success:', categoryResult);
+    if (isUpdating) {
+        document.getElementById(categoryResult.idCategory).remove();
+        document.getElementById("action" + categoryResult.idCategory).remove();
+        var i = 0;
+        while (categoryList[i].idCategory != categoryResult.idCategory) {
+            i++;
+        }
+        categoryList.splice(i, 1);
+        categoryList.push(createCategoryFromCallServerResult(categoryResult));
+    } else {
+        categoryList.push(createCategoryFromCallServerResult(categoryResult));
+    }
+    sessionStorage.setItem('categories', JSON.stringify(categoryList));
+    renderCategories(categoryResult);
+    clearForm();
+}
+
+function createCategoryFromCallServerResult(categoryResult) {
+    var result = {
+        idCategory: categoryResult.idCategory,
+        name: categoryResult.name,
+        activ: categoryResult.activ,
+        description: categoryResult.description
+    };
+    return result;
+}
 
 function renderCategories(doc) {
 
@@ -120,31 +147,19 @@ function renderCategories(doc) {
     // deleting data
     btnDelete.addEventListener('click', async (e) => {
         e.stopPropagation();
-        var counter = 0;
         var i = 0;
-        while (counter == 0 && i < productsList.length) {
+        var flag = false;
+        while (!flag && i < productsList.length) {
             console.log(i);
             if (productsList[i].category == doc.idCategory) {
-                counter++;
+                flag = true;
             }
             i++;
         }
-        if (counter == 0) {
-            let id = doc.idCategory;
+        if (!flag) {
             showPleaseWait();
-            await deleteCategory(id).then(
-                await deleteFile(id));
-            var i = 0;
-            while (categoryList[i] != doc) {
-                i++;
-            }
-            categoryList.splice(i, 1);
-            sessionStorage.setItem('categories', JSON.stringify(categoryList));
-            document.getElementById("action" + doc.idCategory).remove();
-            document.getElementById(doc.idCategory).remove();
-
+            callDeleteServer(doc);
             hidePleaseWait();
-            //location.reload();
         } else {
             alert(noDeleteCategoryWithRegMessage);
         }
@@ -156,20 +171,16 @@ function renderCategories(doc) {
         btnResetForm.setAttribute('style', 'visibility: visible;')
         categoryFormMessage.innerHTML = updatingFormMessage;
         categoriesform.name.value = doc.name;
+        categoriesform.idCategory.value = doc.idCategory;
         categoriesform.activ.value = doc.status;
         categoriesform.description.value = doc.description;
-        categoryToUpdate = doc;
-        var i = 0;
-        while (categoryList[i] != doc) {
-            i++;
-        }
-        categoryList.splice(i, 1);
         $('#imageFirebase')
             .attr('src', url + doc.idCategory + urlPlus);
         imageInput.innerHTML = chooseFileMessage;
         hideAndShowDivFuction();
     });
 }
+
 function loadingPageSettings() {
     var unActiveOption = document.createElement("option");
     unActiveOption.setAttribute("value", "0");
@@ -180,12 +191,7 @@ function loadingPageSettings() {
     categoriesform.activ.appendChild(unActiveOption);
     categoriesform.activ.appendChild(activeOption);
 }
-function setcategoryToUpdate() {
 
-    categoryToUpdate.name = categoriesform.name.value;
-    categoryToUpdate.status = categoriesform.activ.value;
-    categoryToUpdate.description = categoriesform.description.value;
-}
 function clearForm() {
     categoriesform.reset();
     imageInput.innerHTML = chooseFileMessage;
@@ -193,8 +199,6 @@ function clearForm() {
     this.isUpdating = false;
     this.imageToFirebase = false;
     categoryFormMessage.innerHTML = '';
-    categoryToUpdate == null ? console.log("reseting the form") : categoryList.push(categoryToUpdate);
-    categoryToUpdate = null;
     hideAndShowDivFuction();
     btnResetForm.setAttribute('style', 'visibility: hidden;');
 }
