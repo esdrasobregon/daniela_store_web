@@ -1,9 +1,7 @@
 const categoryTableList = document.querySelector('#categories-table-list');
-const imageInput = document.querySelector('#inputGroupFile01');
 const categoryFormMessage = document.querySelector('#categoryFormMessage');
 const btnResetForm = document.querySelector('#btnResetForm');
 const categoriesform = document.querySelector('#add-category-form');
-const imageFi = document.querySelector('#imageFirebase');
 var categoryList;
 var productsList;
 var isUpdating = false;
@@ -33,7 +31,7 @@ async function loadCategories() {
     });
 }
 
-imageInput.addEventListener('change', (e) => {
+categoriesform.inputGroupFile01.addEventListener('change', (e) => {
     imageToFirebase = !imageToFirebase;
 });
 //adding or updating category
@@ -102,7 +100,7 @@ function createCategoryFromCallServerResult(categoryResult) {
     var result = {
         idCategory: categoryResult.idCategory,
         name: categoryResult.name,
-        activ: categoryResult.activ,
+        status: categoryResult.status,
         description: categoryResult.description
     };
     return result;
@@ -174,9 +172,8 @@ function renderCategories(doc) {
         categoriesform.idCategory.value = doc.idCategory;
         categoriesform.activ.value = doc.status;
         categoriesform.description.value = doc.description;
-        $('#imageFirebase')
-            .attr('src', url + doc.idCategory + urlPlus);
-        imageInput.innerHTML = chooseFileMessage;
+        categoriesform.imageFirebase.setAttribute('src', url + doc.idCategory + urlPlus);
+        document.getElementById("inputImage").innerHTML = chooseFileMessage;
         hideAndShowDivFuction();
     });
 }
@@ -194,8 +191,8 @@ function loadingPageSettings() {
 
 function clearForm() {
     categoriesform.reset();
-    imageInput.innerHTML = chooseFileMessage;
-    imageFi.setAttribute('src', '#');
+    document.getElementById("inputImage").innerHTML = chooseFileMessage;
+    categoriesform.imageFirebase.setAttribute('src', '#');
     this.isUpdating = false;
     this.imageToFirebase = false;
     categoryFormMessage.innerHTML = '';

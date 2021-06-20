@@ -1,14 +1,10 @@
-var categories;
-
-async function getCategories(db) {
-  categories = await db.collection("productCategories").get()
-    .then(function (querySnapshot) {
-      return querySnapshot.once('value').then(snap => snap.val());
-    })
-    .catch(function (error) {
-      console.log("Error getting documents: ", error);
-      return null;
-    });
+class Category {
+  constructor(name, idCategory, description, status) {
+    this.name = name;
+    this.idCategory = idCategory;
+    this.description = description;
+    this.status = status;
+  }
 }
 //adding category
 var addCategory = async function (db, pCategory) {
