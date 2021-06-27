@@ -80,14 +80,19 @@
             <script>
 
                 window.onload = async function () {
-                    showPleaseWait();
+
                     sessionStorage.getItem('allProducts') == null ? await getProducts() : console.log('products allready loaded');
                     sessionStorage.getItem("categories") == null ? await getCategories() : console.log('categories allready loaded');
+
+                    //it gives some time to load the data needed
+                    showPleaseWait();
+                    setTimeout(async () => {
+                        hidePleaseWait();
+                    }, 3000);
                     var prods = sessionStorage.getItem('allProducts');
                     prods = JSON.parse(prods);
                     var categories = sessionStorage.getItem('categories');
                     categories = JSON.parse(categories);
-                    hidePleaseWait();
                 }
             </script>
 </body>

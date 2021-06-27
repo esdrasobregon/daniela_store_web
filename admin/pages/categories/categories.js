@@ -39,14 +39,18 @@ categoriesform.addEventListener('submit', async (e) => {
     e.preventDefault();
 
     if (categoriesform.idCategory.value == "") {
+        await callServer();
         showPleaseWait();
-        callServer();
-        hidePleaseWait();
+        setTimeout(() => {
+            hidePleaseWait();
+        }, 3000);
     } else {
         if (isUpdating) {
+            await callServer();
             showPleaseWait();
-            callServer();
-            hidePleaseWait();
+            setTimeout(() => {
+                hidePleaseWait();
+            }, 3000);
         } else
             alert(addImageMessage);
     }
@@ -155,9 +159,11 @@ function renderCategories(doc) {
             i++;
         }
         if (!flag) {
+            await callDeleteServer(doc);
             showPleaseWait();
-            callDeleteServer(doc);
-            hidePleaseWait();
+            setTimeout(() => {
+                hidePleaseWait();
+            }, 3000);
         } else {
             alert(noDeleteCategoryWithRegMessage);
         }

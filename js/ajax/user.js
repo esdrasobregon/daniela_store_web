@@ -1,4 +1,3 @@
-
 //get user
 async function getUser(puser) {
     const HttpUser = new XMLHttpRequest();
@@ -20,22 +19,30 @@ async function getUser(puser) {
 //getting the actual user with a post request
 //get user
 async function getUserWithPost() {
-    showPleaseWait();
     var data = {
         userEmail: loginForm.userEmail.value.replace(/\s/g, ""),
         userPassword: loginForm.userPassword.value.replace(/\s/g, "")
     };
-    if (data.userEmail.length < 50) { }
-    isNotValid(data.userEmail) ? alert("You can't type this characters") :
-        isNotValid(data.userPassword) ? alert("You can't type this characters")
-            : callServer(data);
-    hidePleaseWait();
 
+    if (isNotValid(data.userEmail)) {
+        alert("You can't type this characters")
+    } else {
+        if (isNotValid(data.userPassword)) {
+            alert("You can't type this characters")
+        } else {
+            await callServer(data);
+            showPleaseWait();
+            setTimeout(() => {
+                hidePleaseWait();
+            }, 3000);
+        }
+    }
 }
+
 function callServer(data) {
-    if (data.userPassword.length > 8
-        && data.userPassword.length < 22 && (data.userEmail.length > 8
-            && data.userEmail.length < 40)) {
+    if (data.userPassword.length > 8 &&
+        data.userPassword.length < 22 && (data.userEmail.length > 8 &&
+            data.userEmail.length < 40)) {
         const options = {
             method: 'POST',
             headers: {
@@ -51,5 +58,5 @@ function callServer(data) {
             loginForm.reset();
         });
         hidePleaseWait();
-    } else alert('hola');
+    } else alert('Error in email or password');
 }

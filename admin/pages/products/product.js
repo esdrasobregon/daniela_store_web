@@ -52,14 +52,18 @@ productForm.addEventListener('submit', async (e) => {
     e.preventDefault();
 
     if (productForm.idProduct.value == "") {
+        await callServer();
         showPleaseWait();
-        callServer();
-        hidePleaseWait();
+        setTimeout(() => {
+            hidePleaseWait();
+        }, 3000);
     } else {
         if (isUpdating) {
+            await callServer();
             showPleaseWait();
-            callServer();
-            hidePleaseWait();
+            setTimeout(() => {
+                hidePleaseWait();
+            }, 3000);
         } else
             alert(addImageMessage);
     }
@@ -164,6 +168,10 @@ function renderProductList(doc) {
     btnDelete.addEventListener('click', async (e) => {
         e.stopPropagation();
         await callDeleteServer(doc);
+        showPleaseWait();
+        setTimeout(() => {
+            hidePleaseWait();
+        }, 3000);
     });
     // updating data
     btnUpdate.addEventListener('click', (e) => {
