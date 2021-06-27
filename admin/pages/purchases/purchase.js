@@ -1,7 +1,7 @@
 const productcategoryList = document.querySelector('#category-product-list');
 const purchaseTable = document.querySelector('#purchase-table');
 const purchaseForm = document.querySelector('#add-purchase-form');
-var purchaseList;
+var purchaseList = {};
 var productList;
 var purchasetToUpdate;
 var indexPurchaseSelected;
@@ -11,29 +11,40 @@ var idProduct = document.location.search.split('=')[1];
 
 
 window.onload = async function () {
-    loadingPageSettings();
 
-    $('#imageFirebase')
-        .attr('src', url + idProduct + urlPlus);
-    if (sessionStorage.getItem('categories') == null) {
-        await getCategories();
-    }
-    if (sessionStorage.getItem('allProducts') == null) {
-        await getProducts();
-        getInformation();
-    } else {
-        console.log('getting the local sessionStorage');
-        getInformation();
-    }
+    loadingPageSettings();
+    await getPurchases(idProduct);
+    showPleaseWait();
+    //it give some time for purchases callback function
+    setTimeout(async () => {
+        $('#imageFirebase')
+            .attr('src', url + idProduct + urlPlus);
+        if (sessionStorage.getItem('categories') == null) {
+            await getCategories();
+        }
+        if (sessionStorage.getItem('allProducts') == null) {
+            await getProducts();
+
+            getInformation();
+        } else {
+            console.log('getting the local sessionStorage');
+            getInformation();
+        }
+        hidePleaseWait();
+    }, 3000);
+
 }
 //get information from the session storage
 //and render the categories options
 async function getInformation() {
-    purchaseList = await getAllPurchasesByIdProduct(idProduct);
     purchaseList.forEach(item => {
         renderPurchase(item);
     });
-    var statuslist = [{ 'payment': 'Done' }, { 'payment': 'Pendient' }];
+    var statuslist = [{
+        'payment': 'Done'
+    }, {
+        'payment': 'Pendient'
+    }];
     statuslist.forEach(item => {
         var li = createCustomTextTag('option', 'divider', item.payment);
         li.setAttribute('role', 'presentation');
@@ -44,6 +55,7 @@ async function getInformation() {
     productList = JSON.parse(sessionStorage.getItem('allProducts'));
 
 }
+
 function chageIndexSelected(sel) {
     indexPurchaseSelected = purchaseList[sel.selectedIndex].idPurchase;
 }
@@ -53,45 +65,39 @@ unitPrice.addEventListener("keypress", (ev) => noLetters(ev));
 //add or update purchases
 purchaseForm.addEventListener('submit', async (e) => {
     e.preventDefault();
-    var d = new Date(purchaseForm.modificationDate.value)
+    var d = getCustomDate(new Date(purchaseForm.modificationDate.value));
+    var creationDate = getCustomDate(new Date(purchaseForm.creationDate.value));
+    var p = productList.find((elenent) => elenent.idProduct == idProduct);
+    var quantity = parseFloat(purchaseForm.tottalUnits.value) + parseFloat(p.inventory);
     var purchase = {
         idProduct: idProduct,
         receipt: purchaseForm.receipt.value,
         unitPrice: parseFloat(purchaseForm.unitPrice.value),
         tottalUnits: parseFloat(purchaseForm.tottalUnits.value),
-        creationDate: d,
+        creationDate: creationDate,
         updateDate: d,
         state: purchaseForm.paymentState.value,
-        description: purchaseForm.description.value
+        description: purchaseForm.description.value,
+        quantity: quantity
     };
-    if (isUpdating) {
-        //console.log('is updating');
-        purchase.idProduct = purchasetToUpdate.idProduct;
-        console.log('updating');
-        showPleaseWait();
-
-        await updatePurchase(purchase).then(async () => {
-            location.reload();
-        });
-
-    } else {
-        showPleaseWait();
-        await addPurchase(purchase).then(async () => {
-            var prds = JSON.parse(sessionStorage.getItem('allProducts'));
-            var p = prds.find((elenent) => elenent.idProduct == purchase.idProduct);
-            var quantity = parseFloat(purchase.tottalUnits) + parseFloat(p.inventory);
-            await updateProductStock(purchase.idProduct, quantity).then(() => {
-                prds.find((element) => {
-                    if (element.idProduct == p.idProduct) {
-                        element.inventory = quantity;
-                    }
-                });
-                sessionStorage.setItem('allProducts', JSON.stringify(prds));
+    showPleaseWait();
+    await addPurchase(purchase);
+    var listLength = purchaseList.length;
+    setTimeout(() => {
+        if (listLength < purchaseList.length) {
+            productList.find((element) => {
+                if (element.idProduct == idProduct) {
+                    element.inventory = quantity;
+                }
             });
-            location.reload();
-        });
+            sessionStorage.setItem('allProducts', JSON.stringify(productList));
+            renderPurchase(purchaseList[purchaseList.length - 1]);
+            clearForm();
+        } else {
+            alert("server fail");
+        }
         hidePleaseWait();
-    }
+    }, 3000);
 });
 // render purchase table
 function renderPurchase(doc) {
@@ -102,8 +108,8 @@ function renderPurchase(doc) {
     blank.setAttribute('class', 'table-success');
     let idPurchase = createCustomTextTag('td', 'table-success', doc.idPurchase);
     let receipt = createCustomTextTag('td', 'table-success', doc.receipt);
-    let creationDatetd = createCustomTextTag('td', 'table-success', doc.creationDate.toDate().toDateString());
-    let updateDatetd = createCustomTextTag('td', 'table-success', doc.updateDate.toDate().toDateString());
+    let creationDatetd = createCustomTextTag('td', 'table-success', doc.creationDate.date + "-" + doc.creationDate.month + "-" + doc.creationDate.year);
+    let updateDatetd = createCustomTextTag('td', 'table-success', doc.updateDate.date + "-" + doc.updateDate.month + "-" + doc.updateDate.year);
     let state = createCustomTextTag('td', 'table-success', doc.state);
     let unitPrice = createCustomTextTag('td', 'table-success', doc.unitPrice);
     let tottalUnits = createCustomTextTag('td', 'table-success', doc.tottalUnits);
@@ -118,9 +124,8 @@ function renderPurchase(doc) {
 
     var btnUpdate;
     btnUpdate = doc.state == 'Pendient' ? createCustomTextTag('button', 'btn btn-warning', '!') : createCustomTextTag('button', 'btn btn-warning', 'No need');
+    btnUpdate.setAttribute("id", "btnUpdate" + doc.idPurchase);
     appendChildListTag([btnUpdate, btnDelete, btnSales], tdActions);
-
-    tr.setAttribute('data-id', doc.idPurchase);
 
     appendChildListTag([blank, idPurchase, receipt, state, creationDatetd, updateDatetd, tottalUnits, unitPrice], tr);
 
@@ -134,36 +139,26 @@ function renderPurchase(doc) {
         e.stopPropagation();
         if (doc.state == 'Pendient') {
             showPleaseWait();
-            var result = await updatePurchase(doc);
-            if (result == null) {
+            await updatePurchase(doc);
+            setTimeout(() => {
                 hidePleaseWait();
-                alert("Purchase payment no updated");
-                location.reload();
-            } else {
-                hidePleaseWait();
-                alert("Purchase payment updated");
-            }
+            }, 3000);
         } else alert('No need');
     });
     btnSales.addEventListener('click', async (e) => {
         prod = productList.find(Element => Element.idProduct == idProduct);
         actualPurchaseId = doc.idPurchase;
         actualpur = purchaseList.find(Element => Element.idPurchase == actualPurchaseId);
-        salesList = await getAllSalesByIdPurchase(actualPurchaseId);
-        outStock = 0;
-        if (salesList != null) {
-            salesList.forEach(item => {
-                outStock += item.tottalUnits;
-            });
-        }
-        availableUnits = actualpur.tottalUnits - outStock;
-        salesForm.availableUnits.value = availableUnits;
-        salesForm.unitPriceSales.value = "" + prod.price;
+        showPleaseWait();
+        await getAllSalesByIdPurchases(actualPurchaseId, salesList);
+        setTimeout(() => {
+            hidePleaseWait();
+        }, 3000);
     });
     btnDelete.addEventListener("click", async (e) => {
         e.stopPropagation();
-        alert("deleting");
-        await getAllSalesByIdPurchase(doc.idPurchase);
+        deletePurchase(doc.idPurchase);
+        //await getAllSalesByIdPurchase(doc.idPurchase);
     });
 
 }
@@ -186,6 +181,7 @@ function renderPurchaseList(item) {
     appendChildListTag([divHeadder, divHide], divCat);
     productcategoryList.appendChild(divCat);
 };
+
 function loadingPageSettings() {
     purchaseForm.creationDate.valueAsDate = new Date();
     purchaseForm.modificationDate.valueAsDate = new Date();
@@ -199,5 +195,4 @@ function clearForm() {
     this.isUpdating = false;
     creationDate.valueAsDate = new Date();
     modificationDate.valueAsDate = new Date();
-    hideAndShowDivFuction();
 }

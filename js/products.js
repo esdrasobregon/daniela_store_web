@@ -126,11 +126,11 @@ var updateProduct = async function (db, pProduct) {
   });
 }
 //update stock
-var updateProductStock = async function (pIdProduct, pQuantityToAdd) {
+var updateProductStock = async function (db, pIdProduct, pQuantityToAdd) {
   await db.collection('products').doc(pIdProduct).update({
     inventory: pQuantityToAdd
   }).then(function (result) {
-    alert("Register updated");
+    console.log("Register updated");
     return true;
   }).catch(function (error) {
     return null;

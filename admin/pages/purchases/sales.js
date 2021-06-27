@@ -21,24 +21,26 @@ salesForm.addEventListener('submit', async (e) => {
                 description: salesForm.saleDescription.value
             };
             showPleaseWait();
-            await addSale(sale);
+            await addSales(sale);
             if (sale == null) {
                 alert("Sale no added");
             } else {
+                console.log(sale);
                 var newInventory = (prod.inventory - sale.tottalUnits);
-                await updateProductStock(idProduct, newInventory).then(() => {
-                    productList.find((element) => {
-                        if (element.idProduct == prod.idProduct) {
-                            element.inventory = newInventory;
-                        }
-                    });
-                    sessionStorage.setItem('allProducts', JSON.stringify(productList));
-                });
+                await updateProductStocks(idProduct, newInventory);
+                // await updateProductStock(idProduct, newInventory).then(() => {
+                //     productList.find((element) => {
+                //         if (element.idProduct == prod.idProduct) {
+                //             element.inventory = newInventory;
+                //         }
+                //     });
+                //     sessionStorage.setItem('allProducts', JSON.stringify(productList));
+                // });
 
                 outStock += parseFloat(salesForm.salesTottalUnit.value);
                 if (outStock >= actualpur.tottalUnits) {
-                    await updatePurchaseOutOfStock(actualpur);
-                    document.getElementById(actualPurchaseId).remove();
+                    console.log("out stoc");
+                    await updatePurchaseOutOfStocks(actualpur);
                 }
                 resetHideModal()
             }
@@ -50,8 +52,23 @@ salesForm.addEventListener('submit', async (e) => {
         alert("Just " + (actualpur.tottalUnits - outStock) + " units available");
     }
 });
+
 //reset and hide modal
 function resetHideModal() {
     salesForm.reset();
     $('#myModal').modal('hide');
+}
+//
+function saleSettings(salesList) {
+    outStock = 0;
+    if (salesList != null) {
+        salesList.forEach(item => {
+            outStock += item.tottalUnits;
+        });
+    } else {
+        console.log("list: " + salesList);
+    }
+    availableUnits = actualpur.tottalUnits - outStock;
+    salesForm.availableUnits.value = availableUnits;
+    salesForm.unitPriceSales.value = "" + prod.price;
 }

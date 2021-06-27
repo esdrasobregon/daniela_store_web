@@ -11,11 +11,29 @@ var isNotValid = function (pCredentialToValidate) {
     flag == false ? flag = pCredentialToValidate.includes(']') : console.log(flag);
     return flag;
 }
+
 function isEmail(email) {
     const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(String(email).toLowerCase());
 }
+
+function getCustomDate(pDateObject) {
+    var dateResult = {
+        year: "",
+        date: "",
+        month: ""
+    };
+    dateResult.year = pDateObject.toDate().getFullYear();
+    pDateObject.toDate().getMonth() < 10 ?
+        dateResult.month = "0" + pDateObject.toDate().getMonth() :
+        dateResult.month += pDateObject.toDate().getMonth();
+    pDateObject.toDate().getDate() < 10 ?
+        dateResult.date = "0" + pDateObject.toDate().getDate() :
+        dateResult.date += pDateObject.toDate().getDate();
+    return dateResult;
+}
 module.exports = {
     isNotValid: isNotValid,
-    isEmail: isEmail
+    isEmail: isEmail,
+    getCustomDate: getCustomDate
 }
