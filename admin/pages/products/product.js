@@ -98,9 +98,9 @@ function afterServerCallsettings(productResult) {
             i++;
         }
         productList.splice(i, 1);
-        productList.push(createProductFromCallServerResult(productResult));
+        productList.push(productResult);
     } else {
-        productList.push(createProductFromCallServerResult(productResult));
+        productList.push(productResult);
     }
     sessionStorage.setItem('allProducts', JSON.stringify(productList));
     renderProductList(productResult);
@@ -194,22 +194,6 @@ function renderProductList(doc) {
             .attr('src', url + doc.idProduct + urlPlus);
         $('#productDetailsModLabel').modal('show');
     });
-}
-
-function createProductFromCallServerResult(productResult) {
-    var result = {
-        idProduct: productResult.idProduct,
-        name: productResult.name,
-        activ: productResult.activ,
-        description: productResult.description,
-        category: productResult.category,
-        showPrice: productResult.showPrice,
-        inventory: productResult.inventory,
-        price: productResult.price,
-        modificationDate: productResult.modificationDate,
-        creationDate: productResult.creationDate
-    };
-    return result;
 }
 
 function createFormDataProduct() {

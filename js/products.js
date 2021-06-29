@@ -18,7 +18,21 @@ class Product {
 
 }
 //functions
-
+var product = function (doc) {
+  var prod = {
+    idProduct: doc.idProduct,
+    name: doc.name,
+    price: doc.price,
+    category: doc.category,
+    creationDate: doc.creationDate,
+    modificationDate: doc.modificationDate,
+    activ: doc.activ,
+    inventory: doc.inventory,
+    description: doc.description,
+    showPrice: doc.showPrice
+  };
+  return prod;
+}
 //getting all products data
 var allProducts = async function (db) {
   var allProd = [];
@@ -152,5 +166,6 @@ module.exports = {
   addProduct: addProduct,
   deleteProduct: deleteProduct,
   updateProductStock: updateProductStock,
-  updateProduct: updateProduct
+  updateProduct: updateProduct,
+  product: product
 }

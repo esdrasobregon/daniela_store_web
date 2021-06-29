@@ -6,9 +6,10 @@ function callServer() {
             body: formData
         }).then(response => response.json())
         .then(result => {
-            result.idProduct == "" ?
-                alert(addImageMessage) :
-                afterServerCallsettings(result);
+            console.log(result);
+            result.success ?
+                afterServerCallsettings(result.product) :
+                alert(addImageMessage);
         })
         .catch(error => {
             console.error('Error:', error);
