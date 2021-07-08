@@ -1,48 +1,30 @@
-class Purchase {
-    constructor(receipt, unitPrice, image, creationDate, updateDate, state, idProduct, idUser, tottalUnits, description, outOfStock) {
-        this.receipt = receipt;
-        this.unitPrice = unitPrice;
+class Receipt {
+    constructor(idReceipt, image, creationDate, updateDate, state, idUser, description) {
+        this.idReceipt = idReceipt;
         this.image = image;
         this.state = state;
-        this.tottalUnits = tottalUnits;
         this.creationDate = creationDate;
         this.updateDate = updateDate;
-        this.idProduct = idProduct;
         this.idUser = idUser;
         this.description = description;
-        this.outOfStock = outOfStock;
     }
 }
 //functions
 //adding purchase
-var addPurchases = async function (db, pPurchase) {
-    await db.collection('purchase').add({
-        idReceipt: pPurchase.idReceipt,
-        unitPrice: pPurchase.unitPrice,
-        tottalUnits: pPurchase.tottalUnits,
-        idProduct: pPurchase.idProduct
-    }).then(function (docRef) {
-        pPurchase.idPurchase = docRef.id;
-        console.log('Document added');
-    }).catch(function (error) {
-        console.error("Error adding document: ", error);
-        return null;
-    });
-}
-var addPurchase = async function (db, pPurchase) {
-    await db.collection('purchase').add({
-        description: pPurchase.description,
-        receipt: pPurchase.receipt,
-        state: pPurchase.state,
+var addReceipt = async function (db, pReceipt) {
+    var paymentState = pReceipt.paymentState == "true" ?
+        true :
+        false;
+    await db.collection('receipt').add({
+        description: pReceipt.description,
         creationDate: new Date(),
         updateDate: new Date(),
-        unitPrice: pPurchase.unitPrice,
-        tottalUnits: pPurchase.tottalUnits,
-        idProduct: pPurchase.idProduct,
-        state: pPurchase.state,
-        outOfStock: false
+        paymentState: paymentState,
+        paymentMethod: pReceipt.paymentMethod
     }).then(function (docRef) {
-        pPurchase.idPurchase = docRef.id;
+        pReceipt.idReceipt = docRef.id;
+        pReceipt.creationDate = new Date();
+        pReceipt.updateDate = new Date();
         console.log('Document added');
     }).catch(function (error) {
         console.error("Error adding document: ", error);
@@ -50,7 +32,7 @@ var addPurchase = async function (db, pPurchase) {
     });
 }
 //getting all purchase data
-var getAllPurchases = async function (db) {
+var getAllReceipts = async function (db) {
     var allPurchases = [];
     await db.collection("purchase").get()
         .then((querySnapshot) => {
@@ -163,17 +145,12 @@ var updatePurchaseOutOfStock = async function (db, pPurchase) {
     return res;
 }
 //delete purchase
-var deletePurchase = async function (db, pIdPurchase) {
+var deleteReceipt = async function (db, pIdPurchase) {
     await db.collection('purchase').doc(pIdPurchase).delete();
     console.log('Document ' + pIdPurchase + ' deleted!');
 }
 module.exports = {
-    updatePurchaseOutOfStock: updatePurchaseOutOfStock,
-    addPurchase: addPurchase,
-    getAllPurchases: getAllPurchases,
-    getAllPurchasesByIdProduct: getAllPurchasesByIdProduct,
-    getPurchase: getPurchase,
-    updatePurchase: updatePurchase,
-    deletePurchase: deletePurchase,
-    addPurchases: addPurchases
+    addReceipt: addReceipt,
+    getAllReceipts: getAllReceipts,
+    deletePurchase: deleteReceipt
 }

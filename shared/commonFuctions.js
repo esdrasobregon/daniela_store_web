@@ -27,3 +27,15 @@ function isNotValid(pCredentialToValidate) {
     flag == false ? flag = pCredentialToValidate.includes(']') : console.log(flag);
     return flag;
 }
+function isValid(pCredentialToValidate) {
+    var result = false;
+    const notPermitedLetters = /^[(){}/[]/;
+    const notPermitedLettersPluss = /^]/;
+    result = notPermitedLetters.test(pCredentialToValidate);
+    // result == false ?
+    //     result =
+    //     notPermitedLettersPluss.test(pCredentialToValidate) :
+    //     console.log(result);
+    return result;
+
+}

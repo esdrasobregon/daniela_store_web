@@ -29,7 +29,7 @@ async function getInformation() {
         var li = createCustomTextTag('option', 'divider', item.name);
         li.setAttribute('role', 'presentation');
         li.setAttribute('value', item.idCategory);
-        productForm.stateSelect.appendChild(li);
+        productForm.categorySelect.appendChild(li);
         renderCategoryList(item);
     });
     if (categoryList != null) {
@@ -41,9 +41,6 @@ async function getInformation() {
     });
 }
 
-function chageIndexSelected(sel) {
-    indexCategorySelected = categoryList[sel.selectedIndex].idCategory;
-}
 productForm.price
     .addEventListener("keypress", (ev) => noLetters(ev));
 
@@ -51,22 +48,20 @@ productForm.price
 productForm.addEventListener('submit', async (e) => {
     e.preventDefault();
 
-    if (productForm.idProduct.value == "") {
-        await callServer();
+    if (isUpdating) {
+        await callUpdateServer();
         showPleaseWait();
         setTimeout(() => {
             hidePleaseWait();
         }, 3000);
     } else {
-        if (isUpdating) {
-            await callServer();
-            showPleaseWait();
-            setTimeout(() => {
-                hidePleaseWait();
-            }, 3000);
-        } else
-            alert(addImageMessage);
+        await callServer();
+        showPleaseWait();
+        setTimeout(() => {
+            hidePleaseWait();
+        }, 3000);
     }
+
 
 });
 
@@ -141,7 +136,15 @@ function renderProductList(doc) {
 
 
     var divProdDetails = createCustomNonTextTag('div', 'container-fluid border border-primary rounded');
-    divProdDetails.setAttribute("style", "margin: 10px; padding: 10px;")
+    divProdDetails.setAttribute("style", "margin: 10px; padding: 10px;");
+    var divPurchase = createCustomNonTextTag("div", "form-check form-check-inline");
+    var purchaseCheck = createCustomNonTextTag("input", "form-check-input");
+    var purchaseLabel = createCustomTextTag('label', "form-check form-check-inline", "Purchase: " + doc.name);
+
+    divPurchase.appendChild(purchaseCheck);
+    divPurchase.appendChild(purchaseLabel);
+    purchaseCheck.type = "checkbox";
+    purchaseCheck.name = "purchase";
     var pName = createCustomTextTag('h3', 'h3', prodModaldetailsName + doc.name + " ");
     var pShowImage = createCustomTextTag('small', 'text-primary', showProductImage);
     pShowImage.setAttribute("style", "text-decoration: underline;")
@@ -155,11 +158,12 @@ function renderProductList(doc) {
     var pCreation = createCustomTextTag('p', 'lead', creationdateMessage + ": " + doc.creationDate.year + '-' + doc.creationDate.date + '-' + doc.creationDate.month);
     d = new Date(doc.modificationDate);
     var pModification = createCustomTextTag('p', 'lead', lastModificationMessage + ": " + doc.modificationDate.year + '-' + doc.modificationDate.date + '-' + doc.modificationDate.month);
-    appendChildListTag([pName, pidProduct, pidProduct, pPrice, pShowPrice, pInventory, pState, pCreation, pModification, btnDelete, btnUpdate, btnPurchse], divProdDetails);
+    appendChildListTag([pName, divPurchase, pidProduct, pidProduct, pPrice, pShowPrice, pInventory, pState, pCreation, pModification, btnDelete, btnUpdate, btnPurchse], divProdDetails);
 
     var prodli = document.createElement('div');
     prodli.setAttribute('class', 'col-sm');
     prodli.setAttribute('id', doc.idProduct);
+    prodli.appendChild(divPurchase);
     prodli.appendChild(divProdDetails);
 
 
@@ -194,6 +198,24 @@ function renderProductList(doc) {
             .attr('src', url + doc.idProduct + urlPlus);
         $('#productDetailsModLabel').modal('show');
     });
+    purchaseCheck.addEventListener("change", () => {
+        var productToPurchase = productsTopurchase
+            .find(element => element.idProduct == doc.idProduct);
+        console.log(productToPurchase);
+        if (productToPurchase == undefined) {
+            productsTopurchase.push(doc);
+            //addPurchaseToTheForm(doc);
+        } else {
+            var i = 0;
+            while ((productsTopurchase[i].idProduct !=
+                    productToPurchase.idProduct) || productsTopurchase.length < i) {
+                i++;
+            }
+            productsTopurchase.splice(i, 1);
+            //deletePurchaseToTheForm(doc);
+        }
+
+    });
 }
 
 function createFormDataProduct() {
@@ -211,7 +233,7 @@ function createFormDataProduct() {
     formdata.append('name', productForm.name.value);
     formdata.append('price', productForm.price.value);
     formdata.append('inventory', 0);
-    formdata.append('category', indexCategorySelected);
+    formdata.append('category', productForm.categorySelect.value);
     formdata.append('creationDate', cd);
     formdata.append('modificationDate', md);
     formdata.append('activ', productForm.activ.value);
@@ -225,7 +247,7 @@ function loadProductForm(doc) {
     productForm.idProduct.value = doc.idProduct;
     productForm.name.value = doc.name;
     productForm.price.value = doc.price;
-    productForm.stateSelect.value = doc.category;
+    productForm.categorySelect.value = doc.category;
     productForm.creationDate.value = doc.creationDate.year + "-" + doc.creationDate.month + "-" + doc.creationDate.date;
     productForm.modificationDate.valueAsDate = new Date();
     productForm.activ.value = doc.activ;
@@ -234,6 +256,7 @@ function loadProductForm(doc) {
     $('#imageFirebase')
         .attr('src', url + doc.idProduct + urlPlus);
 }
+
 
 function clearForm() {
     productForm.reset();

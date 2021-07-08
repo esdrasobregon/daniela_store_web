@@ -81,8 +81,7 @@
                                     <label for="stateSelect" id="selectProductCategoryMessage">
                                         <%= keys.key.selectProductCategoryMessage%>
                                     </label>
-                                    <select class="form-control" id="stateSelect" name="stateSelect"
-                                        onChange="chageIndexSelected(this)"></select>
+                                    <select class="form-control" id="categorySelect" name="categorySelect"></select>
                                 </div>
                                 <div class="form-group">
                                     <label for="showPrice" id="showProductPriceMessage">
@@ -166,7 +165,7 @@
                     </div>
 
                 </div>
-                <!-- Modal -->
+                <!-- image modal -->
                 <div class="modal fade" id="productDetailsModLabel" tabindex="-1" role="dialog"
                     aria-labelledby="productDetailsModLabelLabel" aria-hidden="true">
                     <div class="modal-dialog" role="document">
@@ -201,6 +200,11 @@
                         </div>
                     </div>
                 </div>
+                <!-- image modal -->
+                <!-- purchase modal -->
+                <!-- Button trigger modal -->
+                <%- include('./purchase/purchaseModal')%>
+                    <!-- end purchase modal -->
             </div>
 
         </div>
@@ -213,6 +217,7 @@
             <script src="../../js/filesFunctions.js"></script>
             <script src="../../../shared/commonFuctions.js"></script>
             <script src="./product.js"></script>
+            <script src="./purchase/purchase.js"></script>
             <script src="./serverCalls.js"></script>
 
 </body>

@@ -10,6 +10,17 @@ function readURL(input) {
         reader.readAsDataURL(input.files[0]);
     }
 }
+function readPurchaseURL(input) {
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function (e) {
+            $('#purchaseImage')
+                .attr('src', e.target.result);
+            document.getElementById('inputImage').innerHTML = uploadFileMessage;
+        };
+        reader.readAsDataURL(input.files[0]);
+    }
+}
 //upload images to firestorage
 async function uploadImage(imageName) {
     const ref = firebase.storage().ref();

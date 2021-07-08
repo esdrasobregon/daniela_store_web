@@ -74,17 +74,21 @@ function getCustomDate(pDateObject) {
 
 //adding products
 var addProduct = async function (db, pProduct) {
+  var showPriceFlag = false;
+  pProduct.showPrice == "true" ?
+    showPriceFlag = true :
+    showPriceFlag = false;
   try {
     await db.collection('products').add({
       name: pProduct.name,
       price: parseFloat(pProduct.price),
-      inventory: pProduct.inventory,
+      inventory: parseFloat(pProduct.inventory),
       category: pProduct.category,
       creationDate: new Date(),
       modificationDate: new Date(),
       activ: pProduct.activ,
       description: pProduct.description,
-      showPrice: pProduct.showPrice
+      showPrice: showPriceFlag
     }).then(function (docRef) {
       pProduct.idProduct = docRef.id;
       console.log('added');
@@ -97,7 +101,32 @@ var addProduct = async function (db, pProduct) {
     return error;
   }
 }
-
+//validate product
+var validateProduc = function (product, commonFunction) {
+  var flag = true;
+  try {
+    // flag = commonFunction.isValid(doc.idProduct);
+    // flag == false ?
+    //   console.log(doc.idProduc+" not valid"):
+    //     flag = commonFunction.isValid(doc.name);
+    flag = commonFunction.isNotValid(product.name);
+    flag == true ?
+      console.log("name: " + product.name + " not valid") :
+      flag = commonFunction.isNotValid(product.price);
+    // flag == false ?
+    //   return flag: flag = commonFunction(doc.category);
+    flag == true ?
+      console.log("price: " + product.price + " not valid") :
+      flag = commonFunction.isNotValid(product.description);
+    flag == true ?
+      console.log("description: " + product.description + " not valid") :
+      console.log("description valid");
+  } catch (error) {
+    console.log("Error: " + error);
+    flag = true;
+  }
+  return flag;
+}
 //get a pruduct
 var getProduct = async function (idProduct) {
   var product;
@@ -124,20 +153,29 @@ var getProduct = async function (idProduct) {
   return product;
 }
 //update product
+//it do not changes the product inventory
 var updateProduct = async function (db, pProduct) {
-  await db.collection('products').doc(pProduct.idProduct).update({
-    name: pProduct.name,
-    price: pProduct.price,
-    category: pProduct.category,
-    modificationDate: new Date(),
-    activ: pProduct.activ,
-    description: pProduct.description,
-    showPrice: pProduct.showPrice
-  }).then((result) => {
-    console.log("product updated: " + result);
-  }).catch((error) => {
-    console.log("Error updating product: " + error)
-  });
+  var showPriceFlag = false;
+  pProduct.showPrice == "true" ?
+    showPriceFlag = true :
+    showPriceFlag = false;
+  try {
+    await db.collection('products').doc(pProduct.idProduct).update({
+      name: pProduct.name,
+      price: parseFloat(pProduct.price),
+      category: pProduct.category,
+      modificationDate: new Date(),
+      activ: pProduct.activ,
+      description: pProduct.description,
+      showPrice: showPriceFlag
+    }).then((result) => {
+      console.log("product updated: " + result);
+    }).catch((error) => {
+      console.log("Error updating product: " + error)
+    });
+  } catch (error) {
+    console.log("Error updadating" + error)
+  }
 }
 //update stock
 var updateProductStock = async function (db, pIdProduct, pQuantityToAdd) {
@@ -167,5 +205,6 @@ module.exports = {
   deleteProduct: deleteProduct,
   updateProductStock: updateProductStock,
   updateProduct: updateProduct,
-  product: product
+  product: product,
+  validateProduc: validateProduc
 }

@@ -1,0 +1,104 @@
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#purchaseModal">
+    Launch demo modal
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="purchaseModal" tabindex="-1" role="dialog" aria-labelledby="btnPurchaseModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="btnPurchaseModalLabel">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="purchaseForm">
+                    <form id="add-purchase-form" class="container">
+                        <div>
+                            <h1>Receipt details</h1>
+                        </div>
+                        <!-- reciept details-->
+                        <div class="form-group" style="display: none;">
+                            <input type="text" class="form-control" name="idpurchase" placeholder="Id product">
+                        </div>
+                        <div class="form-group">
+                            <label for="description" id="descriptionLabel">
+                                <%= keys.key.purchaseDescriptionLabel%>
+                            </label>
+                            <textarea type="text" class="form-control"
+                                placeholder="<%= keys.key.purchaseDescriptionLabel%>" id="description"
+                                name="description" required=""></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="paymentState" id="paymentStateLabel">
+                                Pagado
+                            </label>
+                            <select class="form-control" name="paymentState" id="paymentState">
+                                <option value="true">Si</option>
+                                <option value="false">No</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="paymentMethod" id="paymentMethodLabel">
+                                Forma de pago
+                            </label>
+                            <select class="form-control" name="paymentMethod" id="paymentMethod">
+                                <option value="SINPE">SINPE</option>
+                                <option value="Credito">Crédito</option>
+                                <option value="Efectivo">Efectivo</option>
+                            </select>
+                        </div>
+                        <div class="custom-file">
+                            <input type='file' accept=".jpg, .jpeg|image/*" class='custom-file-input'
+                                id='inputPurchaseFile' name="inputPurchaseFile" onchange="readPurchaseURL(this);" />
+                            <label id="inputImage" class="custom-file-label" for="inputPurchaseFile">
+                                <%= keys.key.chooseFileMessage%>
+                            </label>
+                        </div>
+                        <div class="d-md-flex">
+                            <div class="overflow-auto p-3 mb-3 mb-md-0 mr-md-3 bg-light"
+                                style="max-width: 100%; max-height: 350px;">
+                                <img class="img-fluid" alt="Responsive image" id="purchaseImage" src="#" />
+                            </div>
+                        </div>
+                        <!-- end receipt details-->
+                        <!-- purchase details-->
+                        <div>
+                            <h1 id="purchaseName"></h1>
+                        </div>
+                        <div class="form-group" id="unitPriceDiv" style="display: none;">
+                            <label for="unitPrice" id="unitPriceLabel">
+                                <%= keys.key.purchaseUnitPriceLabel%>
+                            </label>
+                            <input type="number" placeholder="<%= keys.key.purchaseUnitPriceLabel%>"
+                                class="form-control" name="unitPrice" id="unitPrice" min="1">
+                        </div>
+                        <div class="form-group" id="tottalUnitsDiv" style="display: none;">
+                            <label for=" tottalUnits" id="tottalUnitsLabel">
+                                <%= keys.key.purchaseTottalUnitsLabel%>
+                            </label>
+                            <input type="number" placeholder=" <%=keys.key.purchaseTottalUnitsLabel%>"
+                                class="form-control" name="tottalUnits" id="tottalUnits" min="1" max="100">
+
+                        </div>
+                        <!-- end purchase details-->
+                        <div class="container-fluid">
+                            <button type="submit" class="btn btn-outline-success my-2 my-sm-0" id="btnPurchaseSubmit">
+                                <%= keys.key.btnPurchaseSubmit%>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="btnPurchaseModal">Save
+                    changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end purchase modal -->
