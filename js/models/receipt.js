@@ -1,5 +1,5 @@
 class Receipt {
-    constructor(idReceipt, image, creationDate, updateDate, state, idUser, description) {
+    constructor(idReceiptType, idReceipt, image, creationDate, updateDate, state, idUser, description) {
         this.idReceipt = idReceipt;
         this.image = image;
         this.state = state;
@@ -7,11 +7,12 @@ class Receipt {
         this.updateDate = updateDate;
         this.idUser = idUser;
         this.description = description;
+        this.idReceiptType = idReceiptType;
     }
 }
 //functions
 //adding purchase
-var addReceipt = async function (db, pReceipt) {
+var addReceipt = async function (db, pReceipt, commonFunction) {
     var paymentState = pReceipt.paymentState == "true" ?
         true :
         false;
@@ -20,11 +21,14 @@ var addReceipt = async function (db, pReceipt) {
         creationDate: new Date(),
         updateDate: new Date(),
         paymentState: paymentState,
-        paymentMethod: pReceipt.paymentMethod
+        paymentMethod: pReceipt.paymentMethod,
+        idReceiptType: pReceipt.idReceiptType
     }).then(function (docRef) {
         pReceipt.idReceipt = docRef.id;
-        pReceipt.creationDate = new Date();
-        pReceipt.updateDate = new Date();
+        pReceipt.creationDate = commonFunction.getCustomDateFromNewDate();
+        pReceipt.updateDate = commonFunction.getCustomDateFromNewDate();
+        pReceipt.purchases = [];
+        pReceipt.sales = [];
         console.log('Document added');
     }).catch(function (error) {
         console.error("Error adding document: ", error);
@@ -58,6 +62,42 @@ var getAllReceipts = async function (db) {
             return null;
         });
     return allPurchases;
+}
+/*
+    this function takes all the sales and purchases receipts for the
+    current month
+ */
+var getActualMonthReceipts = async function (firebase, commonFunction, isReady) {
+    var allReceipts = [];
+    var today = new Date();
+    var initDate = new Date(today.getFullYear(), today.getMonth(), 0);
+    var finalDate = new Date(today.getFullYear(), today.getMonth() + 1, 1);
+    console.log("today: " + today + " init date: " + initDate + "last date: " + finalDate);
+    await firebase.db.collection("receipt")
+        .where("creationDate", ">", initDate)
+        .where("creationDate", "<", finalDate)
+        .get()
+        .then((querySnapshot) => {
+            querySnapshot.forEach(function (doc) {
+                var purh = {
+                    description: doc.data().description,
+                    idReceipt: doc.id,
+                    paymentMethod: doc.data().paymentMethod,
+                    creationDate: commonFunction.getCustomDate(doc.data().creationDate),
+                    updateDate: commonFunction.getCustomDate(doc.data().updateDate),
+                    paymentState: doc.data().paymentState,
+                    idReceiptType: doc.data().idReceiptType,
+                    purchases: [],
+                    sales: []
+                };
+                allReceipts.push(purh);
+            });
+        })
+        .catch(function (error) {
+            console.log("Error getting documents: ", error);
+            return null;
+        });
+    return allReceipts;
 }
 //getting all purchase data form make sales
 var getAllPurchasesByIdProduct = async function (db, IdProduct, commonFunction) {
@@ -152,5 +192,6 @@ var deleteReceipt = async function (db, pIdPurchase) {
 module.exports = {
     addReceipt: addReceipt,
     getAllReceipts: getAllReceipts,
-    deletePurchase: deleteReceipt
+    deletePurchase: deleteReceipt,
+    getActualMonthReceipts: getActualMonthReceipts
 }

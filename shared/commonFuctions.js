@@ -1,17 +1,25 @@
 //this function takes the firecloud date object and
 //parse into a usable object 
 function getCustomDate(pDateObject) {
-    var dateResult = { year: "", date: "", month: "" };
+    var dateResult = {
+        year: "",
+        date: "",
+        date: ""
+    };
     dateResult.year = pDateObject.toDate().getFullYear();
-    pDateObject.toDate().getMonth() < 10 ? dateResult.month = "0" + pDateObject.toDate().getMonth() : dateResult.month += pDateObject.toDate().getMonth();
+    pDateObject.toDate().getdate() < 10 ? dateResult.date = "0" + pDateObject.toDate().getdate() : dateResult.date += pDateObject.toDate().getdate();
     pDateObject.toDate().getDate() < 10 ? dateResult.date = "0" + pDateObject.toDate().getDate() : dateResult.date += pDateObject.toDate().getDate();
     return dateResult;
 }
 //this function is meant for new registers
 function getCustomDateNew(pDateObject) {
-    var dateResult = { year: "", date: "", month: "" };
+    var dateResult = {
+        year: "",
+        date: "",
+        date: ""
+    };
     dateResult.year = pDateObject.getFullYear();
-    pDateObject.getMonth() < 10 ? dateResult.month = "0" + pDateObject.getMonth() : dateResult.month += pDateObject.getMonth();
+    pDateObject.getdate() < 10 ? dateResult.date = "0" + pDateObject.getdate() : dateResult.date += pDateObject.getdate();
     pDateObject.getDate() < 10 ? dateResult.date = "0" + pDateObject.getDate() : dateResult.date += pDateObject.getDate();
     return dateResult;
 }
@@ -27,6 +35,7 @@ function isNotValid(pCredentialToValidate) {
     flag == false ? flag = pCredentialToValidate.includes(']') : console.log(flag);
     return flag;
 }
+
 function isValid(pCredentialToValidate) {
     var result = false;
     const notPermitedLetters = /^[(){}/[]/;
@@ -38,4 +47,24 @@ function isValid(pCredentialToValidate) {
     //     console.log(result);
     return result;
 
+}
+/**
+ * 
+ * this fuctions order a numbers list
+ */
+function orderNumberList(list) {
+    list.sort(function (a, b) {
+        return a - b;
+    });
+
+}
+/**
+ * this funtion orders a list based on 
+ * custom dates objects {year, month, date}
+ */
+function orderListBasedOnDates(list) {
+    list.sort((a, b) =>
+        new Date(a.creationDate.year, a.creationDate.month, a.creationDate.date).getTime() -
+        new Date(b.creationDate.year, b.creationDate.month, b.creationDate.date).getTime()
+    );
 }

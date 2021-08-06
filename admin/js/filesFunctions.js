@@ -1,4 +1,3 @@
-
 function readURL(input) {
     if (input.files && input.files[0]) {
         var reader = new FileReader();
@@ -10,6 +9,7 @@ function readURL(input) {
         reader.readAsDataURL(input.files[0]);
     }
 }
+
 function readPurchaseURL(input) {
     if (input.files && input.files[0]) {
         var reader = new FileReader();
@@ -17,6 +17,19 @@ function readPurchaseURL(input) {
             $('#purchaseImage')
                 .attr('src', e.target.result);
             document.getElementById('inputImage').innerHTML = uploadFileMessage;
+        };
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+//this function works for anyone
+function readImageURL(input, idInput, idImageTag) {
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function (e) {
+
+            document.getElementById(idImageTag).setAttribute("src", e.target.result);
+            document.getElementById(idInput)
+                .innerHTML = uploadFileMessage;
         };
         reader.readAsDataURL(input.files[0]);
     }
@@ -51,4 +64,3 @@ async function deleteFile(fileName) {
         alert(fileNotDeletedMessage);
     });
 }
-

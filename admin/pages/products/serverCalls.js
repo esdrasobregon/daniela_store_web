@@ -55,7 +55,7 @@ function callDeleteServer(productToDelete) {
 }
 //call the server purchase
 //add purchase
-function addPurchase(data) {
+function addPurchaseList(data) {
     data.purchaseList = purchaseList;
     fetch(localHost + "/addPurchaseList", {
             method: 'POST',
@@ -67,8 +67,8 @@ function addPurchase(data) {
         .then(result => {
             console.log("result: " + result.success);
             result.success ?
-                finalSettings() :
-                alert("the call fail");
+                finalAddPurchaseSettings(result) :
+                alert(callfailsMessage);
         })
         .catch(error => {
             console.error('Error:', error);
@@ -76,7 +76,7 @@ function addPurchase(data) {
 }
 
 function callServerAddReceipt() {
-    const formData = createFormDataReceipt();
+    const formData = createFormDataPurchaseReceipt();
     fetch(localHost + "/addReceipt", {
             method: 'POST',
             body: formData
@@ -84,8 +84,93 @@ function callServerAddReceipt() {
         .then(result => {
             console.log(result);
             result.success ?
-                setServerCall(result.receipt) :
+                setPurchaseServerCall(result.receipt) :
                 alert(addImageMessage);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+}
+/**
+ * this function test the server
+ */
+function callServerAddReceipts() {
+    const formData = createFormDataSaleReceipt();
+    fetch(localHost + "/addTestReceipts", {
+            method: 'POST',
+            body: formData
+        }).then(response => response.json())
+        .then(result => {
+            console.log(result);
+            result.success ?
+                finalAddPurchaseSettings(result.receipt) :
+                alert(addImageMessage);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+}
+//getting all the purchases
+function getPuchasesReceipts() {
+    var data = {
+        idProduct: "idProduct"
+    }
+    fetch(localHost + "/allAvaliableMonthPurchasesReceipts", {
+            method: 'POST',
+            headers: {
+                'Content-type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        }).then(response => response.json())
+        .then(result => {
+            console.log(result);
+            sessionStorage.setItem('allReceipts', JSON.stringify(result));
+            receiptList = JSON.parse(sessionStorage.getItem('allReceipts'));
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+}
+/**
+ * the next function are related to 
+ * sales purposes
+ */
+/**
+ * this function test the server
+ */
+function callServerAddSaleReceipt() {
+    const formData = createFormDataSaleReceipt();
+    fetch(localHost + "/addTestSaleReceipts", {
+            method: 'POST',
+            body: formData
+        }).then(response => response.json())
+        .then(result => {
+            console.log(result);
+            result.success ?
+                addSalesList(result) :
+                alert(addImageMessage);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+}
+/**
+ * 
+ */
+function addSalesList(data) {
+    data.salesList = salesList;
+    fetch(localHost + "/addSalesList", {
+            method: 'POST',
+            headers: {
+                'Content-type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        }).then(response => response.json())
+        .then(result => {
+            console.log("result: " + result.success);
+            result.success ?
+                salesFinalSettings() :
+                alert(callfailsMessage);
         })
         .catch(error => {
             console.error('Error:', error);

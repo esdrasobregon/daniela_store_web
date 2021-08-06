@@ -1,13 +1,11 @@
 class Sales {
-    constructor(idPurchase, idSale, unitPrice, creationDate, paymentMethod, idProduct, tottalUnits, description) {
+    constructor(idReceipt, idPurchase, idSale, unitPrice, idProduct, tottalUnits) {
         this.idSale = idSale;
         this.idPurchase = idPurchase;
         this.unitPrice = unitPrice;
-        this.paymentMethod = paymentMethod;
         this.tottalUnits = tottalUnits;
-        this.creationDate = creationDate;
         this.idProduct = idProduct;
-        this.description = description;
+        this.idReceipt = idReceipt;
     }
 }
 
@@ -16,11 +14,9 @@ var addSale = async function (db, pSale) {
     await db.collection('sales').add({
         idPurchase: pSale.idPurchase,
         unitPrice: pSale.unitPrice,
-        paymentMethod: pSale.paymentMethod,
         tottalUnits: pSale.tottalUnits,
-        creationDate: pSale.creationDate,
         idProduct: pSale.idProduct,
-        description: pSale.description
+        idReceipt: pSale.idReceipt
     }).then(function (docRef) {
         pSale.idSale = docRef.id;
         console.log('added');
@@ -57,9 +53,8 @@ var getAllSales = async function () {
     return allPurchases;
 }
 //
-var getAllSalesByIdPurchases = async function (db, idPurchase, allSales) {
-
-    await db.collection("sales").where("idPurchase", "==", idPurchase).get()
+var getAllSalesByIdReceipt = async function (db, idReceipt, allSales) {
+    await db.collection("sales").where("idReceipt", "==", idReceipt).get()
         .then(function (querySnapshot) {
             querySnapshot.forEach(function (doc) {
                 var sal = {
@@ -70,14 +65,17 @@ var getAllSalesByIdPurchases = async function (db, idPurchase, allSales) {
                     tottalUnits: doc.data().tottalUnits,
                     creationDate: doc.data().creationDate,
                     idProduct: doc.data().idProduct,
-                    description: doc.data().description
+                    description: doc.data().description,
+                    idReceipt: doc.data().idReceipt
                 };
                 allSales.push(sal);
                 console.log(doc.id, " => ", doc.data());
             });
+            return allSales;
         })
         .catch(function (error) {
             console.log("Error getting documents: ", error);
+            return null;
         });
 }
 //get a purchase
@@ -118,5 +116,5 @@ module.exports = {
     getAllSales: getAllSales,
     getSale: getSale,
     addSale: addSale,
-    getAllSalesByIdPurchases: getAllSalesByIdPurchases
+    getAllSalesByIdReceipt: getAllSalesByIdReceipt
 }

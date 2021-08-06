@@ -57,6 +57,7 @@ var key = {
     purchasePageHeader: "Agregar una compra de",
     createShortCutMessage: "Arrastra esta imagen al escritorio o a la marca de libro para crear un acceso directo",
     createShortCutTitle: "Crear un acceso directo para My store",
+    nextStepMessage: "Siguiente"
 }
 var pagesNames = {
     aloginText: "Ingresar",

@@ -1,5 +1,5 @@
 class Purchase {
-    constructor(receipt, unitPrice, image, creationDate, updateDate, state, idProduct, idUser, tottalUnits, description, outOfStock) {
+    constructor(receipt, unitPrice, image, creationDate, updateDate, state, idProduct, idUser, tottalUnits, description, notAvailableUnits, outOfStock) {
         this.receipt = receipt;
         this.unitPrice = unitPrice;
         this.image = image;
@@ -10,7 +10,9 @@ class Purchase {
         this.idProduct = idProduct;
         this.idUser = idUser;
         this.description = description;
-        this.outOfStock = outOfStock;
+        this.notAvailableUnits = notAvailableUnits;
+        this.outOfStock;
+        outOfStock
     }
 }
 //functions
@@ -20,7 +22,9 @@ var addPurchases = async function (db, pPurchase) {
         idReceipt: pPurchase.idReceipt,
         unitPrice: pPurchase.unitPrice,
         tottalUnits: pPurchase.tottalUnits,
-        idProduct: pPurchase.idProduct
+        notAvailableUnits: 0,
+        idProduct: pPurchase.idProduct,
+        outOfStock: pPurchase.outOfStock
     }).then(function (docRef) {
         pPurchase.idPurchase = docRef.id;
         console.log('Document added');
@@ -64,8 +68,65 @@ var getAllPurchases = async function (db) {
                     updateDate: doc.data().updateDate,
                     unitPrice: doc.data().unitPrice,
                     tottalUnits: doc.data().tottalUnits,
-                    idProduc: doc.data().idProduc,
-                    state: doc.data().state
+                    idProduct: doc.data().idProduct,
+                    state: doc.data().state,
+                    notAvailableUnits: doc.data().notAvailableUnits
+                };
+                allPurchases.push(purh);
+                console.log(doc.id, " => ", doc.data());
+            });
+        })
+        .catch(function (error) {
+            console.log("Error getting documents: ", error);
+            return null;
+        });
+    return allPurchases;
+}
+//getting all purchase data
+var getAllAvailablePurchases = async function (db) {
+    var allPurchases = [];
+    await db.collection("purchase")
+        .where("outOfStock", "==", false)
+        .get()
+        .then((querySnapshot) => {
+            querySnapshot.forEach(function (doc) {
+                var purh = {
+                    idPurchase: doc.id,
+                    idReceipt: doc.data().idReceipt,
+                    unitPrice: doc.data().unitPrice,
+                    tottalUnits: doc.data().tottalUnits,
+                    idProduct: doc.data().idProduct,
+                    notAvailableUnits: doc.data().notAvailableUnits,
+                    outOfStock: doc.data().outOfStock
+                };
+                allPurchases.push(purh);
+            });
+        })
+        .catch(function (error) {
+            console.log("Error getting documents: ", error);
+            return null;
+        });
+    return allPurchases;
+}
+/**
+  this function retrieves the purchases for receipt 
+ */
+var getAllAvailablePurchasesForReceipt = async function (db, idReceipt) {
+    var allPurchases = [];
+    await db.collection("purchase")
+        .where("outOfStock", "==", false)
+        .where("idReceipt", "==", idReceipt)
+        .get()
+        .then((querySnapshot) => {
+            querySnapshot.forEach(function (doc) {
+                var purh = {
+                    idPurchase: doc.id,
+                    idReceipt: doc.data().idReceipt,
+                    unitPrice: doc.data().unitPrice,
+                    tottalUnits: doc.data().tottalUnits,
+                    idProduct: doc.data().idProduct,
+                    notAvailableUnits: doc.data().notAvailableUnits,
+                    outOfStock: doc.data().outOfStock
                 };
                 allPurchases.push(purh);
                 console.log(doc.id, " => ", doc.data());
@@ -94,7 +155,8 @@ var getAllPurchasesByIdProduct = async function (db, IdProduct, commonFunction) 
                     unitPrice: doc.data().unitPrice,
                     tottalUnits: doc.data().tottalUnits,
                     idProduct: doc.data().idProduct,
-                    state: doc.data().state
+                    state: doc.data().state,
+                    notAvailableUnits: doc.data().notAvailableUnits
                 };
                 allPurchases.push(purh);
             });
@@ -175,5 +237,7 @@ module.exports = {
     getPurchase: getPurchase,
     updatePurchase: updatePurchase,
     deletePurchase: deletePurchase,
-    addPurchases: addPurchases
+    addPurchases: addPurchases,
+    getAllAvailablePurchases: getAllAvailablePurchases,
+    getAllAvailablePurchasesForReceipt: getAllAvailablePurchasesForReceipt
 }

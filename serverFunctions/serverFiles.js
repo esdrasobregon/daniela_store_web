@@ -5,7 +5,7 @@ function checkImageFileType(file) {
     //allow ext
     const fileType = /jpeg|jpg|png|gif/;
     var flag = fileType.test(file.type);
-    flag ? flag = file.size > 10000 && file.size < 500000 :
+    flag ? flag = file.size > 10000 && file.size < 3000000 :
         flag = false;
     console.log("image: " + flag);
     return flag;

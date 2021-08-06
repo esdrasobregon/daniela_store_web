@@ -32,8 +32,29 @@ function getCustomDate(pDateObject) {
         dateResult.date += pDateObject.toDate().getDate();
     return dateResult;
 }
+/**
+ * this function creates a customized date
+ * object and returns it
+ */
+function getCustomDateFromNewDate() {
+    var today = new Date();
+    var dateResult = {
+        year: "",
+        date: "",
+        month: ""
+    };
+    dateResult.year = today.getFullYear();
+    today.getMonth() < 10 ?
+        dateResult.month = "0" + today.getMonth() :
+        dateResult.month += today.getMonth();
+    today.getDate() < 10 ?
+        dateResult.date = "0" + today.getDate() :
+        dateResult.date += today.getDate();
+    return dateResult;
+}
 module.exports = {
     isNotValid: isNotValid,
     isEmail: isEmail,
-    getCustomDate: getCustomDate
+    getCustomDate: getCustomDate,
+    getCustomDateFromNewDate: getCustomDateFromNewDate
 }

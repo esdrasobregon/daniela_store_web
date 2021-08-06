@@ -4,6 +4,7 @@ const productFormMessage = document.querySelector('#productFormMessage');
 const btnResetForm = document.querySelector('#btnResetForm');
 var categoryList;
 var productList;
+var receiptList = [];
 var indexCategorySelected;
 var imageToFirebase = false;
 var isUpdating = false;
@@ -14,6 +15,7 @@ window.onload = async function () {
     currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
     productForm.creationDate.valueAsDate = new Date();
     productForm.modificationDate.valueAsDate = new Date();
+
     verifyUserCredentials();
     getInformation();
 }
@@ -24,6 +26,12 @@ productForm.inputGroupFile01.addEventListener('change', (e) => {
 //get information from the session storage
 //and render the categories options
 async function getInformation() {
+    if (sessionStorage.getItem('allReceipts') == null) {
+        console.log("getting purchases");
+        getAllPurchases();
+    } else {
+        receiptList = JSON.parse(sessionStorage.getItem('allReceipts'));
+    }
     categoryList = JSON.parse(sessionStorage.getItem('categories'));
     categoryList.forEach(item => {
         var li = createCustomTextTag('option', 'divider', item.name);
@@ -139,6 +147,7 @@ function renderProductList(doc) {
     divProdDetails.setAttribute("style", "margin: 10px; padding: 10px;");
     var divPurchase = createCustomNonTextTag("div", "form-check form-check-inline");
     var purchaseCheck = createCustomNonTextTag("input", "form-check-input");
+    purchaseCheck.setAttribute("id", "check" + doc.idProduct);
     var purchaseLabel = createCustomTextTag('label', "form-check form-check-inline", "Purchase: " + doc.name);
 
     divPurchase.appendChild(purchaseCheck);
@@ -204,6 +213,7 @@ function renderProductList(doc) {
         console.log(productToPurchase);
         if (productToPurchase == undefined) {
             productsTopurchase.push(doc);
+            productsToSales.push(doc);
             //addPurchaseToTheForm(doc);
         } else {
             var i = 0;
@@ -212,6 +222,7 @@ function renderProductList(doc) {
                 i++;
             }
             productsTopurchase.splice(i, 1);
+            productsToSales.splice(i, 1);
             //deletePurchaseToTheForm(doc);
         }
 
