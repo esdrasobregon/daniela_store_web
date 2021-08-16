@@ -199,16 +199,17 @@ var getPurchase = async function (db, pIdPurchase) {
 //update purchase
 var updatePurchase = async function (db, pPurchase) {
     var d = new Date();
-    var res = await db.collection('purchase').doc(pPurchase.idPurchase).update({
-        updateDate: d,
-        state: "Done"
-    }).then(function (result) {
-        pPurchase.state = "Done";
-        console.log(result);
-    }).catch(function (error) {
-        console.log(error);
-        return null;
-    });
+    var res = await db.collection('purchase')
+        .doc(pPurchase.idPurchase).update({
+            updateDate: d,
+            outOfStock: pPurchase.outOfStock,
+            notAvailableUnits: pPurchase.notAvailableUnits
+        }).then(function (result) {
+            console.log("Updated purchase: " + result);
+        }).catch(function (error) {
+            console.log(error);
+            return null;
+        });
     return res;
 }
 //update purchase out of stock

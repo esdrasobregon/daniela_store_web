@@ -1,42 +1,74 @@
-var productsToSales = [];
+//#region variables
 var salesList = [];
 const btnSalesModal = document.querySelector('#btnSalesModal');
 const salesForm = document.querySelector('#add-Sales-form');
 var salesUnitPriceDiv = document.getElementById("salesUnitPriceDiv");
 var salesTottalUnitsDiv = document.getElementById("salesTottalUnitsDiv");
 var salesIndexList = -1;
+//#endregion variables
 
+//#region view
+
+/**
+ * this function is call when the Sales 
+ * form is submited, so it needs to handle the correct 
+ * dynamic to asists the user create successfuly a receipt
+ * and its Saless
+ */
+salesForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    if (productsToSale.length == 0) {
+        alert(noProductsToPurchase);
+    } else {
+        salesIndexList == productsToSale.length - 2 ||
+            productsToSale.length == 1 ?
+            document.getElementById("btnSalesSubmit").innerHTML = finaliceMessage :
+            console.log(nextStepMessage);
+        salesIndexList < 0 ? showSalesLineFields() :
+            setSalesLinesList();
+    }
+
+});
 /**
  * it shows the right product name
  * and available units in the list to Sales
  */
 function currentProdInfoOnTheForm() {
-    var units = getPurchasesUnits(productsToSales[salesIndexList].idProduct);
-
-    document.getElementById("availableUnits").innerHTML = "Available units: " + units;
-    document.getElementById("SalesName").innerHTML =
-        productsToSales[salesIndexList].name == undefined ?
+    var units = getPurchasesAvalilableUnits(productsToSale[salesIndexList].idProduct);
+    document.getElementById("salesUnitPrice")
+        .value = productsToSale[salesIndexList].price;
+    document.getElementById("availableUnits")
+        .innerHTML = "Available units: " + units;
+    document.getElementById("salesName").innerHTML =
+        productsToSale[salesIndexList].name == undefined ?
         "" : "Sale for: " +
-        productsToSales[salesIndexList].name;
+        productsToSale[salesIndexList].name;
+    document.getElementById("salesTottalUnits")
+        .setAttribute("max", units);
+    document.getElementById("salesTottalUnits")
+        .setAttribute("min", 1);
 }
 /**
  * reset the Sales form 
  */
 function resetSalesViews() {
-    document.getElementById("SalesName").innerHTML = "";
+    document.getElementById("salesName").innerHTML = "";
     resetSalesFields();
-    document.getElementById("SalesImage")
+    document.getElementById("salesImage")
         .setAttribute("src", "#");
     salesForm.reset();
-    productsToSales.forEach(element => {
+    productsToSale.forEach(element => {
         document.getElementById("check" + element.idProduct)
             .checked = false;
     });
-    $('#SalesModal').modal('hide');
+    $('#salesModal').modal('hide');
     salesUnitPriceDiv.setAttribute("style", "display: none;");
     salesTottalUnitsDiv.setAttribute("style", "display: none;");
+    document.getElementById("availableUnits")
+        .innerHTML = "";
     document.getElementById("btnSalesSubmit").innerHTML = "Next"
 }
+
 /**
  * it shows the hide fields for the Sales form
  */
@@ -55,112 +87,67 @@ function resetSalesFields() {
     salesForm.salesTottalUnits.value = 0;
     salesForm.salesUnitPrice.value = 0;
 }
+//#endregion view
+
+//#region dynamic
 /**
- * it loads and creates and Sales object
+ * it loads and creates and Sale object
  * and then returns the result
  */
 function loadLineSalesForm() {
 
-    var newInventory = productsToSales[salesIndexList].inventory +
+    var newInventory = productsToSale[salesIndexList].inventory +
         parseFloat(salesForm.salesTottalUnits.value);
     return {
         unitPrice: parseFloat(salesForm.salesUnitPrice.value),
         tottalUnits: parseFloat(salesForm.salesTottalUnits.value),
-        idProduct: productsToSales[salesIndexList].idProduct,
-        idReceipt: productsToSales[salesIndexList].idReceipt,
+        idProduct: productsToSale[salesIndexList].idProduct,
+        idReceipt: productsToSale[salesIndexList].idReceipt,
         description: salesForm.salesDescription.value,
         newInventory: newInventory,
-        purchases: selectRigthPurchForASale({
-            idProduct: productsToSales[salesIndexList].idProduct,
+        sales: selectRigthPurchForASale({
+            idProduct: productsToSale[salesIndexList].idProduct,
             tottalUnits: parseFloat(salesForm.salesTottalUnits.value)
         })
     };
 }
 /**
  * this function makes the final settings
- * after adding a receipt and its Saless
+ * after adding a receipt and its Sales lines
  */
 function salesFinalSettings() {
-    // salesList.forEach(element => {
-    //     productList.forEach(prod => {
-    //         if (element.idProduct == prod.idProduct) {
-    //             prod.inventory = element.newInventory;
-    //         }
-    //     });
-    // });
-    // sessionStorage.setItem('allProducts', JSON.stringify(productList));
-    // resetSalesViews();
-    // resetSalesVaribles();
-    // hidePleaseWait();
+    sessionStorage.setItem('allReceipts', JSON.stringify(receiptList));
+    resetSalesViews();
+    resetSalesVaribles();
+    hidePleaseWait();
     console.log("sales functions endded");
 }
-/**
- * this function makes the last 
- * details before calling the server
- * to add a receipt and its Saless
- */
-function setSalesLinesList() {
 
-    if (salesIndexList < 0) {
-        //this is to show the first product name
-        salesIndexList++;
-        currentProdInfoOnTheForm();
-    } else {
-        //from the first Sales till the one before last
-
-        if (salesIndexList < productsToSales.length - 1) {
-
-            if (salesForm.salesTottalUnits.value != "" &&
-                salesForm.salesUnitPrice.value != "") {
-                salesList.push(loadLineSalesForm());
-                resetSalesFields();
-                salesIndexList++;
-
-                currentProdInfoOnTheForm();
-            } else {
-                alert(fieldsRequiredMessage);
-            }
-
-
-        } else {
-            //load the last Sales and then call the server
-            salesList.push(loadLineSalesForm());
-            //callServerAddReceipt();
-            //this is a test
-            callServerAddSaleReceipt();
-
-        }
-    }
-}
-/**
- * this function is call when the Sales 
- * form is submited, so it needs to handle the correct 
- * dynamic to asists the user create successfuly a receipt
- * and its Saless 
- */
-salesForm.addEventListener("submit", (e) => {
-    e.preventDefault();
-    if (productsToSales.length == 0) {
-        alert(noProductsToPurchase);
-    } else {
-        salesIndexList == productsToSales.length - 2 ||
-            productsToSales.length == 1 ?
-            document.getElementById("btnSalesSubmit").innerHTML = finaliceMessage :
-            console.log(nextStepMessage);
-        salesIndexList < 0 ? showSalesLineFields() :
-            setSalesLinesList();
-    }
-
-});
 /**
  * this fuction is call after the receipt register
  * is successfuly created in the database
  * and then call the server to create its Saless
+ * @param {*} receipt is a receipt object 
  */
 function setSalesServerCall(receipt) {
+    resetPurchList(receiptList);
     salesList.forEach(element => {
-        element.idReceipt = receipt.idReceipt
+        element.purchasesToUpdate = [];
+        element.sales.forEach(item => {
+            console.log(item);
+            item.idReceipt = receipt.idReceipt;
+            var purchReceipt = receiptList.find(el => el.idReceipt ==
+                item.purchaseIdReceipt);
+            console.log(purchReceipt);
+            //this is for update purpases
+            purchReceipt.purchases.forEach(ele => {
+                if (ele.idPurchase == item.idPurchase) {
+                    element.purchasesToUpdate.push(ele);
+                }
+            });
+        });
     });
+
     addSalesList(salesList);
     showPleaseWait();
     setTimeout(() => {
@@ -185,6 +172,8 @@ function createFormDataSaleReceipt() {
     formdata
         .append('description', salesForm
             .salesDescription.value);
+    //this needs to be updated,
+    //the value is not still dynamic
     formdata
         .append('idReceiptType', "YFIgavH6vUIHmONFTpa0");
     formdata
@@ -204,67 +193,51 @@ function createFormDataSaleReceipt() {
 function resetSalesVaribles() {
     salesIndexList = -1;
     salesList = [];
-    productsToSales = [];
+    productsToSale = [];
 }
 /**
- * this function selects the right number
- * from the right purchase register to
- * create sales registers
- * returns a list
+ * this function makes the last 
+ * details before calling the server
+ * to add a receipt and its Saless
  */
-function selectRigthPurchasesToSale(listSales) {
-    var resultList = [];
-    listSales.forEach(sale => {
-        var tottalUnitsToSale = sale.tottalUnits;
-        if (tottalUnitsToSale > 0) {
-            receiptList.forEach(p => {
-                var continuedFlag = true;
-                var count = 0;
-                while (continuedFlag &&
-                    count < p.purchases.length &&
-                    (sale.tottalUnits > 0)) {
-                    if (p.purchases[count].idProduct == sale.idProduct &&
-                        (p.purchases[count].tottalUnits > p.purchases[count].notAvailableUnits)) {
-                        var availableUnitsToSale = (p.purchases[count].tottalUnits -
-                            p.purchases[count].notAvailableUnits);
-                        var unitsToTake = 0;
-                        if (availableUnitsToSale > tottalUnitsToSale) {
-                            unitsToTake = tottalUnitsToSale;
-                        } else {
-                            unitsToTake = availableUnitsToSale;
-                        }
-                        p.purchases[count].notAvailableUnits += unitsToTake;
-                        resultList.push({
-                            units: Math.abs(unitsToTake),
-                            idPurchase: p.purchases[count].idPurchase,
-                            idProduct: p.purchases[count].idProduct
-                        });
-                        console.log("units to take " + unitsToTake);
-                        sale.tottalUnits -= unitsToTake;
-                        tottalUnitsToSale -= unitsToTake;
-                        console.log(availableUnitsToSale);
-                        if (sale.tottalUnits > 0) {
-                            console.log("result > 0 continue");
-                        } else {
-                            if (sale.tottalUnits < 0) {
-                                continuedFlag = false;
-                                console.log("result < 0 not continue");
-                            } else {
-                                continuedFlag = false;
-                                console.log("result = 0 not continue");
-                            }
-                        }
-                    }
-                    count++;
-                }
-            });
-        } else {
-            console.log("sale " + sale.idProduct + " completed");
-        }
-    });
-    return resultList;
-}
+function setSalesLinesList() {
 
+    if (salesIndexList < 0) {
+        //this is to show the first product name
+        salesIndexList++;
+        currentProdInfoOnTheForm();
+    } else {
+        //from the first Sales till the one before last
+
+        if (salesIndexList < productsToSale.length - 1) {
+
+            if (salesForm.salesTottalUnits.value != "" &&
+                salesForm.salesUnitPrice.value != "") {
+                salesList.push(loadLineSalesForm());
+                resetSalesFields();
+                salesIndexList++;
+
+                currentProdInfoOnTheForm();
+            } else {
+                alert(fieldsRequiredMessage);
+            }
+
+
+        } else {
+            if (salesForm.salesTottalUnits.value != "" &&
+                salesForm.salesUnitPrice.value != "") {
+                //load the last Sales and then call the server
+                salesList.push(loadLineSalesForm());
+                //callServerAddReceipt();
+                //this is a test
+                callServerAddSaleReceipt();
+            } else {
+                alert(fieldsRequiredMessage);
+            }
+
+        }
+    }
+}
 /**
  * this function selects the right number
  * from the right purchase register to
@@ -275,47 +248,8 @@ function selectRigthPurchForASale(sale) {
     var resultList = [];
     var tottalUnitsToSale = sale.tottalUnits;
     if (tottalUnitsToSale > 0) {
-        receiptList.forEach(p => {
-            var continuedFlag = true;
-            var count = 0;
-            while (continuedFlag &&
-                count < p.purchases.length &&
-                (sale.tottalUnits > 0)) {
-                if (p.purchases[count].idProduct == sale.idProduct &&
-                    (p.purchases[count].tottalUnits > p.purchases[count].notAvailableUnits)) {
-                    var availableUnitsToSale = (p.purchases[count].tottalUnits -
-                        p.purchases[count].notAvailableUnits);
-                    var unitsToTake = 0;
-                    if (availableUnitsToSale > tottalUnitsToSale) {
-                        unitsToTake = tottalUnitsToSale;
-                    } else {
-                        unitsToTake = availableUnitsToSale;
-                    }
-                    p.purchases[count].notAvailableUnits += unitsToTake;
-                    resultList.push({
-                        idReceipt: p.purchases[count].idReceipt,
-                        units: Math.abs(unitsToTake),
-                        idPurchase: p.purchases[count].idPurchase,
-                        unitPrice: p.purchases[count].unitPrice
-                    });
-                    console.log("units to take " + unitsToTake);
-                    sale.tottalUnits -= unitsToTake;
-                    tottalUnitsToSale -= unitsToTake;
-                    console.log(availableUnitsToSale);
-                    if (sale.tottalUnits > 0) {
-                        console.log("result > 0 continue");
-                    } else {
-                        if (sale.tottalUnits < 0) {
-                            continuedFlag = false;
-                            console.log("result < 0 not continue");
-                        } else {
-                            continuedFlag = false;
-                            console.log("result = 0 not continue");
-                        }
-                    }
-                }
-                count++;
-            }
+        receiptList.forEach(receipt => {
+            getSaleParamters(sale, resultList, tottalUnitsToSale, receipt);
         });
     } else {
         console.log("sale " + sale.idProduct + " completed");
@@ -323,10 +257,60 @@ function selectRigthPurchForASale(sale) {
     return resultList;
 }
 
+function getSaleParamters(sale, resultList, tottalUnitsToSale, receipt) {
+    var continuedFlag = true;
+    var count = 0;
+    while (continuedFlag &&
+        count < receipt.purchases.length &&
+        (sale.tottalUnits > 0)) {
+        var tottalUnits = receipt.purchases[count].tottalUnits;
+        var notAvailUnits = receipt.purchases[count].notAvailableUnits;
+        var productIdReceipt = receipt.purchases[count].idProduct;
+        var availableUnitsToSale = 0;
+        var unitsToTake = 0;
+        if (productIdReceipt == sale.idProduct &&
+            (tottalUnits > notAvailUnits)) {
+            availableUnitsToSale = (tottalUnits -
+                notAvailUnits);
+
+            availableUnitsToSale > tottalUnitsToSale ?
+                unitsToTake = tottalUnitsToSale :
+                unitsToTake = availableUnitsToSale;
+            receipt.purchases[count].notAvailableUnits += unitsToTake;
+            sale.tottalUnits -= unitsToTake;
+            tottalUnitsToSale -= unitsToTake;
+            resultList.push(getSaleObject(receipt, count, unitsToTake));
+            console.log("units to take " + unitsToTake);
+
+            if (sale.tottalUnits < 0 || sale.tottalUnits == 0) {
+                continuedFlag = false;
+                console.log("result < ó = 0, not continue");
+            }
+        }
+        count++;
+    }
+}
 /**
- * var recptList = receiptList
- * var salesList = [{idProduct: receiptList[0].purchases[0].idProduct, tottalUnits: 400}]
- * salesList .push({idProduct: receiptList[2].purchases[0].idProduct, tottalUnits: 220})
+ * this fuction creates a sale line object
+ * @param {*} receipt is the currenct receipt object 
+ * @param {*} count the purchase index to be take
+ * @param {*} unitsToTake the tottal units taken 
+ * @returns the sale object result
+ */
+function getSaleObject(receipt, count, unitsToTake) {
+    return {
+        purchaseIdReceipt: receipt.purchases[count].idReceipt,
+        units: Math.abs(unitsToTake),
+        idPurchase: receipt.purchases[count].idPurchase,
+        unitPrice: receipt.purchases[count].unitPrice,
+        idSale: undefined
+    }
+}
+/**
+ * this function lets the not available units
+ * in 0
+ * use this function just for test
+ * @param {*} list this is a receipt list
  */
 function clearPurchList(list) {
     list.forEach(element => {
@@ -336,17 +320,18 @@ function clearPurchList(list) {
     });
 }
 /**
- * this function returns the given product 
- * stock
+ * use this function to check the receipt list stock
+ * and update it
+ * @param {*} list the receipt list to 
+ * reset
  */
-function getPurchasesUnits(idProduct) {
-    var result = 0;
-    receiptList.forEach(element => {
+function resetPurchList(list) {
+    list.forEach(element => {
         element.purchases.forEach(p => {
-            if (p.idProduct == idProduct) {
-                result += p.tottalUnits - p.notAvailableUnits;
-            }
+            p.notAvailableUnits == p.tottalUnits ?
+                p.outOfStock = true :
+                console.log("not");
         });
     });
-    return result;
 }
+//#endregion dynamic

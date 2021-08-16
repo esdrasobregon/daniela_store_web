@@ -1,10 +1,10 @@
 <!-- Button trigger modal -->
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#SalesModal">
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#salesModal">
     Launch sales modal
 </button>
 
 <!-- Modal -->
-<div class="modal fade" id="SalesModal" tabindex="-1" role="dialog" aria-labelledby="btnSalesModalLabel"
+<div class="modal fade" id="salesModal" tabindex="-1" role="dialog" aria-labelledby="btnSalesModalLabel"
     aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -54,7 +54,7 @@
                         <div class="custom-file">
                             <input type='file' accept=".jpg, .jpeg|image/*" class='custom-file-input'
                                 id='inputSalesFile' name="inputSalesFile"
-                                onchange="readImageURL(this, 'inputSalesFile','SalesImage');" />
+                                onchange="readImageURL(this, 'inputSalesFile','salesImage');" />
                             <label id="inputImage" class="custom-file-label" for="inputSalesFile">
                                 <%= keys.key.chooseFileMessage%>
                             </label>
@@ -62,13 +62,13 @@
                         <div class="d-md-flex">
                             <div class="overflow-auto p-3 mb-3 mb-md-0 mr-md-3 bg-light"
                                 style="max-width: 100%; max-height: 350px;">
-                                <img class="img-fluid" alt="Responsive image" id="SalesImage" src="#" />
+                                <img class="img-fluid" alt="Responsive image" id="salesImage" src="#" />
                             </div>
                         </div>
                         <!-- end receipt details-->
                         <!-- Sales details-->
                         <div>
-                            <h1 id="SalesName"></h1>
+                            <h1 id="salesName"></h1>
                         </div>
                         <div class="form-group" id="availableUnitsDiv" style="display: none;">
                             <label id="availableUnits">
@@ -77,14 +77,14 @@
                         </div>
                         <div class="form-group" id="salesUnitPriceDiv" style="display: none;">
                             <label for="salesUnitPrice" id="salesUnitPriceLabel">
-                                <%= keys.key.SalesUnitPriceLabel%>
+                                <%= keys.key.unitPriceLabel%>
                             </label>
                             <input type="number" placeholder="<%= keys.key.SalesUnitPriceLabel%>" class="form-control"
                                 name="salesUnitPrice" id="salesUnitPrice" min="1">
                         </div>
                         <div class="form-group" id="salesTottalUnitsDiv" style="display: none;">
                             <label for="salesTottalUnits" id="salesTottalUnitsLabel">
-                                <%= keys.key.SalesTottalUnitsLabel%>
+                                <%= keys.key.tottalUnitsLabel%>
                             </label>
                             <input type="number" placeholder=" <%=keys.key.SalesTottalUnitsLabel%>" class="form-control"
                                 name="salesTottalUnits" id="salesTottalUnits" min="1" max="100">

@@ -1,9 +1,9 @@
 class Sales {
-    constructor(idReceipt, idPurchase, idSale, unitPrice, idProduct, tottalUnits) {
+    constructor(idReceipt, idPurchaseIdReceipt, idSale, unitPrice, idProduct, units) {
         this.idSale = idSale;
-        this.idPurchase = idPurchase;
+        this.idPurchaseIdReceipt = idPurchaseIdReceipt;
         this.unitPrice = unitPrice;
-        this.tottalUnits = tottalUnits;
+        this.units = units;
         this.idProduct = idProduct;
         this.idReceipt = idReceipt;
     }
@@ -12,10 +12,10 @@ class Sales {
 //adding sales
 var addSale = async function (db, pSale) {
     await db.collection('sales').add({
+        purchaseIdReceipt: pSale.purchaseIdReceipt,
         idPurchase: pSale.idPurchase,
         unitPrice: pSale.unitPrice,
-        tottalUnits: pSale.tottalUnits,
-        idProduct: pSale.idProduct,
+        units: pSale.units,
         idReceipt: pSale.idReceipt
     }).then(function (docRef) {
         pSale.idSale = docRef.id;

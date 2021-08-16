@@ -1,4 +1,4 @@
-var productsTopurchase = [];
+//#region variables
 var receiptList = [];
 var purchaseList = [];
 const btnPurchaseModal = document.querySelector('#btnPurchaseModal');
@@ -6,6 +6,9 @@ const purchaseForm = document.querySelector('#add-purchase-form');
 var unitPriceDiv = document.getElementById("unitPriceDiv");
 var tottalUnitsDiv = document.getElementById("tottalUnitsDiv");
 var indexList = -1;
+//#endregion variables
+
+//#region view
 
 /**
  * it shows the right product name in the list to purchase
@@ -28,6 +31,10 @@ function resetPurchaseViews() {
     productsTopurchase.forEach(element => {
         document.getElementById("check" + element.idProduct)
             .checked = false;
+        showSaleDiv(element.idProduct);
+        document.getElementById("inventory" + element.idProduct).innerHTML =
+            placeHolderProductInventory +
+            getPurchasesAvalilableUnits(element.idProduct);
     });
     $('#purchaseModal').modal('hide');
     unitPriceDiv.setAttribute("style", "display: none;");
@@ -43,7 +50,6 @@ function showPurchaseLineFields() {
     unitPriceDiv.setAttribute("style", "display: block;");
     tottalUnitsDiv.setAttribute("style", "display: block;");
 }
-
 /**
  * this fucntion resets the purchase fields
  */
@@ -51,6 +57,31 @@ function resetPurchaseFields() {
     purchaseForm.unitPrice.value = 0;
     purchaseForm.tottalUnits.value = 0;
 }
+/**
+ * this function is call when the purchase 
+ * form is submited, so it needs to handle the correct 
+ * dynamic to asists the user create successfuly a receipt
+ * and its purchases 
+ */
+purchaseForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    if (productsTopurchase.length == 0) {
+        alert(noProductsToPurchase);
+    } else {
+        indexList == productsTopurchase.length - 2 ||
+            productsTopurchase.length == 1 ?
+            document.getElementById("btnPurchaseSubmit").innerHTML = finaliceMessage :
+            console.log(nextStepMessage);
+        indexList < 0 ? showPurchaseLineFields() :
+            setPurchaseLinesList();
+    }
+
+});
+
+//#endregion view
+
+//#region dynamic
+
 /**
  * it loads and creates and purchase object
  * and then returns the result
@@ -65,7 +96,7 @@ function loadLinePurchaseForm() {
         idProduct: productsTopurchase[indexList].idProduct,
         description: purchaseForm.purchseDescription.value,
         newInventory: newInventory,
-        availableUnits: 0,
+        notAvailableUnits: 0,
         outOfStock: false
     };
 }
@@ -109,32 +140,12 @@ function setPurchaseLinesList() {
         } else {
             //load the last purchase and then call the server
             purchaseList.push(loadLinePurchaseForm());
+            showPleaseWait();
             callServerAddReceipt();
-            //this is a test
-            //callServerAddReceipts();
         }
     }
 }
-/**
- * this function is call when the purchase 
- * form is submited, so it needs to handle the correct 
- * dynamic to asists the user create successfuly a receipt
- * and its purchases 
- */
-purchaseForm.addEventListener("submit", (e) => {
-    e.preventDefault();
-    if (productsTopurchase.length == 0) {
-        alert(noProductsToPurchase);
-    } else {
-        indexList == productsTopurchase.length - 2 ||
-            productsTopurchase.length == 1 ?
-            document.getElementById("btnPurchaseSubmit").innerHTML = finaliceMessage :
-            console.log(nextStepMessage);
-        indexList < 0 ? showPurchaseLineFields() :
-            setPurchaseLinesList();
-    }
 
-});
 /**
  * this fuction is call after the receipt register
  * is successfuly created in the database
@@ -198,6 +209,11 @@ function resetPurchaseVaribles() {
                 console.log("try again");
         });
     });
+    productsTopurchase.forEach(element => {
+        document.getElementById("inventory" + element.idProduct).innerHTML =
+            placeHolderProductInventory +
+            getPurchasesAvalilableUnits(element.idProduct);
+    });
     sessionStorage.setItem('allReceipts', JSON.stringify(receiptList));
     sessionStorage.setItem('allProducts', JSON.stringify(productList));
     indexList = -1;
@@ -205,11 +221,11 @@ function resetPurchaseVaribles() {
     productsTopurchase = [];
 }
 
-function getAllPurchases() {
+function getAllPurchasesReceipts() {
     showPleaseWait();
     setTimeout(() => {
         hidePleaseWait();
-    }, 3000);
+    }, 4000);
     getPuchasesReceipts();
 }
 
@@ -226,3 +242,5 @@ function getInventory(idProduct) {
     console.log("inventory of " + idProduct + ": " + result);
     return result;
 }
+
+//#endregion dynamic
