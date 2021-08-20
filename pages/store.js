@@ -1,4 +1,4 @@
-//show jus one category and its products
+//show just one category and its products
 var localUrl = document.URL;
 var split = localUrl.split('?');
 var idCategory = split[1].split('=')[1];

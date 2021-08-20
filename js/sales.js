@@ -13,7 +13,6 @@ class Sales {
 var addSale = async function (db, pSale) {
     await db.collection('sales').add({
         purchaseIdReceipt: pSale.purchaseIdReceipt,
-        idPurchase: pSale.idPurchase,
         unitPrice: pSale.unitPrice,
         units: pSale.units,
         idReceipt: pSale.idReceipt

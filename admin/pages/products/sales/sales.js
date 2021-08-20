@@ -177,10 +177,10 @@ function createFormDataSaleReceipt() {
     formdata
         .append('idReceiptType', "YFIgavH6vUIHmONFTpa0");
     formdata
-        .append('paymentState', salesForm
+        .append('salePaymentState', salesForm
             .paymentState.value);
     formdata
-        .append('paymentMethod', salesForm
+        .append('salePaymentMethod', salesForm
             .paymentMethod.value);
     formdata
         .append('inputFile', salesForm

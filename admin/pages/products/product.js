@@ -99,8 +99,6 @@ function renderProductList(doc) {
     btnDelete.setAttribute('style', 'margin-right:5px');
     var btnUpdate = createCustomTextTag('button', 'btn btn-warning', '!');
     btnUpdate.setAttribute('style', 'margin-right:5px');
-    var btnPurchse = createCustomTextTag('button', 'btn btn-info', '!');
-
 
     var divProdDetails =
         createCustomNonTextTag('div', 'container-fluid border border-primary rounded');
@@ -172,8 +170,7 @@ function renderProductList(doc) {
             pCreation,
             pModification,
             btnDelete,
-            btnUpdate,
-            btnPurchse
+            btnUpdate
         ],
         divProdDetails
     );
@@ -181,7 +178,6 @@ function renderProductList(doc) {
     var prodli = document.createElement('div');
     prodli.setAttribute('class', 'col-sm');
     prodli.setAttribute('id', doc.idProduct);
-    prodli.appendChild(divPurchase);
     prodli.appendChild(divProdDetails);
 
 
@@ -203,10 +199,6 @@ function renderProductList(doc) {
         productFormMessage.innerHTML = updatingFormMessage;
         isUpdating = true;
         loadProductForm(doc);
-    });
-    btnPurchse.addEventListener('click', (e) => {
-        e.stopPropagation();
-        window.location.href = '/admin/pages/purchases/purchase?id=' + doc.idProduct;
     });
     //show product image
     pShowImage.addEventListener('click', async (e) => {
@@ -412,8 +404,8 @@ function getPurchasesAvalilableUnits(idProduct) {
 }
 /**
  * this function sets the final steps after 
- * delete a product object 
- * call this fuction after delete a product
+ * delete a product object. 
+ * Call this fuction after delete a product
  * @param {*} productDeleted a product object
  */
 function afterDeletingSettings(productDeleted) {
