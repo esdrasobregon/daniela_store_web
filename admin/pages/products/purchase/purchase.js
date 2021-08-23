@@ -87,7 +87,6 @@ purchaseForm.addEventListener("submit", (e) => {
  * and then returns the result
  */
 function loadLinePurchaseForm() {
-
     var newInventory = productsTopurchase[indexList].inventory +
         parseFloat(purchaseForm.tottalUnits.value);
     return {
@@ -97,16 +96,18 @@ function loadLinePurchaseForm() {
         description: purchaseForm.purchseDescription.value,
         newInventory: newInventory,
         notAvailableUnits: 0,
-        outOfStock: false
+        outOfStock: false,
+        idPurchase: null
     };
 }
 /**
  * this function makes the final settings
  * after adding a receipt and its purchases
  */
-function finalAddPurchaseSettings() {
+function finalAddPurchaseSettings(result) {
     resetPurchaseViews();
-    resetPurchaseVaribles();
+    showPleaseWait();
+    resetPurchaseVaribles(result);
     hidePleaseWait();
 }
 /**
@@ -196,13 +197,8 @@ function createFormDataPurchaseReceipt() {
 /**
  * it reset the purchase variables
  */
-function resetPurchaseVaribles() {
-    purchaseList.forEach(element => {
-        productList.forEach(prod => {
-            if (element.idProduct == prod.idProduct) {
-                prod.inventory = element.newInventory;
-            }
-        });
+function resetPurchaseVaribles(result) {
+    result.forEach(element => {
         receiptList.find(el => {
             el.idReceipt == element.idReceipt ?
                 el.purchases.push(element) :

@@ -12,7 +12,29 @@ function addPurchaseList(data) {
         .then(result => {
             console.log("result: " + result.success);
             result.success ?
-                finalAddPurchaseSettings(result) :
+                getPurchaseList(result.purchase[0].idReceipt) :
+                alert(callfailsMessage);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+}
+
+function getPurchaseList(idReceipt) {
+    var data = {
+        idReceipt: idReceipt
+    }
+    fetch(localHost + "/getPurchaseList", {
+            method: 'POST',
+            headers: {
+                'Content-type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        }).then(response => response.json())
+        .then(result => {
+            console.log(result.purchases[0]);
+            result.success ?
+                finalAddPurchaseSettings(result.purchases) :
                 alert(callfailsMessage);
         })
         .catch(error => {
@@ -72,6 +94,27 @@ function getPuchasesReceipts() {
             sessionStorage.setItem('allReceipts', JSON.stringify(result));
             receiptList = JSON.parse(sessionStorage.getItem('allReceipts'));
             setProductInventoryView();
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+}
+
+/**
+ * this function call the server to update a 
+ * purchase list
+ * @param {*} purchasesToUpdate this is a purchase list
+ */
+function updatePuchaseList(purchasesToUpdate) {
+    fetch(localHost + "/updatePurchaseList", {
+            method: 'POST',
+            headers: {
+                'Content-type': 'application/json'
+            },
+            body: JSON.stringify(purchasesToUpdate)
+        }).then(response => response.json())
+        .then(result => {
+            console.log(result);
         })
         .catch(error => {
             console.error('Error:', error);

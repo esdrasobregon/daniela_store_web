@@ -1,8 +1,7 @@
-
 /**
  * this function test the server
  */
- function callServerAddSaleReceipt() {
+function callServerAddSaleReceipt() {
     const formData = createFormDataSaleReceipt();
     fetch(localHost + "/addReceipt", {
             method: 'POST',
@@ -11,8 +10,8 @@
         .then(result => {
             console.log(result);
             result.success ?
-            setSalesServerCall(result.receipt) :
-            alert(addImageMessage);
+                setSalesServerCall(result.receipt) :
+                alert(addImageMessage);
         })
         .catch(error => {
             console.error('Error:', error);
@@ -32,7 +31,7 @@ function addSalesList(data) {
         .then(result => {
             console.log("result: " + result.sales[0].idSale);
             result.success ?
-                salesFinalSettings() :
+                salesFinalSettings(result.sales) :
                 alert(callfailsMessage);
         })
         .catch(error => {

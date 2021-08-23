@@ -27,7 +27,7 @@ var addPurchases = async function (db, pPurchase) {
         outOfStock: pPurchase.outOfStock
     }).then(function (docRef) {
         pPurchase.idPurchase = docRef.id;
-        console.log('Document added');
+        console.log("Document " + pPurchase.idPurchase + " added");
     }).catch(function (error) {
         console.error("Error adding document: ", error);
         return null;
@@ -129,7 +129,6 @@ var getAllAvailablePurchasesForReceipt = async function (db, idReceipt) {
                     outOfStock: doc.data().outOfStock
                 };
                 allPurchases.push(purh);
-                console.log(doc.id, " => ", doc.data());
             });
         })
         .catch(function (error) {
@@ -208,7 +207,7 @@ var updatePurchase = async function (db, pPurchase) {
             console.log("Updated purchase: " + result);
         }).catch(function (error) {
             console.log(error);
-            return null;
+            return null;    
         });
     return res;
 }

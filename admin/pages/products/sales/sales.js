@@ -58,7 +58,7 @@ function resetSalesViews() {
         .setAttribute("src", "#");
     salesForm.reset();
     productsToSale.forEach(element => {
-        document.getElementById("check" + element.idProduct)
+        document.getElementById("saleCheck" + element.idProduct)
             .checked = false;
     });
     $('#salesModal').modal('hide');
@@ -115,18 +115,41 @@ function loadLineSalesForm() {
  * this function makes the final settings
  * after adding a receipt and its Sales lines
  */
-function salesFinalSettings() {
+function salesFinalSettings(resultSales) {
+    //update the purchaseslist
+    setUpdatePurchaseList(resultSales);
     sessionStorage.setItem('allReceipts', JSON.stringify(receiptList));
     resetSalesViews();
     resetSalesVaribles();
     hidePleaseWait();
     console.log("sales functions endded");
 }
+/**
+ * this function takes the purchases to 
+ * update from the sales list,
+ * then call the server to update the purchases
+ */
+function setUpdatePurchaseList(resultSales) {
+    var purchasesToUpdate = [];
+    resultSales.forEach((element) => {
+        receiptList.forEach((receipt) => {
+            receipt.purchases.forEach((p) => {
+                    element.idPurchase == p.idPurchase ?
+                        purchasesToUpdate.push(p) :
+                        console.log("try again");
+                }
+
+            );
+        });
+
+    });
+    updatePuchaseList(purchasesToUpdate);
+}
 
 /**
  * this fuction is call after the receipt register
  * is successfuly created in the database
- * and then call the server to create its Saless
+ * and then call the server to create its Sales
  * @param {*} receipt is a receipt object 
  */
 function setSalesServerCall(receipt) {
@@ -136,15 +159,6 @@ function setSalesServerCall(receipt) {
         element.sales.forEach(item => {
             console.log(item);
             item.idReceipt = receipt.idReceipt;
-            var purchReceipt = receiptList.find(el => el.idReceipt ==
-                item.purchaseIdReceipt);
-            console.log(purchReceipt);
-            //this is for update purpases
-            purchReceipt.purchases.forEach(ele => {
-                if (ele.idPurchase == item.idPurchase) {
-                    element.purchasesToUpdate.push(ele);
-                }
-            });
         });
     });
 
@@ -177,11 +191,11 @@ function createFormDataSaleReceipt() {
     formdata
         .append('idReceiptType', "YFIgavH6vUIHmONFTpa0");
     formdata
-        .append('salePaymentState', salesForm
-            .paymentState.value);
+        .append('paymentState', salesForm
+            .salePaymentState.value);
     formdata
-        .append('salePaymentMethod', salesForm
-            .paymentMethod.value);
+        .append('paymentMethod', salesForm
+            .salePaymentMethod.value);
     formdata
         .append('inputFile', salesForm
             .inputSalesFile.files[0]);
@@ -227,9 +241,8 @@ function setSalesLinesList() {
             if (salesForm.salesTottalUnits.value != "" &&
                 salesForm.salesUnitPrice.value != "") {
                 //load the last Sales and then call the server
+                showPleaseWait();
                 salesList.push(loadLineSalesForm());
-                //callServerAddReceipt();
-                //this is a test
                 callServerAddSaleReceipt();
             } else {
                 alert(fieldsRequiredMessage);
