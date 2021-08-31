@@ -3,7 +3,7 @@
  */
 function callServerAddSaleReceipt() {
     const formData = createFormDataSaleReceipt();
-    fetch(localHost + "/addReceipt", {
+    fetch(localHost + "/receipt", {
             method: 'POST',
             body: formData
         }).then(response => response.json())
@@ -21,7 +21,7 @@ function callServerAddSaleReceipt() {
  * 
  */
 function addSalesList(data) {
-    fetch(localHost + "/addSalesList", {
+    fetch(localHost + "/sale", {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json'

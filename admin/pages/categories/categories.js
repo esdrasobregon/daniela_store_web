@@ -39,14 +39,14 @@ categoriesform.addEventListener('submit', async (e) => {
     e.preventDefault();
 
     if (categoriesform.idCategory.value == "") {
-        await callServer();
+        addCategoryServerCall();
         showPleaseWait();
         setTimeout(() => {
             hidePleaseWait();
         }, 3000);
     } else {
         if (isUpdating) {
-            await callServer();
+            updateCategoryServerCall();
             showPleaseWait();
             setTimeout(() => {
                 hidePleaseWait();
@@ -57,7 +57,7 @@ categoriesform.addEventListener('submit', async (e) => {
 
 });
 
-function createFormDataCategory() {
+function createFormDataAddCategory() {
     formdata = new FormData();
     formdata.append('isUpdating', isUpdating);
     formdata.append('imageToFirebase', imageToFirebase);
@@ -65,7 +65,21 @@ function createFormDataCategory() {
     formdata.append('name', categoriesform.name.value);
     formdata.append('description', categoriesform.description.value);
     formdata.append('status', categoriesform.activ.value);
-    formdata.append('inputGroupFile01', categoriesform.inputGroupFile01.files[0]);
+    formdata.append('case', "add");
+    formdata.append('inputFile', categoriesform.inputGroupFile01.files[0]);
+    return formdata;
+}
+
+function createFormDataUpdateCategory() {
+    formdata = new FormData();
+    formdata.append('isUpdating', isUpdating);
+    formdata.append('imageToFirebase', imageToFirebase);
+    formdata.append('idCategory', categoriesform.idCategory.value);
+    formdata.append('name', categoriesform.name.value);
+    formdata.append('description', categoriesform.description.value);
+    formdata.append('status', categoriesform.activ.value);
+    formdata.append('case', "update");
+    formdata.append('inputFile', categoriesform.inputGroupFile01.files[0]);
     return formdata;
 }
 

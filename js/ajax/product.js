@@ -1,13 +1,16 @@
-//getting all the products
-async function getProducts() {
-    var prods;
-    const HttpProd = new XMLHttpRequest();
-    const urlProds = localHost + '/allProducts';
-    HttpProd.open("GET", urlProds);
-    HttpProd.send();
-
-    HttpProd.onreadystatechange = (e) => {
-        prods = HttpProd.responseText;
-        sessionStorage.setItem('allProducts', prods);
-    }
+/**
+ * this function calls the server
+ * to retreive all products
+ */
+function getProducts() {
+    fetch(localHost + "/products/?allProducts", {
+            method: 'GET'
+        }).then(response => response.json())
+        .then(result => {
+            console.log(result);
+            sessionStorage.setItem('allProducts', JSON.stringify(result));
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
 }

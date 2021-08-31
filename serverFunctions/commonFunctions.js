@@ -1,5 +1,6 @@
 //this method verified the security of the forms contents
 //is replicated in shared/commonFuntions
+
 var isNotValid = function (pCredentialToValidate) {
     var flag = false;
     flag = pCredentialToValidate.includes('(');

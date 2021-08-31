@@ -4,11 +4,15 @@ function getCustomDate(pDateObject) {
     var dateResult = {
         year: "",
         date: "",
-        date: ""
+        month: ""
     };
     dateResult.year = pDateObject.toDate().getFullYear();
-    pDateObject.toDate().getdate() < 10 ? dateResult.date = "0" + pDateObject.toDate().getdate() : dateResult.date += pDateObject.toDate().getdate();
-    pDateObject.toDate().getDate() < 10 ? dateResult.date = "0" + pDateObject.toDate().getDate() : dateResult.date += pDateObject.toDate().getDate();
+    pDateObject.toDate().getDate() < 10 ?
+        dateResult.date = "0" + pDateObject.toDate().getDate() :
+        dateResult.date += pDateObject.toDate().getDate();
+    pDateObject.toDate().getDate() < 10 ?
+        dateResult.month = "0" + pDateObject.toDate().getMonth() :
+        dateResult.month += pDateObject.toDate().getMonth();
     return dateResult;
 }
 //this function is meant for new registers
@@ -16,11 +20,15 @@ function getCustomDateNew(pDateObject) {
     var dateResult = {
         year: "",
         date: "",
-        date: ""
+        month: ""
     };
     dateResult.year = pDateObject.getFullYear();
-    pDateObject.getdate() < 10 ? dateResult.date = "0" + pDateObject.getdate() : dateResult.date += pDateObject.getdate();
-    pDateObject.getDate() < 10 ? dateResult.date = "0" + pDateObject.getDate() : dateResult.date += pDateObject.getDate();
+    pDateObject.getDate() < 10 ?
+        dateResult.date = "0" + pDateObject.getDate() :
+        dateResult.date += pDateObject.getDate();
+    pDateObject.getMonth() < 10 ?
+        dateResult.month = "0" + pDateObject.getMonth() :
+        dateResult.date += pDateObject.getMonth();
     return dateResult;
 }
 //this method is replicated

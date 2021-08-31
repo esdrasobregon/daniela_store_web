@@ -1,7 +1,9 @@
 <div class="pos-f-t">
     <nav class="navbar navbar-dark bg-dark">
         <a class="navbar-brand collapsed" href="#" data-toggle="collapse" data-target="#header" aria-controls="header"
-            aria-expanded="false" aria-label="Toggle navigation"><%= keys.key.headerMenuText%></a>
+            aria-expanded="false" aria-label="Toggle navigation">
+            <%= keys.key.headerMenuText%>
+        </a>
         <button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#header"
             aria-controls="header" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -32,10 +34,10 @@
 
                     <div class="dropdown-menu dropdown-menu-right dropdown-info"
                         aria-labelledby="navbarDropdownMenuLink-4">
-                        <a id="adminProductMenu" href="/admin/pages/products/product" class="dropdown-item">
+                        <a id="adminProductMenu" href="/products/?admProductPage" class="dropdown-item">
                             <%=keys.key.aAdminProductsMenu%>
                         </a>
-                        <a id="adminCategoryMenu" href="/admin/pages/categories/categories" class="dropdown-item">
+                        <a id="adminCategoryMenu" href="/categories/?admCategoryPage" class="dropdown-item">
                             <%=keys.key.aAdminCategoriesMenu%>
                         </a>
                     </div>

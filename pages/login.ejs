@@ -30,7 +30,6 @@
             <!--header-->
             <%- include('./../shared/header')%>
                 <!--end header-->
-
                 <div class="container" style="margin-bottom: 50px; margin-top: 50px;">
                     <div class="overflow-auto p-3 mb-3 mb-md-0 mr-md-3 bg-light"
                         style="max-width: 100%; max-height: 450px;">
@@ -45,7 +44,8 @@
                                         <form id="login-form" class="login">
                                             <div class="form-group">
                                                 <input type="email" class="form-control" , id="userEmail"
-                                                    name="userEmail" placeholder="Email" maxlength="50" minlength="15" required>
+                                                    name="userEmail" placeholder="Email" maxlength="50" minlength="15"
+                                                    required>
                                             </div>
                                             <div class="form-group">
                                                 <input type="password" class="form-control" name="userPassword"
@@ -83,8 +83,40 @@
                         loginForm = document.getElementById("login-form");
                         loginForm.addEventListener('submit', async (e) => {
                             e.preventDefault();
-                            await getUserWithPost();
+                            validateLoginForm();
                         });
+
+                        /**
+                         * this function validates the login form 
+                         * info
+                        */
+                        async function validateLoginForm() {
+                            var data = {
+                                userEmail: loginForm.userEmail.value.replace(/\s/g, ""),
+                                userPassword: loginForm.userPassword.value.replace(/\s/g, ""),
+                                case: "getUser"
+                            };
+
+                            if (isNotValid(data.userEmail)) {
+                                alert("You can't type this characters")
+                            } else {
+                                if (isNotValid(data.userPassword)) {
+                                    alert("You can't type this characters")
+                                } else {
+                                    if ((data.userPassword.length > 8 && data.userPassword.length < 22)
+                                        && (data.userEmail.length > 8 && data.userEmail.length < 40)) {
+                                        await loginCall(data);
+                                        showPleaseWait();
+                                        setTimeout(() => {
+                                            hidePleaseWait();
+                                        }, 3000);
+                                    } else {
+                                        alert('Error in email or password')
+                                    }
+
+                                }
+                            }
+                        }
                     </script>
                     <script src="./../js/commonFunctions.js"></script>
 

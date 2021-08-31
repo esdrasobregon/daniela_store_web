@@ -78,11 +78,14 @@
             <script src="./js/ajax/product.js"></script>
             <script src="./js/ajax/user.js"></script>
             <script>
-
                 window.onload = async function () {
 
-                    sessionStorage.getItem('allProducts') == null ? await getProducts() : console.log('products allready loaded');
-                    sessionStorage.getItem("categories") == null ? await getCategories() : console.log('categories allready loaded');
+                    sessionStorage.getItem('allProducts') == null
+                        ? await getProducts()
+                        : console.log('products allready loaded');
+                    sessionStorage.getItem("categories") == null
+                        ? await getCategories()
+                        : console.log('categories allready loaded');
 
                     //it gives some time to load the data needed
                     showPleaseWait();

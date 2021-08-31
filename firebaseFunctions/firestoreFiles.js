@@ -1,7 +1,15 @@
-// Testing out upload of file
+//#region function
+
+/**
+ * this function upload a file to firebase storage
+ * @param {*} filename the file name
+ * @param {*} firebaseAdmin a firebase admin object
+ * @param {*} fileNewName the new name for the file
+ * @param {*} contentType the file type
+ * @returns a bool type confirmation
+ */
 const uploadFile = async (filename, firebaseAdmin, fileNewName, contentType) => {
 
-    // Uploads a local file to the bucket
     try {
         await firebaseAdmin.bucket.upload(filename, {
             destination: fileNewName,
@@ -16,17 +24,23 @@ const uploadFile = async (filename, firebaseAdmin, fileNewName, contentType) => 
         }).then((result) => {
             console.log(`${filename} uploaded to ${firebaseAdmin.bucket}.`);
             console.log("Result: " + result);
+            return true;
         }).catch((error) => {
             console.log("Error uploading firebase file: " + error);
-            return error;
+            return false;
         });
     } catch (error) {
         console.log("Error uploading firestore file: " + error);
-        return error;
+        return false;
     }
 
 
 }
+/**
+ * this function deletes a firebase store file
+ * @param {*} filename the file name
+ * @param {*} firebaseAdmin a firebase admin object
+ */
 const deleteFile = async (filename, firebaseAdmin) => {
     // delete a firestore file
     try {
@@ -40,7 +54,12 @@ const deleteFile = async (filename, firebaseAdmin) => {
         console.log("error deleting firestore file: " + error);
     }
 }
+
+//#endregion function
+
+//#region export
 module.exports = {
     uploadFile: uploadFile,
     deleteFile: deleteFile
 }
+//#endregion export

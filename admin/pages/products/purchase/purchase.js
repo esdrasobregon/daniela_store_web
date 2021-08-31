@@ -157,7 +157,11 @@ function setPurchaseServerCall(receipt) {
         element.idReceipt = receipt.idReceipt
     });
     receiptList.push(receipt);
-    addPurchaseList(purchaseList);
+    var data = {
+        purchaseList: purchaseList,
+        case: "addPurchaseList"
+    };
+    addPurchaseList(data);
     showPleaseWait();
     setTimeout(() => {
         hidePleaseWait();
@@ -192,6 +196,8 @@ function createFormDataPurchaseReceipt() {
     formdata
         .append('inputFile', purchaseForm
             .inputPurchaseFile.files[0]);
+            formdata
+        .append('case', "add");
     return formdata;
 }
 /**

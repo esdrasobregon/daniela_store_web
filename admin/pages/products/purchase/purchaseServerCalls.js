@@ -2,7 +2,7 @@
 //add purchase
 function addPurchaseList(data) {
     data.purchaseList = purchaseList;
-    fetch(localHost + "/addPurchaseList", {
+    fetch(localHost + "/purchase", {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json'
@@ -21,15 +21,11 @@ function addPurchaseList(data) {
 }
 
 function getPurchaseList(idReceipt) {
-    var data = {
-        idReceipt: idReceipt
-    }
-    fetch(localHost + "/getPurchaseList", {
-            method: 'POST',
+    fetch(localHost + "/purchase/?" + idReceipt, {
+            method: 'GET',
             headers: {
                 'Content-type': 'application/json'
-            },
-            body: JSON.stringify(data)
+            }
         }).then(response => response.json())
         .then(result => {
             console.log(result.purchases[0]);
@@ -44,7 +40,7 @@ function getPurchaseList(idReceipt) {
 
 function callServerAddReceipt() {
     const formData = createFormDataPurchaseReceipt();
-    fetch(localHost + "/addReceipt", {
+    fetch(localHost + "/receipt", {
             method: 'POST',
             body: formData
         }).then(response => response.json())
@@ -79,15 +75,11 @@ function callServerAddReceipts() {
 }
 //getting all the purchases
 function getPuchasesReceipts() {
-    var data = {
-        idProduct: "idProduct"
-    }
-    fetch(localHost + "/allAvaliableMonthPurchasesReceipts", {
-            method: 'POST',
+    fetch(localHost + "/purchase/?allAvaliableMonthPurchasesReceipts", {
+            method: "GET",
             headers: {
                 'Content-type': 'application/json'
-            },
-            body: JSON.stringify(data)
+            }
         }).then(response => response.json())
         .then(result => {
             console.log(result);
@@ -103,15 +95,15 @@ function getPuchasesReceipts() {
 /**
  * this function call the server to update a 
  * purchase list
- * @param {*} purchasesToUpdate this is a purchase list
+ * @param {*} data this is a purchase list
  */
-function updatePuchaseList(purchasesToUpdate) {
-    fetch(localHost + "/updatePurchaseList", {
-            method: 'POST',
+function updatePuchaseList(data) {
+    fetch(localHost + "/purchase", {
+            method: 'PUT',
             headers: {
                 'Content-type': 'application/json'
             },
-            body: JSON.stringify(purchasesToUpdate)
+            body: JSON.stringify(data)
         }).then(response => response.json())
         .then(result => {
             console.log(result);

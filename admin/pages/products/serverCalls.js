@@ -1,7 +1,10 @@
-//call the server
-function callServer() {
+/**
+ * this function calls the server to add 
+ * a product object
+ */
+function callAddServer() {
     const formData = createFormDataProduct();
-    fetch(localHost + "/addProduct", {
+    fetch(localHost + "/products", {
             method: 'POST',
             body: formData
         }).then(response => response.json())
@@ -16,12 +19,14 @@ function callServer() {
         });
 }
 
-//call the server
-
+/**
+ * this function calls the server to update 
+ * a product object 
+ */
 function callUpdateServer() {
     const formData = createFormDataProduct();
-    fetch(localHost + "/updateProduct", {
-            method: 'POST',
+    fetch(localHost + "/products", {
+            method: 'put',
             body: formData
         }).then(response => response.json())
         .then(result => {
@@ -34,16 +39,21 @@ function callUpdateServer() {
             console.error('Error:', error);
         });
 }
-//call the server
+
+/**
+ * this function calls the server to delete 
+ * a product object
+ * @param {*} productToDelete product object  
+ */
 function callDeleteServer(productToDelete) {
     const options = {
-        method: 'POST',
+        method: 'delete',
         headers: {
             'Content-type': 'application/json'
         },
         body: JSON.stringify(productToDelete)
     }
-    fetch(localHost + "/deleteProduct", options).then(
+    fetch(localHost + "/products", options).then(
         result => result.json()
     ).then((result) => {
         var p = result.productToDelete;

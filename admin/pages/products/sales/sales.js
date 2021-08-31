@@ -143,7 +143,11 @@ function setUpdatePurchaseList(resultSales) {
         });
 
     });
-    updatePuchaseList(purchasesToUpdate);
+    var data = {
+        purchasesToUpdate: purchasesToUpdate,
+        case: "updatePurchaseList"
+    }
+    updatePuchaseList(data);
 }
 
 /**
@@ -161,8 +165,11 @@ function setSalesServerCall(receipt) {
             item.idReceipt = receipt.idReceipt;
         });
     });
-
-    addSalesList(salesList);
+    var data = {
+        salesList: salesList,
+        case: "addSaleList"
+    }
+    addSalesList(data);
     showPleaseWait();
     setTimeout(() => {
         hidePleaseWait();
@@ -199,6 +206,8 @@ function createFormDataSaleReceipt() {
     formdata
         .append('inputFile', salesForm
             .inputSalesFile.files[0]);
+    formdata
+        .append('case', "add");
     return formdata;
 }
 /**

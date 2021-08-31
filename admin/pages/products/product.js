@@ -50,7 +50,7 @@ productForm.addEventListener('submit', async (e) => {
             hidePleaseWait();
         }, 3000);
     } else {
-        await callServer();
+        await callAddServer();
         showPleaseWait();
         setTimeout(() => {
             hidePleaseWait();
@@ -236,7 +236,6 @@ function createFormDataProduct() {
     productForm.showPrice.value == "true" ?
         priceFlag = true :
         priceFlag = false;
-
     formdata.append('isUpdating', isUpdating);
     formdata.append('idProduct', productForm.idProduct.value);
     formdata.append('imageToFirebase', imageToFirebase);
@@ -249,7 +248,9 @@ function createFormDataProduct() {
     formdata.append('activ', productForm.activ.value);
     formdata.append('description', productForm.description.value);
     formdata.append('showPrice', priceFlag);
-    formdata.append('inputGroupFile01', productForm.inputGroupFile01.files[0]);
+    formdata.append('inputfile', productForm.inputGroupFile01.files[0]);
+    isUpdating ? formdata.append('case', "update") :
+        formdata.append('case', "add");
     return formdata;
 }
 /**

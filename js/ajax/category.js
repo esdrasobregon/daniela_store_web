@@ -1,16 +1,16 @@
-//getting all categories
-async function getCategories() {
-  var cat;
-  const Http = new XMLHttpRequest();
-  const url = localHost + '/allcategories';
-  Http.open("GET", url);
-  Http.send();
-
-  Http.onreadystatechange = (e) => {
-    cat = Http.responseText;
-    console.log(Http.responseText);
-    sessionStorage.setItem('categories', cat);
-    window.location.href = './pages/categories/categories';
-  }
+/**
+ * this function calls the server
+ * to retreive all categories
+ */
+function getCategories() {
+  fetch(localHost + "/categories/?allCategories", {
+      method: 'GET'
+    }).then(response => response.json())
+    .then(result => {
+      console.log(result);
+      sessionStorage.setItem('categories', JSON.stringify(result));
+    })
+    .catch(error => {
+      console.error('Error:', error);
+    });
 }
-

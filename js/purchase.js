@@ -128,6 +128,7 @@ var getAllAvailablePurchasesForReceipt = async function (db, idReceipt) {
                     notAvailableUnits: doc.data().notAvailableUnits,
                     outOfStock: doc.data().outOfStock
                 };
+                console.log(purh);
                 allPurchases.push(purh);
             });
         })
@@ -207,7 +208,7 @@ var updatePurchase = async function (db, pPurchase) {
             console.log("Updated purchase: " + result);
         }).catch(function (error) {
             console.log(error);
-            return null;    
+            return null;
         });
     return res;
 }
