@@ -20,14 +20,16 @@ salesForm.addEventListener("submit", (e) => {
     if (productsToSale.length == 0) {
         alert(noProductsToPurchase);
     } else {
-        salesIndexList == productsToSale.length - 2 ||
-            productsToSale.length == 1 ?
-            document.getElementById("btnSalesSubmit").innerHTML = finaliceMessage :
-            console.log(nextStepMessage);
-        salesIndexList < 0 ? showSalesLineFields() :
-            setSalesLinesList();
+        if (fileUploaded(salesForm
+                .inputSalesFile.files[0])) {
+            salesIndexList == productsToSale.length - 2 ||
+                productsToSale.length == 1 ?
+                document.getElementById("btnSalesSubmit").innerHTML = finaliceMessage :
+                console.log(nextStepMessage);
+            salesIndexList < 0 ? showSalesLineFields() :
+                setSalesLinesList();
+        } else alert(addImageMessage);
     }
-
 });
 /**
  * it shows the right product name
@@ -60,6 +62,11 @@ function resetSalesViews() {
     productsToSale.forEach(element => {
         document.getElementById("saleCheck" + element.idProduct)
             .checked = false;
+        var stock = getPurchasesAvalilableUnits(element.idProduct);
+        if (stock <= 0) {
+            document.getElementById("saleCheck" + element.idProduct)
+                .setAttribute("style", "display: none;");
+        }
     });
     $('#salesModal').modal('hide');
     salesUnitPriceDiv.setAttribute("style", "display: none;");
@@ -118,8 +125,8 @@ function loadLineSalesForm() {
 function salesFinalSettings(resultSales) {
     //update the purchaseslist
     setUpdatePurchaseList(resultSales);
-    sessionStorage.setItem('allReceipts', JSON.stringify(receiptList));
     resetSalesViews();
+    setProductInventoryView();
     resetSalesVaribles();
     hidePleaseWait();
     console.log("sales functions endded");
@@ -129,25 +136,20 @@ function salesFinalSettings(resultSales) {
  * update from the sales list,
  * then call the server to update the purchases
  */
-function setUpdatePurchaseList(resultSales) {
-    var purchasesToUpdate = [];
-    resultSales.forEach((element) => {
-        receiptList.forEach((receipt) => {
-            receipt.purchases.forEach((p) => {
-                    element.idPurchase == p.idPurchase ?
-                        purchasesToUpdate.push(p) :
-                        console.log("try again");
-                }
+async function setUpdatePurchaseList(resultSales) {
+    showPleaseWait();
+    var purchasesToUpdate = getPurchasesToUpdate(resultSales);
 
-            );
-        });
-
-    });
     var data = {
         purchasesToUpdate: purchasesToUpdate,
         case: "updatePurchaseList"
     }
-    updatePuchaseList(data);
+
+    var result = await updateAsyncPuchaseList(data);
+    result.success ?
+        console.log(result) :
+        alert("purchases not updated");
+    hidePleaseWait();
 }
 
 /**
@@ -156,8 +158,27 @@ function setUpdatePurchaseList(resultSales) {
  * and then call the server to create its Sales
  * @param {*} receipt is a receipt object 
  */
-function setSalesServerCall(receipt) {
-    resetPurchList(receiptList);
+async function setSalesListServerCall(receipt) {
+    showPleaseWait();
+    resetReceiptPurchList();
+    setSalesIdReceipt(receipt);
+    var data = {
+        salesList: salesList,
+        case: "addSaleList"
+    }
+    var result = await addAsyncSalesList(data);
+    result.success ?
+        salesFinalSettings(result.sales) :
+        alert(callfailsMessage);
+    hidePleaseWait();
+    salesIndexList = 0;
+}
+/**
+ * this function sets the sales list id receipt
+ * @param {*} receipt is a receipt object
+ * list
+ */
+function setSalesIdReceipt(receipt) {
     salesList.forEach(element => {
         element.purchasesToUpdate = [];
         element.sales.forEach(item => {
@@ -165,25 +186,8 @@ function setSalesServerCall(receipt) {
             item.idReceipt = receipt.idReceipt;
         });
     });
-    var data = {
-        salesList: salesList,
-        case: "addSaleList"
-    }
-    addSalesList(data);
-    showPleaseWait();
-    setTimeout(() => {
-        hidePleaseWait();
-    }, 3000 * salesList.length);
-    salesIndexList = 0;
 }
-/**
- * this fuction calls the server to create a
- * receipt register
- */
-function serverReceipt() {
-    callServerAddReceipt();
-    showPleaseWait();
-}
+
 /**
  * this function creates an receipt object
  * an the returns the result 
@@ -223,12 +227,13 @@ function resetSalesVaribles() {
  * details before calling the server
  * to add a receipt and its Saless
  */
-function setSalesLinesList() {
+async function setSalesLinesList() {
 
     if (salesIndexList < 0) {
         //this is to show the first product name
         salesIndexList++;
         currentProdInfoOnTheForm();
+
     } else {
         //from the first Sales till the one before last
 
@@ -250,9 +255,8 @@ function setSalesLinesList() {
             if (salesForm.salesTottalUnits.value != "" &&
                 salesForm.salesUnitPrice.value != "") {
                 //load the last Sales and then call the server
-                showPleaseWait();
                 salesList.push(loadLineSalesForm());
-                callServerAddSaleReceipt();
+                handleAddSaleReceipt();
             } else {
                 alert(fieldsRequiredMessage);
             }
@@ -260,58 +264,20 @@ function setSalesLinesList() {
         }
     }
 }
+
 /**
- * this function selects the right number
- * from the right purchase register to
- * create sales registers
- * returns an object
+ * this function calls the server 
+ * to add a sale receipt
  */
-function selectRigthPurchForASale(sale) {
-    var resultList = [];
-    var tottalUnitsToSale = sale.tottalUnits;
-    if (tottalUnitsToSale > 0) {
-        receiptList.forEach(receipt => {
-            getSaleParamters(sale, resultList, tottalUnitsToSale, receipt);
-        });
-    } else {
-        console.log("sale " + sale.idProduct + " completed");
-    }
-    return resultList;
+async function handleAddSaleReceipt() {
+    showPleaseWait();
+    var result = await addSaleReceipt(createFormDataSaleReceipt());
+    result.success ?
+        setSalesListServerCall(result.receipt) :
+        alert(addImageMessage);
+    hidePleaseWait();
 }
 
-function getSaleParamters(sale, resultList, tottalUnitsToSale, receipt) {
-    var continuedFlag = true;
-    var count = 0;
-    while (continuedFlag &&
-        count < receipt.purchases.length &&
-        (sale.tottalUnits > 0)) {
-        var tottalUnits = receipt.purchases[count].tottalUnits;
-        var notAvailUnits = receipt.purchases[count].notAvailableUnits;
-        var productIdReceipt = receipt.purchases[count].idProduct;
-        var availableUnitsToSale = 0;
-        var unitsToTake = 0;
-        if (productIdReceipt == sale.idProduct &&
-            (tottalUnits > notAvailUnits)) {
-            availableUnitsToSale = (tottalUnits -
-                notAvailUnits);
-
-            availableUnitsToSale > tottalUnitsToSale ?
-                unitsToTake = tottalUnitsToSale :
-                unitsToTake = availableUnitsToSale;
-            receipt.purchases[count].notAvailableUnits += unitsToTake;
-            sale.tottalUnits -= unitsToTake;
-            tottalUnitsToSale -= unitsToTake;
-            resultList.push(getSaleObject(receipt, count, unitsToTake));
-            console.log("units to take " + unitsToTake);
-
-            if (sale.tottalUnits < 0 || sale.tottalUnits == 0) {
-                continuedFlag = false;
-                console.log("result < ó = 0, not continue");
-            }
-        }
-        count++;
-    }
-}
 /**
  * this fuction creates a sale line object
  * @param {*} receipt is the currenct receipt object 
@@ -328,32 +294,5 @@ function getSaleObject(receipt, count, unitsToTake) {
         idSale: undefined
     }
 }
-/**
- * this function lets the not available units
- * in 0
- * use this function just for test
- * @param {*} list this is a receipt list
- */
-function clearPurchList(list) {
-    list.forEach(element => {
-        element.purchases.forEach(p => {
-            p.notAvailableUnits = 0;
-        });
-    });
-}
-/**
- * use this function to check the receipt list stock
- * and update it
- * @param {*} list the receipt list to 
- * reset
- */
-function resetPurchList(list) {
-    list.forEach(element => {
-        element.purchases.forEach(p => {
-            p.notAvailableUnits == p.tottalUnits ?
-                p.outOfStock = true :
-                console.log("not");
-        });
-    });
-}
+
 //#endregion dynamic

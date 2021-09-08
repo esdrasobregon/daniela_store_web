@@ -1,27 +1,38 @@
+
 /**
- * this function test the server
+ * this function calls the server to add 
+ * a sale receipt register
+ * @param {*} formData a formdata object
+ * @returns a server response object
  */
-function callServerAddSaleReceipt() {
-    const formData = createFormDataSaleReceipt();
-    fetch(localHost + "/receipt", {
+async function AddAsyncSaleReceipt(formData) {
+    var result = await fetch(localHost + "/receipt", {
             method: 'POST',
             body: formData
         }).then(response => response.json())
         .then(result => {
-            console.log(result);
-            result.success ?
-                setSalesServerCall(result.receipt) :
-                alert(addImageMessage);
+            return result;
         })
         .catch(error => {
             console.error('Error:', error);
+            var result = {
+                success: false,
+                error: error
+            }
+            return result;
         });
+    console.log(result);
+    return result;
 }
+
 /**
- * 
+ * this function calls the server to add a
+ * sale object list registers
+ * @param {*} data a sale object list 
+ * @returns a server call response
  */
-function addSalesList(data) {
-    fetch(localHost + "/sale", {
+async function addAsyncSalesList(data) {
+    var result = await fetch(localHost + "/sale", {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json'
@@ -29,12 +40,16 @@ function addSalesList(data) {
             body: JSON.stringify(data)
         }).then(response => response.json())
         .then(result => {
-            console.log("result: " + result.sales[0].idSale);
-            result.success ?
-                salesFinalSettings(result.sales) :
-                alert(callfailsMessage);
+            return result;
         })
         .catch(error => {
             console.error('Error:', error);
+            var result = {
+                success: false,
+                error: error
+            }
+            return result;
         });
+    console.log(result);
+    return result;
 }

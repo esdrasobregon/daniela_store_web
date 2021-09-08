@@ -1,19 +1,25 @@
+//#region variables
+
 window.rootFile;
 
 window.content;
 
+//#endregion variables
+
+//#region functions
+/**
+ * this function verify the current user
+ * credentials
+ * @returns return a bool value, true if the credencial
+ * are confirm else returns false
+ */
 function verifyUserCredentials() {
-  if (currentUser != null) {
-    if (!currentUser.userState) {
-      document.location.replace("/pages/login");
-    } else {
-      !currentUser.userState ?
-        document.location.replace("/pages/login") :
-        sessionStorage.getItem('allProducts') == null
-          ? document.location.replace("/pages/login")
-          : console.log("");
-    }
+  var flag = true;
+  if (currentUser == null) {
+    flag = false;
   } else {
-    document.location.replace("/pages/login");
+    currentUser.userState ? flag = true : flag = false;
   }
+  return flag;
 }
+//#endregion functions

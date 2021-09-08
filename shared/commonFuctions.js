@@ -76,3 +76,27 @@ function orderListBasedOnDates(list) {
         new Date(b.creationDate.year, b.creationDate.month, b.creationDate.date).getTime()
     );
 }
+/**
+ * this function checks if is a file loaded
+ * @param {*} file 
+ * @returns a bool confirmation
+ */
+function fileUploaded(file) {
+    if (file == undefined) {
+        return false;
+    } else return true;
+}
+
+
+/**
+ * this function gives some time to wait
+ * use it for a large request
+ * @param {*} sometime time to await 
+ */
+async function giveSomeTime(sometime) {
+    showPleaseWait();
+    setTimeout(() => {
+        hidePleaseWait();
+    }, sometime * 1500);
+
+}

@@ -1,11 +1,12 @@
 //#region variables
-var receiptList = [];
+
 var purchaseList = [];
 const btnPurchaseModal = document.querySelector('#btnPurchaseModal');
 const purchaseForm = document.querySelector('#add-purchase-form');
 var unitPriceDiv = document.getElementById("unitPriceDiv");
 var tottalUnitsDiv = document.getElementById("tottalUnitsDiv");
 var indexList = -1;
+
 //#endregion variables
 
 //#region view
@@ -68,12 +69,16 @@ purchaseForm.addEventListener("submit", (e) => {
     if (productsTopurchase.length == 0) {
         alert(noProductsToPurchase);
     } else {
-        indexList == productsTopurchase.length - 2 ||
-            productsTopurchase.length == 1 ?
-            document.getElementById("btnPurchaseSubmit").innerHTML = finaliceMessage :
-            console.log(nextStepMessage);
-        indexList < 0 ? showPurchaseLineFields() :
-            setPurchaseLinesList();
+        if (fileUploaded(purchaseForm
+                .inputPurchaseFile.files[0])) {
+            indexList == productsTopurchase.length - 2 ||
+                productsTopurchase.length == 1 ?
+                document.getElementById("btnPurchaseSubmit").innerHTML = finaliceMessage :
+                console.log(nextStepMessage);
+            indexList < 0 ? showPurchaseLineFields() :
+                setPurchaseLinesList();
+        } else alert(addImageMessage);
+
     }
 
 });
@@ -105,8 +110,8 @@ function loadLinePurchaseForm() {
  * after adding a receipt and its purchases
  */
 function finalAddPurchaseSettings(result) {
-    resetPurchaseViews();
     showPleaseWait();
+    resetPurchaseViews();
     resetPurchaseVaribles(result);
     hidePleaseWait();
 }
@@ -141,40 +146,80 @@ function setPurchaseLinesList() {
         } else {
             //load the last purchase and then call the server
             purchaseList.push(loadLinePurchaseForm());
-            showPleaseWait();
-            callServerAddReceipt();
+            handlePurchaseReceiptAdding();
         }
     }
 }
-
+/**
+ * this function calls the server to add a
+ * purchase receipt
+ */
+async function handlePurchaseReceiptAdding() {
+    showPleaseWait();
+    var result = await addPurchaseReceipt(createFormDataPurchaseReceipt());
+    result.success ?
+        setPurchaseServerCall(result.receipt) :
+        alert(addImageMessage);
+    hidePleaseWait();
+}
 /**
  * this fuction is call after the receipt register
  * is successfuly created in the database
  * and then call the server to create its purchases
  */
-function setPurchaseServerCall(receipt) {
-    purchaseList.forEach(element => {
-        element.idReceipt = receipt.idReceipt
-    });
-    receiptList.push(receipt);
+async function setPurchaseServerCall(receipt) {
+    showPleaseWait();
+    setPurchaseListIdReceipt(receipt);
+    addLocalRecept(receipt);
     var data = {
         purchaseList: purchaseList,
         case: "addPurchaseList"
     };
-    addPurchaseList(data);
-    showPleaseWait();
-    setTimeout(() => {
-        hidePleaseWait();
-    }, 3000 * receiptList.length);
+    var result = await addAsyncPurchaseList(data);
+    hidePleaseWait();
+    await giveSomeTime(purchaseList.length);
+    if (result.success) {
+        var id = result.purchase[0].idReceipt
+        await getAddedPurchaseList(id);
+    } else alert(callfailsMessage);
     indexList = 0;
+}
+
+/**
+ * this function get the purchase list just 
+ * added
+ * @param {*} idReceipt this is a id receipt
+ */
+async function getAddedPurchaseList(idReceipt) {
+    showPleaseWait();
+    var result =
+        await getAsyncPurchaseList(idReceipt);
+    hidePleaseWait();
+    result.success ?
+        finalAddPurchaseSettings(result.purchases) :
+        alert(callfailsMessage);
+}
+/**
+ * this function sets the purchase list
+ * id receipt
+ * @param {*} receipt 
+ */
+function setPurchaseListIdReceipt(receipt) {
+    purchaseList.forEach(element => {
+        element.idReceipt = receipt.idReceipt
+    });
 }
 /**
  * this fuction calls the server to create a
  * receipt register
  */
-function serverReceipt() {
-    callServerAddReceipt();
+async function serverReceipt() {
     showPleaseWait();
+    var result = await callAsyncServerAddReceipt(createFormDataPurchaseReceipt());
+    result.success ?
+        setPurchaseServerCall(result.receipt) :
+        alert(addImageMessage);
+    hidePleaseWait();
 }
 /**
  * this function creates an receipt object
@@ -196,7 +241,7 @@ function createFormDataPurchaseReceipt() {
     formdata
         .append('inputFile', purchaseForm
             .inputPurchaseFile.files[0]);
-            formdata
+    formdata
         .append('case', "add");
     return formdata;
 }
@@ -205,44 +250,17 @@ function createFormDataPurchaseReceipt() {
  */
 function resetPurchaseVaribles(result) {
     result.forEach(element => {
-        receiptList.find(el => {
-            el.idReceipt == element.idReceipt ?
-                el.purchases.push(element) :
-                console.log("try again");
-        });
+        addNewLocalReceipt(element);
     });
     productsTopurchase.forEach(element => {
         document.getElementById("inventory" + element.idProduct).innerHTML =
             placeHolderProductInventory +
             getPurchasesAvalilableUnits(element.idProduct);
     });
-    sessionStorage.setItem('allReceipts', JSON.stringify(receiptList));
     sessionStorage.setItem('allProducts', JSON.stringify(productList));
     indexList = -1;
     purchaseList = [];
     productsTopurchase = [];
-}
-
-function getAllPurchasesReceipts() {
-    showPleaseWait();
-    setTimeout(() => {
-        hidePleaseWait();
-    }, 4000);
-    getPuchasesReceipts();
-}
-
-function getInventory(idProduct) {
-    var result = 0;
-    receiptList.forEach(element => {
-        if (element.idProduct == idProduct) {
-            result += element.tottalUnits;
-            result -= element.notAvailableUnits;
-        } else {
-            console.log("result " + result);
-        }
-    });
-    console.log("inventory of " + idProduct + ": " + result);
-    return result;
 }
 
 //#endregion dynamic

@@ -1,8 +1,11 @@
-//call the server purchase
-//add purchase
-function addPurchaseList(data) {
-    data.purchaseList = purchaseList;
-    fetch(localHost + "/purchase", {
+/**
+ * this function calls the server to create 
+ * a purchase list registers in the database
+ * @param {*} data this is a purchase list
+ * @returns the receipt created 
+ */
+async function addAsyncPurchaseList(data) {
+    var result = await fetch(localHost + "/purchase", {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json'
@@ -10,95 +13,107 @@ function addPurchaseList(data) {
             body: JSON.stringify(data)
         }).then(response => response.json())
         .then(result => {
-            console.log("result: " + result.success);
-            result.success ?
-                getPurchaseList(result.purchase[0].idReceipt) :
-                alert(callfailsMessage);
+            return result;
         })
         .catch(error => {
             console.error('Error:', error);
+            var result = {
+                success: false,
+                error: error
+            }
+            return result;
         });
+    return result;
 }
-
-function getPurchaseList(idReceipt) {
-    fetch(localHost + "/purchase/?" + idReceipt, {
+/**
+ * this function calls the server to get the 
+ * purchases asociated to the receipt
+ * @param {*} idReceipt receipt of an id receipt
+ * @returns the purchases from the database
+ */
+async function getAsyncPurchaseList(idReceipt) {
+    var result = await fetch(localHost + "/purchase/?" + idReceipt, {
             method: 'GET',
             headers: {
                 'Content-type': 'application/json'
             }
         }).then(response => response.json())
         .then(result => {
-            console.log(result.purchases[0]);
-            result.success ?
-                finalAddPurchaseSettings(result.purchases) :
-                alert(callfailsMessage);
+            return result;
         })
         .catch(error => {
             console.error('Error:', error);
+            var result = {
+                success: false,
+                error: error
+            }
+            return result;
         });
+    return result;
 }
 
-function callServerAddReceipt() {
-    const formData = createFormDataPurchaseReceipt();
-    fetch(localHost + "/receipt", {
-            method: 'POST',
-            body: formData
-        }).then(response => response.json())
-        .then(result => {
-            console.log(result);
-            result.success ?
-                setPurchaseServerCall(result.receipt) :
-                alert(addImageMessage);
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
-}
 /**
- * this function test the server
+ * this function calls the server to add a
+ * receipt register
+ * @param {*} formData a form data object 
+ * @returns the receipt just added
  */
-function callServerAddReceipts() {
-    const formData = createFormDataSaleReceipt();
-    fetch(localHost + "/addTestReceipts", {
+async function callAsyncServerAddReceipt(formData) {
+    var result = await fetch(localHost + "/receipt", {
             method: 'POST',
             body: formData
         }).then(response => response.json())
         .then(result => {
             console.log(result);
-            result.success ?
-                finalAddPurchaseSettings(result.receipt) :
-                alert(addImageMessage);
+            return result;
         })
         .catch(error => {
             console.error('Error:', error);
+            var result = {
+                success: false,
+                error: error
+            }
+            return result;
         });
+    return result;
 }
-//getting all the purchases
-function getPuchasesReceipts() {
-    fetch(localHost + "/purchase/?allAvaliableMonthPurchasesReceipts", {
+
+/**
+ * this function calls the server to get 
+ * the receipt registers needed in the app
+ * @returns a receipt list 
+ */
+async function getAsyncPuchasesReceipts() {
+    var result = await fetch(localHost + "/purchase/?allAvaliableMonthPurchasesReceipts", {
             method: "GET",
             headers: {
                 'Content-type': 'application/json'
             }
         }).then(response => response.json())
         .then(result => {
-            console.log(result);
-            sessionStorage.setItem('allReceipts', JSON.stringify(result));
-            receiptList = JSON.parse(sessionStorage.getItem('allReceipts'));
-            setProductInventoryView();
+            return result;
         })
         .catch(error => {
             console.error('Error:', error);
+            var result = {
+                success: false,
+                error: error
+            }
+            return result;
         });
+    return result;
 }
 
 /**
- * this function call the server to update a 
- * purchase list
- * @param {*} data this is a purchase list
+ * this function calls the server to update 
+ * a purchase list registers on the database
+ * @param {*} data an object that contains the purchase
+ * list and the purchase call case
+ * @returns a server response object
  */
-function updatePuchaseList(data) {
-    fetch(localHost + "/purchase", {
+async function updateAsyncPuchaseList(data) {
+
+    var result = await fetch(localHost + "/purchase", {
             method: 'PUT',
             headers: {
                 'Content-type': 'application/json'
@@ -106,9 +121,16 @@ function updatePuchaseList(data) {
             body: JSON.stringify(data)
         }).then(response => response.json())
         .then(result => {
-            console.log(result);
+            return result;
         })
         .catch(error => {
             console.error('Error:', error);
+            var result = {
+                success: false,
+                error: error
+            }
+            return result;
         });
+    console.log(result);
+    return result;
 }

@@ -1,3 +1,5 @@
+//#region variables
+
 const categoryTableList = document.querySelector('#categories-table-list');
 const categoryFormMessage = document.querySelector('#categoryFormMessage');
 const btnResetForm = document.querySelector('#btnResetForm');
@@ -8,19 +10,27 @@ var isUpdating = false;
 var imageToFirebase = false;
 var currentUser = null;
 
+//#endregion variables
+
+//#region view
+
 window.onload = async function () {
     currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
-    verifyUserCredentials();
-    loadingPageSettings();
-    getInformation();
-    loadCategories();
-}
-async function getInformation() {
-    console.log('getting the categories from sessionStorage');
-    categoryList = JSON.parse(sessionStorage.getItem('categories'));
-    productsList = JSON.parse(sessionStorage.getItem('allProducts'));
+    if (verifyUserCredentials()) {
+        loadingPageSettings();
+        await getInformation();
+        loadCategories();
+    } else document.location.replace("/pages/login");
 
 }
+categoriesform.inputGroupFile01.addEventListener('change', (e) => {
+    imageToFirebase = !imageToFirebase;
+});
+
+/**
+ * this function loops through the category list
+ * and prepare the view category id divs
+ */
 async function loadCategories() {
     categoryList.forEach(item => {
         var li = createCustomTextTag('option', 'divider', item.name);
@@ -30,10 +40,6 @@ async function loadCategories() {
         renderCategories(item);
     });
 }
-
-categoriesform.inputGroupFile01.addEventListener('change', (e) => {
-    imageToFirebase = !imageToFirebase;
-});
 //adding or updating category
 categoriesform.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -57,72 +63,11 @@ categoriesform.addEventListener('submit', async (e) => {
 
 });
 
-function createFormDataAddCategory() {
-    formdata = new FormData();
-    formdata.append('isUpdating', isUpdating);
-    formdata.append('imageToFirebase', imageToFirebase);
-    formdata.append('idCategory', categoriesform.idCategory.value);
-    formdata.append('name', categoriesform.name.value);
-    formdata.append('description', categoriesform.description.value);
-    formdata.append('status', categoriesform.activ.value);
-    formdata.append('case', "add");
-    formdata.append('inputFile', categoriesform.inputGroupFile01.files[0]);
-    return formdata;
-}
-
-function createFormDataUpdateCategory() {
-    formdata = new FormData();
-    formdata.append('isUpdating', isUpdating);
-    formdata.append('imageToFirebase', imageToFirebase);
-    formdata.append('idCategory', categoriesform.idCategory.value);
-    formdata.append('name', categoriesform.name.value);
-    formdata.append('description', categoriesform.description.value);
-    formdata.append('status', categoriesform.activ.value);
-    formdata.append('case', "update");
-    formdata.append('inputFile', categoriesform.inputGroupFile01.files[0]);
-    return formdata;
-}
-
-function afterDeletingSettings(categoryDeleted) {
-    var i = 0;
-    while (categoryList[i].idCategory != categoryDeleted.idCategory) {
-        i++;
-    }
-    categoryList.splice(i, 1);
-    sessionStorage.setItem('categories', JSON.stringify(categoryList));
-    document.getElementById(categoryDeleted.idCategory).remove();
-    document.getElementById("action" + categoryDeleted.idCategory).remove();
-    alert("Product deleted");
-}
-
-function afterServerCallsettings(categoryResult) {
-    console.log('Success:', categoryResult);
-    if (isUpdating) {
-        document.getElementById(categoryResult.idCategory).remove();
-        document.getElementById("action" + categoryResult.idCategory).remove();
-        var i = 0;
-        while (categoryList[i].idCategory != categoryResult.idCategory) {
-            i++;
-        }
-        categoryList.splice(i, 1);
-        categoryList.push(createCategoryFromCallServerResult(categoryResult));
-    } else {
-        categoryList.push(createCategoryFromCallServerResult(categoryResult));
-    }
-    sessionStorage.setItem('categories', JSON.stringify(categoryList));
-    renderCategories(categoryResult);
-    clearForm();
-}
-
-function createCategoryFromCallServerResult(categoryResult) {
-    var result = {
-        idCategory: categoryResult.idCategory,
-        name: categoryResult.name,
-        status: categoryResult.status,
-        description: categoryResult.description
-    };
-    return result;
-}
+/**
+ * this function loads the category object
+ * and it´s functions on the view
+ * @param {*} doc this is a category object
+ */
 
 function renderCategories(doc) {
 
@@ -197,7 +142,10 @@ function renderCategories(doc) {
         hideAndShowDivFuction();
     });
 }
-
+/**
+ * this function sets the first fields in the 
+ * view
+ */
 function loadingPageSettings() {
     var unActiveOption = document.createElement("option");
     unActiveOption.setAttribute("value", "0");
@@ -208,7 +156,10 @@ function loadingPageSettings() {
     categoriesform.activ.appendChild(unActiveOption);
     categoriesform.activ.appendChild(activeOption);
 }
-
+/**
+ * this function clean the form
+ * fields after an action
+ */
 function clearForm() {
     categoriesform.reset();
     document.getElementById("inputImage").innerHTML = chooseFileMessage;
@@ -219,3 +170,109 @@ function clearForm() {
     hideAndShowDivFuction();
     btnResetForm.setAttribute('style', 'visibility: hidden;');
 }
+//#endregion view
+
+//#region dynamic
+
+/**
+ * this function prepare the info needded for the
+ * view
+ */
+async function getInformation() {
+    console.log('getting the categories from sessionStorage');
+    await getClientInfo();
+    categoryList = JSON.parse(sessionStorage.getItem('categories'));
+    productsList = JSON.parse(sessionStorage.getItem('allProducts'));
+}
+
+/**
+ * this function loads an formdata object
+ * to be send to the server
+ * @returns a formdata object
+ */
+function createFormDataAddCategory() {
+    formdata = new FormData();
+    formdata.append('isUpdating', isUpdating);
+    formdata.append('imageToFirebase', imageToFirebase);
+    formdata.append('idCategory', categoriesform.idCategory.value);
+    formdata.append('name', categoriesform.name.value);
+    formdata.append('description', categoriesform.description.value);
+    formdata.append('status', categoriesform.activ.value);
+    formdata.append('case', "add");
+    formdata.append('inputFile', categoriesform.inputGroupFile01.files[0]);
+    return formdata;
+}
+
+/**
+ * this function loads an formdata object
+ * to be send to the server
+ * @returns a formdata object
+ */
+function createFormDataUpdateCategory() {
+    formdata = new FormData();
+    formdata.append('isUpdating', isUpdating);
+    formdata.append('imageToFirebase', imageToFirebase);
+    formdata.append('idCategory', categoriesform.idCategory.value);
+    formdata.append('name', categoriesform.name.value);
+    formdata.append('description', categoriesform.description.value);
+    formdata.append('status', categoriesform.activ.value);
+    formdata.append('case', "update");
+    formdata.append('inputFile', categoriesform.inputGroupFile01.files[0]);
+    return formdata;
+}
+/**
+ * this function is call after a deleting 
+ * call to the server
+ * @param {*} categoryDeleted a category object
+ */
+function afterDeletingSettings(categoryDeleted) {
+    var i = 0;
+    while (categoryList[i].idCategory != categoryDeleted.idCategory) {
+        i++;
+    }
+    categoryList.splice(i, 1);
+    sessionStorage.setItem('categories', JSON.stringify(categoryList));
+    document.getElementById(categoryDeleted.idCategory).remove();
+    document.getElementById("action" + categoryDeleted.idCategory).remove();
+    alert("Product deleted");
+}
+/**
+ * this function is call after an add 
+ * call to the server
+ * @param {*} categoryDeleted a category object
+ */
+function afterServerCallsettings(categoryResult) {
+    console.log('Success:', categoryResult);
+    if (isUpdating) {
+        document.getElementById(categoryResult.idCategory).remove();
+        document.getElementById("action" + categoryResult.idCategory).remove();
+        var i = 0;
+        while (categoryList[i].idCategory != categoryResult.idCategory) {
+            i++;
+        }
+        categoryList.splice(i, 1);
+        categoryList.push(createCategoryFromCallServerResult(categoryResult));
+    } else {
+        categoryList.push(createCategoryFromCallServerResult(categoryResult));
+    }
+    sessionStorage.setItem('categories', JSON.stringify(categoryList));
+    renderCategories(categoryResult);
+    clearForm();
+}
+/**
+ * this function create a category object 
+ * usin the category server result after a server call
+ * @param {*} categoryResult a server object result 
+ * @returns a category object
+ */
+function createCategoryFromCallServerResult(categoryResult) {
+    var result = {
+        idCategory: categoryResult.idCategory,
+        name: categoryResult.name,
+        status: categoryResult.status,
+        description: categoryResult.description
+    };
+    return result;
+}
+
+//#endregion dynamic

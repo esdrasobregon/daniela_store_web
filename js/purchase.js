@@ -128,7 +128,6 @@ var getAllAvailablePurchasesForReceipt = async function (db, idReceipt) {
                     notAvailableUnits: doc.data().notAvailableUnits,
                     outOfStock: doc.data().outOfStock
                 };
-                console.log(purh);
                 allPurchases.push(purh);
             });
         })

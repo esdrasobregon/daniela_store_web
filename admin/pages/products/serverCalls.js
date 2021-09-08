@@ -1,51 +1,62 @@
 /**
- * this function calls the server to add 
- * a product object
+ * this function calls the server to add a
+ * product register to the database
+ * @param {*} formData is a formdata object 
+ * @returns a server response object
  */
-function callAddServer() {
-    const formData = createFormDataProduct();
-    fetch(localHost + "/products", {
+async function callAsyncAddServer(formData) {
+    var result = await fetch(localHost + "/products", {
             method: 'POST',
             body: formData
         }).then(response => response.json())
         .then(result => {
-            console.log(result);
-            result.success ?
-                afterServerCallsettings(result.product) :
-                alert(addImageMessage);
+            return result;
         })
         .catch(error => {
             console.error('Error:', error);
+            var result = {
+                success: false,
+                error: error
+            }
+            return result;
         });
+    console.log(result);
+    return result;
 }
 
 /**
- * this function calls the server to update 
- * a product object 
+ * this function calls the server to add a
+ * product register to the database
+ * @param {*} formData is a formdata object 
+ * @returns a server response object
  */
-function callUpdateServer() {
-    const formData = createFormDataProduct();
-    fetch(localHost + "/products", {
+async function callAsyncUpdateServer(formData) {
+    var result = await fetch(localHost + "/products", {
             method: 'put',
             body: formData
         }).then(response => response.json())
         .then(result => {
-            console.log(result);
-            result.success ?
-                afterServerCallsettings(result.product) :
-                alert(addImageMessage);
+            return result;
         })
         .catch(error => {
             console.error('Error:', error);
+            var result = {
+                success: false,
+                error: error
+            }
+            return result;
         });
+    console.log(result);
+    return result;
 }
 
 /**
- * this function calls the server to delete 
- * a product object
- * @param {*} productToDelete product object  
+ * this function calls the server to delete a
+ * product register
+ * @param {*} productToDelete a product object
+ * @returns a product object
  */
-function callDeleteServer(productToDelete) {
+async function callAsyncDeleteServer(productToDelete) {
     const options = {
         method: 'delete',
         headers: {
@@ -53,13 +64,17 @@ function callDeleteServer(productToDelete) {
         },
         body: JSON.stringify(productToDelete)
     }
-    fetch(localHost + "/products", options).then(
+    var result = await fetch(localHost + "/products", options).then(
         result => result.json()
     ).then((result) => {
-        var p = result.productToDelete;
-        result.success ? afterDeletingSettings(p) :
-            alert("Product not deleted: " + result.success);
+        return result;
     }).catch((error) => {
-        alert("Error: " + error)
+        var result = {
+            success: false,
+            error: error
+        }
+        return result;
     });
+    console.log(result);
+    return result;
 }

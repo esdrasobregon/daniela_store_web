@@ -6,7 +6,6 @@ const productFormMessage = document.querySelector('#productFormMessage');
 const btnResetForm = document.querySelector('#btnResetForm');
 var categoryList;
 var productList;
-var receiptList = [];
 var indexCategorySelected;
 var imageToFirebase = false;
 var isUpdating = false;
@@ -22,6 +21,10 @@ productForm.inputGroupFile01.addEventListener('change', (e) => {
     imageToFirebase = !imageToFirebase;
 });
 
+/**
+ * this function renders the user view with the
+ * products and categories available 
+ */
 function renderView() {
     categoryList.forEach(item => {
         var li = createCustomTextTag('option', 'divider', item.name);
@@ -30,8 +33,6 @@ function renderView() {
         productForm.categorySelect.appendChild(li);
         renderCategoryList(item);
     });
-
-    productList = JSON.parse(sessionStorage.getItem('allProducts'));
     productList.forEach(item => {
         renderProductList(item);
     });
@@ -44,21 +45,24 @@ productForm.addEventListener('submit', async (e) => {
     e.preventDefault();
 
     if (isUpdating) {
-        await callUpdateServer();
-        showPleaseWait();
-        setTimeout(() => {
-            hidePleaseWait();
-        }, 3000);
+        showPleaseWait()
+        var result = await callAsyncUpdateServer(createFormDataProduct());
+        result.success ?
+            afterServerCallsettings(result.product) :
+            alert(addImageMessage);
+        hidePleaseWait();
     } else {
-        await callAddServer();
         showPleaseWait();
-        setTimeout(() => {
-            hidePleaseWait();
-        }, 3000);
+        var result = await callAsyncAddServer(createFormDataProduct());
+        result.success ?
+            afterServerCallsettings(result.product) :
+            alert(addImageMessage);
+        hidePleaseWait();
     }
 
 
 });
+
 /**
  * use this function to render a category
  * to the view
@@ -184,29 +188,15 @@ function renderProductList(doc) {
     document.getElementById(doc.category).appendChild(prodli);
     // deleting data
     btnDelete.addEventListener('click', async (e) => {
-        e.stopPropagation();
-        await callDeleteServer(doc);
-        showPleaseWait();
-        setTimeout(() => {
-            hidePleaseWait();
-        }, 3000);
+        await handleDeleteProduct(e, doc);
     });
     // updating data
-    btnUpdate.addEventListener('click', (e) => {
-        e.stopPropagation();
-        clearForm();
-        btnResetForm.setAttribute('style', 'visibility: visible;')
-        productFormMessage.innerHTML = updatingFormMessage;
-        isUpdating = true;
-        loadProductForm(doc);
+    btnUpdate.addEventListener('click', async (e) => {
+        await handleUpdateProduct(e, doc);
     });
     //show product image
     pShowImage.addEventListener('click', async (e) => {
-        e.stopPropagation();
-        document.getElementById("productDetailsModLabelLabel").innerHTML = doc.name;
-        $('#modalImageFirebase')
-            .attr('src', url + doc.idProduct + urlPlus);
-        $('#productDetailsModLabel').modal('show');
+        handleShowImage(e, doc);
     });
     purchaseCheck.addEventListener("change", () => {
         handleProductsToPurchaseList(doc);
@@ -214,6 +204,44 @@ function renderProductList(doc) {
     saleCheck.addEventListener("change", () => {
         handleProductsToSaleList(doc);
     });
+}
+/**
+ * this function shows the product image
+ * @param {*} e button function object
+ * @param {*} doc product object
+ */
+function handleShowImage(e, doc) {
+    e.stopPropagation();
+    document.getElementById("productDetailsModLabelLabel").innerHTML = doc.name;
+    $('#modalImageFirebase')
+        .attr('src', url + doc.idProduct + urlPlus);
+    $('#productDetailsModLabel').modal('show');
+}
+/**
+ * this function deletes a product object
+ * @param {*} e button function object
+ * @param {*} doc product object
+ */
+async function handleDeleteProduct(e, doc) {
+    e.stopPropagation();
+    showPleaseWait();
+    var result = await callAsyncDeleteServer(doc);
+    result.success ? afterDeletingSettings(doc) :
+        alert("Product not deleted: " + result.success);
+    hidePleaseWait();
+}
+/**
+ * this function updates a product object
+ * @param {*} e button function object
+ * @param {*} doc product object
+ */
+async function handleUpdateProduct(e, doc) {
+    e.stopPropagation();
+    clearForm();
+    btnResetForm.setAttribute('style', 'visibility: visible;')
+    productFormMessage.innerHTML = updatingFormMessage;
+    isUpdating = true;
+    loadProductForm(doc);
 }
 
 /**
@@ -263,7 +291,9 @@ function loadProductForm(doc) {
     productForm.name.value = doc.name;
     productForm.price.value = doc.price;
     productForm.categorySelect.value = doc.category;
-    productForm.creationDate.value = doc.creationDate.year + "-" + doc.creationDate.month + "-" + doc.creationDate.date;
+    productForm.creationDate.value = doc.creationDate.year +
+        "-" + doc.creationDate.month +
+        "-" + doc.creationDate.date;
     productForm.modificationDate.valueAsDate = new Date();
     productForm.activ.value = doc.activ;
     productForm.description.value = doc.description;
@@ -308,14 +338,19 @@ window.onload = async function () {
     currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
     productForm.creationDate.valueAsDate = new Date();
     productForm.modificationDate.valueAsDate = new Date();
-    verifyUserCredentials();
-    getInformation();
-    renderView();
+    if (verifyUserCredentials()) {
+        await getInformation();
+        renderView();
+        setProductInventoryView();
+    } else {
+        document.location.replace("/pages/login");
+    }
+
 }
 
 /**
  * this function handles the adding and 
- * removing product to sale
+ * removing product to sale from the list
  * @param {*} doc a product object
  */
 function handleProductsToSaleList(doc) {
@@ -323,31 +358,48 @@ function handleProductsToSaleList(doc) {
         .find(element => element.idProduct == doc.idProduct);
     console.log(idProductToSale);
     if (idProductToSale == undefined) {
-        if (getPurchasesAvalilableUnits(doc.idProduct) > 0) {
-            productsToSale.push(doc);
-        } else {
-            alert("Not available");
-            document.getElementById("saleCheck" + doc.idProduct)
-                .checked = false;
-        }
+        addProductToSaleList(doc);
 
     } else {
-        var exist = false;
-        var i = 0;
-        while (!exist && i < productsToSale.length) {
-            console.log(i);
-            exist = productsToSale[i].idProduct ==
-                doc.idProduct;
-            if (exist) {
-                productsToSale.splice(i, 1);
-                document.getElementById("check" + doc.idProduct)
-                    .checked = false;
-            }
-            i++;
-        }
+        spliceProductToSaleList(doc);
 
     }
 }
+/**
+ * this function handles the adding
+ * to the sale list
+ * @param {*} doc a product object
+ */
+function addProductToSaleList(doc) {
+    if (getPurchasesAvalilableUnits(doc.idProduct) > 0) {
+        productsToSale.push(doc);
+    } else {
+        alert("Not available");
+        document.getElementById("saleCheck" + doc.idProduct)
+            .checked = false;
+    }
+}
+/**
+ * this function handles the 
+ * removing product to sale from the list
+ * @param {*} doc a product object
+ */
+function spliceProductToSaleList(doc) {
+    var exist = false;
+    var i = 0;
+    while (!exist && i < productsToSale.length) {
+        console.log(i);
+        exist = productsToSale[i].idProduct ==
+            doc.idProduct;
+        if (exist) {
+            productsToSale.splice(i, 1);
+            document.getElementById("check" + doc.idProduct)
+                .checked = false;
+        }
+        i++;
+    }
+}
+
 /**
  * this function handles the adding and 
  * removing product to purchase
@@ -375,34 +427,22 @@ function handleProductsToPurchaseList(doc) {
  * show the user view
  */
 async function getInformation() {
+
+    await getClientInfo();
+    productList = JSON.parse(sessionStorage.getItem('allProducts'));
+    categoryList = JSON.parse(sessionStorage.getItem('categories'));
+
     if (sessionStorage.getItem('allReceipts') == null) {
         console.log("getting purchases");
-        getAllPurchasesReceipts();
+        await getAllPurchasesReceipts();
     } else {
         receiptList = JSON.parse(sessionStorage.getItem('allReceipts'));
     }
-    categoryList = JSON.parse(sessionStorage.getItem('categories'));
-
     if (categoryList != null) {
         indexCategorySelected = categoryList[0].idCategory;
     }
 }
-/**
- * use it to know the current inventory of the certain pruduct
- * @param {*} idProduct the product id in serch
- * @returns the current inventory number in stock 
- */
-function getPurchasesAvalilableUnits(idProduct) {
-    var result = 0;
-    receiptList.forEach(element => {
-        element.purchases.forEach(p => {
-            if (p.idProduct == idProduct) {
-                result += p.tottalUnits - p.notAvailableUnits;
-            }
-        });
-    });
-    return result;
-}
+
 /**
  * this function sets the final steps after 
  * delete a product object. 
