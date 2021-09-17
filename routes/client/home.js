@@ -1,9 +1,24 @@
 //take from https://www.youtube.com/watch?v=0Hu27PoloYw
 const express = require("express");
+const session = require('express-session');
 var keys = require('../../shared/serverKeys.js');
+const cokieParser = require("cookie-parser");
+const cookiesFunction = require('../../serverFunctions/serverCookies');
 const router = express.Router();
+router.use(session({
+    secret: "key that will sign cokie",
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        maxAge: 1000 * 60 * 60,
+        secure: false,
+        httpOnly: true
+    }
+}));
+router.use(cokieParser());
 
 router.get("/", function (req, res) {
+    cookiesFunction.getUserCookie(req, keys);
     res.render('index', {
         keys: keys
     });

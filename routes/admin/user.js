@@ -2,6 +2,7 @@ const express = require("express");
 const user = require('../../js/user.js');
 const firebaseAdmin = require("../../firebaseFunctions/firebaseSettings");
 const commonFunction = require('../../serverFunctions/commonFunctions.js');
+const cookiesFunction = require('../../serverFunctions/serverCookies');
 var keys = require('../../shared/serverKeys.js');
 const router = express.Router();
 router.use(express.json());
@@ -9,6 +10,9 @@ router.use(express.json());
 router.use(express.urlencoded({
     extended: false
 }));
+
+//#region get
+//#end region get
 
 router.get('/', async (request, response) => {
     response.set('Cache-control', 'public, max-age =300, s-maxage=600');
@@ -107,6 +111,7 @@ async function getCurrentUser(request, response) {
                 us == null ?
                     result.success = false :
                     console.log(us);
+                cookiesFunction.setUserCookie(response, us);
                 response.json(result);
             });
         }
@@ -115,5 +120,6 @@ async function getCurrentUser(request, response) {
     }
 
 }
+
 
 module.exports = router;

@@ -15,12 +15,10 @@ var currentUser = null;
 //#region view
 
 window.onload = async function () {
-    currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
-    if (verifyUserCredentials()) {
-        loadingPageSettings();
-        await getInformation();
-        loadCategories();
-    } else document.location.replace("/pages/login");
+
+    loadingPageSettings();
+    await getInformation();
+    loadCategories();
 
 }
 categoriesform.inputGroupFile01.addEventListener('change', (e) => {

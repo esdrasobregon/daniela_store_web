@@ -57,3 +57,5 @@ var nextStepMessage = "Siguiente";
 var finaliceMessage = "Finalizar";
 //server calls messages 
 var callfailsMessage = "Error de servidor";
+//new
+const logOutMessage = "Salir";

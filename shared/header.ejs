@@ -26,52 +26,75 @@
                         <%=keys.pagesNames.contactText%>
                     </a>
                 </li>
-                <li class="nav-item dropdown" id="adminMenu">
-                    <a href="#" class="nav-link dropdown-toggle" id="navbarDropdownMenuLink-4" data-toggle="dropdown"
-                        aria-haspopup="true" aria-expanded="false">
-                        <%=keys.key.adminMenuText%>
-                    </a>
+                <% if (keys.currentUser !=null) { %>
+                    <li class="nav-item dropdown" id="adminMenu">
+                        <a href="#" class="nav-link dropdown-toggle" id="navbarDropdownMenuLink-4"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <%=keys.key.adminMenuText%>
+                        </a>
 
-                    <div class="dropdown-menu dropdown-menu-right dropdown-info"
-                        aria-labelledby="navbarDropdownMenuLink-4">
-                        <a id="adminProductMenu" href="/products/?admProductPage" class="dropdown-item">
-                            <%=keys.key.aAdminProductsMenu%>
+                        <div class="dropdown-menu dropdown-menu-right dropdown-info"
+                            aria-labelledby="navbarDropdownMenuLink-4">
+
+
+                            <a id="adminProductMenu" href="/products/?admProductPage" class="dropdown-item">
+                                <%=keys.key.aAdminProductsMenu%>
+                            </a>
+                            <a id="adminCategoryMenu" href="/categories/?admCategoryPage" class="dropdown-item">
+                                <%=keys.key.aAdminCategoriesMenu%>
+                            </a>
+
+                        </div>
                         </a>
-                        <a id="adminCategoryMenu" href="/categories/?admCategoryPage" class="dropdown-item">
-                            <%=keys.key.aAdminCategoriesMenu%>
-                        </a>
-                    </div>
-                    </a>
-                </li>
-                <li class="nav-item" id="headerStoreLink">
-                    <a href="/pages/categories/categories" id="aheaderStoreLink" class="nav-link">
-                        <%=keys.pagesNames.storeText%>
-                    </a>
-                </li>
-                <li class="nav-item" id="headerLoginLink">
-                    <a href="/pages/login" id="aheaderLoginLink" class="nav-link">
-                        <%=keys.pagesNames.aloginText%>
-                    </a>
-                </li>
+                    </li>
+                    <% } %>
+                        <li class="nav-item" id="headerStoreLink">
+                            <a href="/pages/categories/categories" id="aheaderStoreLink" class="nav-link">
+                                <%=keys.pagesNames.storeText%>
+                            </a>
+                        </li>
+                        <li class="nav-item" id="headerLoginLink">
+                            <a href="/pages/login" id="aheaderLoginLink" class="nav-link">
+                                <%=keys.pagesNames.aloginText%>
+                            </a>
+                        </li>
             </ul>
         </div>
     </nav>
 </div>
 <script>
     var currentUser = sessionStorage.getItem('currentUser');
-    document.getElementById("aheaderContactLink").href == document.location.href != true ? console.log("no es contact") : document.getElementById("headerContactLink").setAttribute("class", "nav-link disabled");
-    document.getElementById("aheaderLoginLink").href == document.location.href != true ? console.log("no es login") : document.getElementById("headerLoginLink").setAttribute("class", "nav-link disabled");
-    document.getElementById("aheaderAboutLink").href == document.location.href != true ? console.log("no es about") : document.getElementById("headerAboutLink").setAttribute("class", "nav-link disabled");
-    document.getElementById("aheaderHomeLink").href == document.location.href != true ? console.log("no es Home") : document.getElementById("headerHomeLink").setAttribute("class", "nav-link disabled");
+    document.getElementById("aheaderContactLink").href
+        == document.location.href != true
+        ? console.log("no es contact")
+        : document.getElementById("headerContactLink").setAttribute("class", "nav-link disabled");
+    document.getElementById("aheaderLoginLink").href
+        == document.location.href != true
+        ? console.log("no es login")
+        : document.getElementById("headerLoginLink").setAttribute("class", "nav-link disabled");
+    document.getElementById("aheaderAboutLink").href
+        == document.location.href != true
+        ? console.log("no es about")
+        : document.getElementById("headerAboutLink").setAttribute("class", "nav-link disabled");
+    document.getElementById("aheaderHomeLink").href
+        == document.location.href != true ? console.log("no es Home")
+        : document.getElementById("headerHomeLink").setAttribute("class", "nav-link disabled");
     document.getElementById("aheaderStoreLink").href == document.location.href != true ? console.log("no es Home") : document.getElementById("headerStoreLink").setAttribute("class", "nav-link disabled");
     if (document.getElementById("adminMenu") != null) {
-        document.getElementById("adminProductMenu").href == document.location.href != true ? console.log("no es product") : document.getElementById("adminProductMenu").href = "#";
-        document.getElementById("adminCategoryMenu").href == document.location.href != true ? console.log("no es category") : document.getElementById("adminCategoryMenu").href = "#";
+        document.getElementById("adminProductMenu").href
+            == document.location.href != true ? console.log("no es product")
+            : document.getElementById("adminProductMenu").href = "#";
+        document.getElementById("adminCategoryMenu").href
+            == document.location.href != true ? console.log("no es category")
+            : document.getElementById("adminCategoryMenu").href = "#";
+
+        var userOptions = document.getElementById("navbarDropdownMenuLink-4");
+        if (userOptions == null) {
+
+        } else {
+            document.getElementById("aheaderLoginLink")
+                .innerHTML = logOutMessage;
+        }
+
     }
-    currentUser == null ? document.getElementById("headerItemBar").removeChild(document.getElementById("adminMenu")) : console.log("admin");
-    currentUser == null ? console.log("admin") : document.getElementById("aheaderLoginLink").innerHTML = '<%=keys.key.loginOut%>';
-    document.getElementById("aheaderLoginLink").addEventListener("click", (e) => {
-        e.stopPropagation();
-        sessionStorage.removeItem('currentUser');
-    });
 </script>

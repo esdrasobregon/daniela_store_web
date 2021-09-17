@@ -335,16 +335,19 @@ function setProductInventoryView() {
 //#region dynamic
 
 window.onload = async function () {
-    currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
+    //currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
     productForm.creationDate.valueAsDate = new Date();
     productForm.modificationDate.valueAsDate = new Date();
-    if (verifyUserCredentials()) {
-        await getInformation();
-        renderView();
-        setProductInventoryView();
-    } else {
-        document.location.replace("/pages/login");
-    }
+    // if (verifyUserCredentials()) {
+    //     await getInformation();
+    //     renderView();
+    //     setProductInventoryView();
+    // } else {
+    //     document.location.replace("/pages/login");
+    // }
+    await getInformation();
+    renderView();
+    setProductInventoryView();
 
 }
 

@@ -3,13 +3,15 @@ const categories = require('../../js/categories.js');
 const firebaseAdmin = require("../../firebaseFunctions/firebaseSettings");
 const serverFiles = require("../../serverFunctions/serverFiles.js");
 const firestoreFiles = require("../../firebaseFunctions/firestoreFiles.js");
-const commonFunction = require('../../serverFunctions/commonFunctions.js');
+const cokieParser = require("cookie-parser");
+const cookiesFunction = require('../../serverFunctions/serverCookies');
 var keys = require('../../shared/serverKeys.js');
 var formidable = require('formidable');
 const {
     Result
 } = require("express-validator");
 const router = express.Router();
+router.use(cokieParser());
 router.use(express.json());
 router.use(express.urlencoded({
     extended: false
@@ -40,9 +42,17 @@ function getDecition(request, response) {
             getAllCategories(response);
             break;
         case "admCategoryPage":
-            response.render("./admin/pages/categories/categories", {
-                keys: keys
-            });
+
+            if (cookiesFunction.userCookieExist(request)) {
+                cookiesFunction.getUserCookie(request, keys);
+                console.log(__dirname);
+                response.set('Cache-control', `no-cache, no-store, must-revalidate`, );
+                response.render("./admin/pages/categories/categories", {
+                    keys: keys
+                });
+            } else {
+                response.redirect("/");
+            }
             break;
         default:
             result.success = false;

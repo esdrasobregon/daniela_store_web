@@ -5,9 +5,12 @@ const firebaseAdmin = require("../../firebaseFunctions/firebaseSettings");
 const firestoreFiles = require("../../firebaseFunctions/firestoreFiles.js");
 const commonFunction = require('../../serverFunctions/commonFunctions.js');
 const serverFiles = require("../../serverFunctions/serverFiles.js");
+const cokieParser = require("cookie-parser");
+const cookiesFunction = require('../../serverFunctions/serverCookies');
 var keys = require('../../shared/serverKeys.js');
 var formidable = require('formidable');
 const router = express.Router();
+router.use(cokieParser());
 router.use(express.json());
 
 router.use(express.urlencoded({
@@ -40,9 +43,19 @@ function getDecition(request, response) {
             getAllProducts(response);
             break;
         case "admProductPage":
-            response.render("./admin/pages/products/product", {
-                keys: keys
-            });
+            if (cookiesFunction.userCookieExist(request)) {
+                cookiesFunction.getUserCookie(request, keys);
+                console.log(__dirname);
+                response.set('Cache-control', `no-cache, no-store, must-revalidate`, );
+                response.render("./admin/pages/products/product", {
+                    keys: keys
+                });
+            } else {
+                //this doesn't work
+
+                response.redirect("/");
+            }
+
             break;
         default:
             result.success = false;

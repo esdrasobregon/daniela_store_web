@@ -18,7 +18,7 @@ function loginCall(userCredentials) {
         console.log(result);
         if (result.success) {
             loginForm.reset();
-            sessionStorage.setItem('currentUser', JSON.stringify(result.user));
+            //sessionStorage.setItem('currentUser', JSON.stringify(result.user));
             document.location.replace("/products/?admProductPage");
         } else {
             alert(credentialsErrorMessage);
