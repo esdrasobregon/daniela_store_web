@@ -106,7 +106,7 @@ async function getCurrentUser(request, response) {
             userCredentials.error = "the call failed";
             response.json(userCredentials);
         } else {
-            user.getUser(firebaseAdmin.db, userCredentials).then(us => {
+            user.user.getUser(userCredentials).then(us => {
                 result.user = us;
                 us == null ?
                     result.success = false :
