@@ -1,5 +1,5 @@
 const express = require("express");
-const user = require('../../js/user.js');
+const user = require('../../js/models/user.js');
 const firebaseAdmin = require("../../firebaseFunctions/firebaseSettings");
 const commonFunction = require('../../serverFunctions/commonFunctions.js');
 const cookiesFunction = require('../../serverFunctions/serverCookies');

@@ -1,0 +1,77 @@
+<!-- Modal -->
+<div class="modal fade" id="productDetailsModLabel" tabindex="-1" role="dialog"
+aria-labelledby="productDetailsModLabelLabel" aria-hidden="true">
+<div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="productDetailsModLabelLabel"></h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="card">
+
+                <div class="d-md-flex align-self-center">
+                    <div class="overflow-auto p-3 mb-3 mb-md-0 mr-md-3 bg-light"
+                        style="max-width: 700px; max-height: 400px;">
+                        <br>
+                        <img style="margin: 20px" class="img-fluid align-self-center"
+                            alt="Responsive image" id="productImage" src="#"><br>
+
+                    </div>
+
+                </div>
+                <div id="productDetails" class="container align-self-center">
+                    <br>
+                    <h4 class="text-info d-flex">Product details</h4>
+                    <h2 class="name" id="productName">
+                    </h2>
+                    <h2 class="price-container" id="productPrice"></h2>
+                    <h2 class="price-container" id="whatsAppNumber"></h2>
+                    <div class="description" id="productDescription"></div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                <%= keys.key.btnCloseLabel%>
+            </button>
+        </div>
+    </div>
+</div>
+</div>
+<!--modal end-->
+<script>
+    /**
+ * this function shows the product details
+ * @param {*} prod a product object
+ */
+function showProductDetailsModal(prod) {
+    var listProdDescription = prod.description.split(".");
+    var ulProdDescription = createCustomNonTextTag("ul", "list-group list-group-flush");
+    ulProdDescription.appendChild(createCustomTextTag("li", "list-group-item active", categoryDescriptionListTitle));
+    listProdDescription.forEach((desc) => {
+        const l = createCustomTextTag("li", "list-group-item", desc);
+        ulProdDescription.appendChild(l);
+    });
+    document.getElementById("productDetailsModLabelLabel").innerHTML = prod.name;
+    document.getElementById("productName").innerHTML = prodModaldetailsName + prod.name;
+    document.getElementById("productPrice").innerHTML = prod.showPrice == true ?
+        prodModaldetailsPrice + prod.price :
+        prodModaldetailsNotPrice;
+    var divDesc = document.getElementById("productDescription");
+    //removing the actual content
+    while (divDesc.firstChild) {
+        divDesc.removeChild(divDesc.firstChild);
+    }
+    divDesc.appendChild(ulProdDescription);
+    document.getElementById("whatsAppNumber") == null ?
+        console.log("no whatsapp section") :
+        document.getElementById("whatsAppNumber")
+        .innerHTML = prodModaldetailsCallPhone + whatsAppNumber;
+    $('#productImage')
+        .attr('src', url + prod.idProduct + urlPlus);
+    $('#productDetailsModLabel').modal('show');
+}
+</script>

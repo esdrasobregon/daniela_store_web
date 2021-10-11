@@ -1,14 +1,15 @@
+const firebaseAdmin = require("../firebaseFunctions/firebaseSettings");
+
 //#region function
 
 /**
  * this function upload a file to firebase storage
  * @param {*} filename the file name
- * @param {*} firebaseAdmin a firebase admin object
  * @param {*} fileNewName the new name for the file
  * @param {*} contentType the file type
  * @returns a bool type confirmation
  */
-const uploadFile = async (filename, firebaseAdmin, fileNewName, contentType) => {
+const uploadFile = async (filename, fileNewName, contentType) => {
 
     try {
         await firebaseAdmin.bucket.upload(filename, {
@@ -39,9 +40,8 @@ const uploadFile = async (filename, firebaseAdmin, fileNewName, contentType) => 
 /**
  * this function deletes a firebase store file
  * @param {*} filename the file name
- * @param {*} firebaseAdmin a firebase admin object
  */
-const deleteFile = async (filename, firebaseAdmin) => {
+const deleteFile = async (filename) => {
     // delete a firestore file
     try {
         await firebaseAdmin.bucket.file(filename)

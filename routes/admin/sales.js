@@ -1,6 +1,6 @@
 //#region variables
 const express = require("express");
-const sale = require('../../js/sales.js');
+const sale = require('../../js/models/sales.js');
 const receipt = require('../../js/models/receipt');
 const firebaseAdmin = require("../../firebaseFunctions/firebaseSettings");
 const commonFunction = require('../../serverFunctions/commonFunctions.js');
@@ -59,9 +59,8 @@ async function getPurchaseList(request, response) {
     }
     try {
 
-        result.purchases = await sale
-            .getAllAvailablePurchasesForReceipt(firebaseAdmin.db,
-                result.idReceipt);
+        result.purchases = await sale.sales
+            .getAllAvailablePurchasesForReceipt(result.idReceipt);
         console.log(result.purchases);
         response.json(result);
     } catch (error) {
@@ -79,9 +78,10 @@ async function getPurchaseList(request, response) {
 async function allAvaliableMonthPurchasesReceipts(request, response) {
     response.set('Cache-control', 'public, max-age =300, s-maxage=600');
     console.log("function all purchases called");
-    var purchases = await sale.getAllAvailablePurchases(firebaseAdmin.db);
+    var purchases = await sale.sales
+        .getAllAvailablePurchases();
     var receipts =
-        await receipt.getActualMonthReceipts(firebaseAdmin, commonFunction);
+        await receipt.receipt.getActualMonthReceipts();
     receipts.forEach(element => {
         purchases.forEach(p => {
             if (element.idReceipt == p.idReceipt) {
@@ -99,8 +99,8 @@ async function allAvaliableMonthPurchasesReceipts(request, response) {
 async function getAllPurchasesByIdProduct(request, response) {
     console.log("function all product purchases called");
     console.log("Purchases for: " + request.body.idProduct);
-    await sale
-        .getAllPurchasesByIdProduct(firebaseAdmin.db, request.body.idProduct, commonFunction)
+    await sale.sales
+        .getAllPurchasesByIdProduct(request.body.idProduct)
         .then(purchaces => {
             response.json(purchaces)
         });
@@ -161,7 +161,7 @@ async function addSaleList(request, response) {
     try {
         request.body.salesList.forEach((item) => {
             item.sales.forEach(async (element) => {
-                sale.addSale(firebaseAdmin.db, element);
+                sale.sales.addSale(element);
                 result.sales.push(element);
             });
         });
@@ -230,7 +230,7 @@ async function updatePuchaseList(request, response) {
     try {
         result.purchases.forEach(async (item) => {
             console.log(item);
-            await sale.updatePurchase(firebaseAdmin.db, item);
+            await sale.sales.updatePurchase(item);
         });
         response.json(result);
     } catch (error) {
@@ -251,8 +251,8 @@ router.delete('/', async (request, response) => {
     response.set('Cache-control', 'public, max-age =300, s-maxage=600');
     console.log("method add delete called");
     console.log(request.body);
-    await sale
-        .deletePurchase(firebaseAdmin.db, request.body.idPurchase);
+    await sale.sales
+        .deletePurchase(request.body.idPurchase);
     var result = {
         idPurchase: request.body.idPurchase,
         success: true

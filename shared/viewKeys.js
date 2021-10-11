@@ -21,7 +21,7 @@ var prodModaldetailsCallPhone = "Llamanos al: ";
 //product admin labels
 var creationdateMessage = "Fecha de creación";
 var lastModificationMessage = "Última modificación";
-var showProductImage = "Mostrar imagen";
+var showProductDetails = "Ver detalles";
 var placeHolderProductId = "Id del producto ";
 var placeHolderProductPrice = "Precio";
 var showProductPriceMessageYes = "Mostrar precio: si";

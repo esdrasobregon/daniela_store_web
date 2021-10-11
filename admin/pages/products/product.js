@@ -33,8 +33,10 @@ function renderView() {
         productForm.categorySelect.appendChild(li);
         renderCategoryList(item);
     });
-    productList.forEach(item => {
-        renderProductList(item);
+    productList.forEach(prod => {
+        var divProd = renderProduct(prod);
+        document.getElementById(prod.category).appendChild(divProd);
+        adminProductButtons(prod);
     });
 }
 productForm.price
@@ -71,24 +73,27 @@ productForm.addEventListener('submit', async (e) => {
 function renderCategoryList(item) {
     var divBtnHide = createCustomNonTextTag('div', 'card');
     divBtnHide.setAttribute("style", "margin: 10px;");
-    var btnHide = document.createElement("button");
+    var btnHide = document.createElement("container");
     divBtnHide.appendChild(btnHide);
     btnHide.setAttribute("class", "btn btn-info btn-lg");
     btnHide.innerHTML = item.name;
+    var divHide = createCustomNonTextTag('div', 'card');
+    divHide.setAttribute("style", "margin: 10px;");
     var mainContainer = document.createElement("div");
     mainContainer.setAttribute("class", "row");
-    mainContainer.setAttribute("style", "margin:10px; padding:5px; display:none;");
-    btnHide.addEventListener('click', (e) => {
+    divHide.setAttribute("style", "margin:10px; padding:5px; display:none;");
+    divBtnHide.addEventListener('click', (e) => {
         e.stopPropagation();
-        if (mainContainer.style.display === "none") {
-            mainContainer.style.display = "block";
+        if (divHide.style.display === "none") {
+            divHide.style.display = "block";
         } else {
-            mainContainer.style.display = "none";
+            divHide.style.display = "none";
         }
     });
     mainContainer.setAttribute("id", item.idCategory);
+    divHide.appendChild(mainContainer);
     productcategoryList.appendChild(divBtnHide);
-    productcategoryList.appendChild(mainContainer);
+    productcategoryList.appendChild(divHide);
 
 };
 
@@ -97,17 +102,17 @@ function renderCategoryList(item) {
  * objects to the view
  * @param {*} doc is a product object
  */
-function renderProductList(doc) {
+
+function adminProductButtons(doc) {
     var availableUnits = getPurchasesAvalilableUnits(doc.idProduct);
+    var inventoryDiv = createCustomTextTag("div");
+    inventoryDiv.innerHTML = "inventory: " + availableUnits;
+    inventoryDiv.setAttribute("id", "inventory" + doc.idProduct);
+    var productDiv = document.getElementById("product" + doc.idProduct);
     var btnDelete = createCustomTextTag('button', 'btn btn-danger', 'X');
     btnDelete.setAttribute('style', 'margin-right:5px');
     var btnUpdate = createCustomTextTag('button', 'btn btn-warning', '!');
     btnUpdate.setAttribute('style', 'margin-right:5px');
-
-    var divProdDetails =
-        createCustomNonTextTag('div', 'container-fluid border border-primary rounded');
-    divProdDetails.setAttribute("style", "margin: 10px; padding: 10px;");
-
     //purchase
     var divPurchase = createCustomNonTextTag("div", "form-check form-check-inline");
     var purchaseCheck = createCustomNonTextTag("input", "form-check-input");
@@ -122,6 +127,9 @@ function renderProductList(doc) {
     //end purchase
     //sale
     var divSale = createCustomNonTextTag("div", "form-check form-check-inline");
+    availableUnits == 0 ?
+        divSale.style.display = "none" :
+        console.log("Available units");
     divSale.setAttribute("id", "divSale" + doc.idProduct);
     availableUnits == 0 ?
         divSale.style.display = "none" :
@@ -137,56 +145,22 @@ function renderProductList(doc) {
     saleCheck.name = "sale";
     //end sale
 
-    var pName = createCustomTextTag('h3', 'h3', prodModaldetailsName + doc.name + " ");
-    var pShowImage = createCustomTextTag('small', 'text-primary', showProductImage);
-    pShowImage.setAttribute("style", "text-decoration: underline;")
-    pName.appendChild(pShowImage);
-    var pidProduct = createCustomTextTag('p', 'lead', placeHolderProductId + doc.idProduct);
-    var pPrice = createCustomTextTag('p', 'lead', placeHolderProductPrice + ": " + doc.price);
-    var pShowPrice = createCustomTextTag('p', 'lead', doc.showPrice == true ?
-        showProductPriceMessageYes :
-        showProductPriceMessageNo);
-    var pInventory = createCustomTextTag('p', 'lead', placeHolderProductInventory +
-        availableUnits);
-    pInventory.setAttribute("id", "inventory" + doc.idProduct);
-    var pState = createCustomTextTag('p', 'lead', placeHolderProductState + doc.activ);
-    var d = new Date(doc.creationDate);
-    var pCreation = createCustomTextTag('p', 'lead', creationdateMessage + ": " +
-        doc.creationDate.year +
-        '-' + doc.creationDate.date +
-        '-' + doc.creationDate.month);
-    d = new Date(doc.modificationDate);
-    var pModification = createCustomTextTag('p', 'lead', lastModificationMessage + ": " +
-        doc.modificationDate.year +
-        '-' + doc.modificationDate.date + '-' +
-        doc.modificationDate.month);
 
+    divSale.appendChild(saleCheck);
+    divSale.appendChild(saleLabel);
+    saleCheck.type = "checkbox";
+    saleCheck.name = "sale";
+    //end sale
     appendChildListTag(
-        [pName,
-            divPurchase,
+        [
+            inventoryDiv,
             divSale,
-            pidProduct,
-            pidProduct,
-            pPrice,
-            pShowPrice,
-            pInventory,
-            pState,
-            pCreation,
-            pModification,
+            divPurchase,
             btnDelete,
             btnUpdate
         ],
-        divProdDetails
+        productDiv
     );
-
-    var prodli = document.createElement('div');
-    prodli.setAttribute('class', 'col-sm');
-    prodli.setAttribute('id', doc.idProduct);
-    prodli.appendChild(divProdDetails);
-
-
-    document.getElementById(doc.category).appendChild(prodli);
-    // deleting data
     btnDelete.addEventListener('click', async (e) => {
         await handleDeleteProduct(e, doc);
     });
@@ -194,10 +168,7 @@ function renderProductList(doc) {
     btnUpdate.addEventListener('click', async (e) => {
         await handleUpdateProduct(e, doc);
     });
-    //show product image
-    pShowImage.addEventListener('click', async (e) => {
-        handleShowImage(e, doc);
-    });
+
     purchaseCheck.addEventListener("change", () => {
         handleProductsToPurchaseList(doc);
     });
@@ -205,18 +176,7 @@ function renderProductList(doc) {
         handleProductsToSaleList(doc);
     });
 }
-/**
- * this function shows the product image
- * @param {*} e button function object
- * @param {*} doc product object
- */
-function handleShowImage(e, doc) {
-    e.stopPropagation();
-    document.getElementById("productDetailsModLabelLabel").innerHTML = doc.name;
-    $('#modalImageFirebase')
-        .attr('src', url + doc.idProduct + urlPlus);
-    $('#productDetailsModLabel').modal('show');
-}
+
 /**
  * this function deletes a product object
  * @param {*} e button function object
@@ -335,20 +295,13 @@ function setProductInventoryView() {
 //#region dynamic
 
 window.onload = async function () {
-    //currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
+    showPleaseWait();
     productForm.creationDate.valueAsDate = new Date();
     productForm.modificationDate.valueAsDate = new Date();
-    // if (verifyUserCredentials()) {
-    //     await getInformation();
-    //     renderView();
-    //     setProductInventoryView();
-    // } else {
-    //     document.location.replace("/pages/login");
-    // }
     await getInformation();
     renderView();
-    setProductInventoryView();
-
+    //setProductInventoryView();
+    hidePleaseWait();
 }
 
 /**
@@ -459,7 +412,7 @@ function afterDeletingSettings(productDeleted) {
     }
     productList.splice(i, 1);
     sessionStorage.setItem('allProducts', JSON.stringify(productList));
-    var prodli = document.getElementById(productDeleted.idProduct);
+    const prodli = document.getElementById("card" + productDeleted.idProduct);
     document.getElementById(productDeleted.category).removeChild(prodli);
     alert("Product deleted");
 }
@@ -478,7 +431,7 @@ function afterServerCallsettings(productResult) {
             element.idProduct == productResult.idProduct);
         var indexCategory = categoryList.find(element =>
             element.idCategory == p.category).idCategory;
-        var del = document.getElementById(productResult.idProduct);
+        var del = document.getElementById("card" + productResult.idProduct);
         document.getElementById(indexCategory).removeChild(del);
         var i = 0;
         while (productList[i].idProduct != productResult.idProduct) {
@@ -490,7 +443,10 @@ function afterServerCallsettings(productResult) {
         productList.push(productResult);
     }
     sessionStorage.setItem('allProducts', JSON.stringify(productList));
-    renderProductList(productResult);
+    var prodDiv = renderProduct(productResult);
+    document.getElementById(productResult.category)
+        .appendChild(prodDiv);
+    adminProductButtons(productResult);
     clearForm();
 }
 

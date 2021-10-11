@@ -1,13 +1,10 @@
 //#region variables
 const express = require("express");
-const purchase = require('../../js/purchase');
+const purchase = require('../../js/models/purchase');
 const receipt = require('../../js/models/receipt');
 const firebaseAdmin = require("../../firebaseFunctions/firebaseSettings");
-const serverFiles = require("../../serverFunctions/serverFiles.js");
-const firestoreFiles = require("../../firebaseFunctions/firestoreFiles.js");
+//const serverFiles = require("../../serverFunctions/serverFiles.js");
 const commonFunction = require('../../serverFunctions/commonFunctions.js');
-var keys = require('../../shared/serverKeys.js');
-var formidable = require('formidable');
 const router = express.Router();
 router.use(express.json());
 
@@ -63,8 +60,8 @@ async function getPurchaseList(request, response) {
     }
     try {
 
-        result.purchases = await purchase
-            .getAllAvailablePurchasesForReceipt(firebaseAdmin.db,
+        result.purchases = await purchase.purchases
+            .getAllAvailablePurchasesForReceipt(
                 result.idReceipt);
         console.log(result.purchases);
         response.json(result);
@@ -83,9 +80,9 @@ async function getPurchaseList(request, response) {
 async function allAvaliableMonthPurchasesReceipts(request, response) {
     response.set('Cache-control', 'public, max-age =300, s-maxage=600');
     console.log("function all purchases called");
-    var purchases = await purchase.getAllAvailablePurchases(firebaseAdmin.db);
+    var purchases = await purchase.purchases.getAllAvailablePurchases();
     var receipts =
-        await receipt.getActualMonthReceipts(firebaseAdmin, commonFunction);
+        await receipt.receipt.getActualMonthReceipts(firebaseAdmin, commonFunction);
     receipts.forEach(element => {
         purchases.forEach(p => {
             if (element.idReceipt == p.idReceipt) {
@@ -103,8 +100,8 @@ async function allAvaliableMonthPurchasesReceipts(request, response) {
 async function getAllPurchasesByIdProduct(request, response) {
     console.log("function all product purchases called");
     console.log("Purchases for: " + request.body.idProduct);
-    await purchase
-        .getAllPurchasesByIdProduct(firebaseAdmin.db, request.body.idProduct, commonFunction)
+    await purchase.purchases
+        .getAllPurchasesByIdProduct(request.body.idProduct)
         .then(purchaces => {
             response.json(purchaces)
         });
@@ -165,7 +162,7 @@ async function addPurchaseList(request, response) {
     }
     try {
         request.body.purchaseList.forEach(async (element) => {
-            await purchase.addPurchases(firebaseAdmin.db, element);
+            await purchase.purchases.addPurchases(element);
         });
         result.purchase = request.body.purchaseList;
         response.json(result);
@@ -233,7 +230,7 @@ async function updatePuchaseList(request, response) {
     try {
         result.purchases.forEach(async (item) => {
             console.log(item);
-            await purchase.updatePurchase(firebaseAdmin.db, item);
+            await purchase.purchases.updatePurchase(item);
         });
         response.json(result);
     } catch (error) {
@@ -254,8 +251,8 @@ router.delete('/', async (request, response) => {
     response.set('Cache-control', 'public, max-age =300, s-maxage=600');
     console.log("method add delete called");
     console.log(request.body);
-    await purchase
-        .deletePurchase(firebaseAdmin.db, request.body.idPurchase);
+    await purchase.purchases
+        .deletePurchase(request.body.idPurchase);
     var result = {
         idPurchase: request.body.idPurchase,
         success: true

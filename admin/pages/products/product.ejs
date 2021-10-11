@@ -165,47 +165,14 @@
                     </div>
 
                 </div>
-                <!-- image modal -->
-                <div class="modal fade" id="productDetailsModLabel" tabindex="-1" role="dialog"
-                    aria-labelledby="productDetailsModLabelLabel" aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="productDetailsModLabelLabel">Modal title</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div class="modal-body">
-                                <div class="card">
 
-                                    <div class="d-md-flex align-self-center">
-                                        <div class="overflow-auto p-3 mb-3 mb-md-0 mr-md-3 bg-light"
-                                            style="max-width: 700px; max-height: 400px;">
-                                            <br>
-                                            <img style="margin: 20px" class="img-fluid align-self-center"
-                                                alt="Responsive image" id="modalImageFirebase" src="#"><br>
-
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-
-
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal"
-                                    id="btnCloseModal">Close</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- Button trigger modal -->
                 <%- include('./purchase/purchaseModal')%>
                     <!-- end purchase modal -->
                     <!-- sales modal -->
                     <%- include('./sales/salesModal')%>
                         <!-- end sales modal -->
+
+                        <%- include('../../../shared/parsials/productDetailModal')%>
             </div>
 
         </div>
@@ -221,13 +188,13 @@
             <script src="../admin/js/filesFunctions.js"></script>
             <script src="../../../shared/commonFuctions.js"></script>
             <script src="../admin/pages/products/product.js"></script>
-            <script src="../admin/pages/products/purchase/purchaseServerCalls.js"></script>
+            <script src="../../../js/serverCalls/purchase.js"></script>
             <script src="../admin/pages/products/purchase/purchase.js"></script>
-            <script src="../admin/pages/products/sales/salesServerCalls.js"></script>
+            <script src="../../../js/serverCalls/sales.js"></script>
             <script src="../admin/pages/products/sales/sales.js"></script>
             <script src="../admin/pages/products/receipt/receipt.js"></script>
-            <script src="../admin/pages/products/serverCalls.js"></script>
-
+            <script src="../../../js/serverCalls/product.js"></script>
+            <script src="../../../shared/parsials/productViewFunctions.js"></script>
 </body>
 
 </html>

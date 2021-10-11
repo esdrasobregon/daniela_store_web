@@ -1,6 +1,4 @@
-﻿const user = require("../js/user")
-
-var key = {
+﻿var key = {
     webSiteName: "My store",
     footerMenuText: "Opciones",
     headerMenuText: "Opciones",

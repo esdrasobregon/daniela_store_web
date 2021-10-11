@@ -18,6 +18,12 @@ function isEmail(email) {
     return re.test(String(email).toLowerCase());
 }
 
+/**
+ * this function receives an firebase date object and
+ * then parse it in a custom date object
+ * @param {*} pDateObject a firebase date object
+ * @returns a custom date object (year, month, date)
+ */
 function getCustomDate(pDateObject) {
     var dateResult = {
         year: "",
@@ -33,6 +39,7 @@ function getCustomDate(pDateObject) {
         dateResult.date += pDateObject.toDate().getDate();
     return dateResult;
 }
+
 /**
  * this function creates a customized date
  * object and returns it

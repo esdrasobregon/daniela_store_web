@@ -1,12 +1,11 @@
 const express = require("express");
-const categories = require('../../js/categories.js');
-const firebaseAdmin = require("../../firebaseFunctions/firebaseSettings");
+const categories = require('../../js/models/categories.js');
 const serverFiles = require("../../serverFunctions/serverFiles.js");
 const firestoreFiles = require("../../firebaseFunctions/firestoreFiles.js");
 const cokieParser = require("cookie-parser");
 const cookiesFunction = require('../../serverFunctions/serverCookies');
 var keys = require('../../shared/serverKeys.js');
-var formidable = require('formidable');
+const formidable = require('formidable');
 const {
     Result
 } = require("express-validator");
@@ -68,13 +67,15 @@ function getDecition(request, response) {
  */
 async function getAllCategories(response) {
     console.log("all categories loading...");
-    await categories.allCategories(firebaseAdmin.db).then(categories => {
-        response.json(categories)
-    });
+    await categories.category.allCategories()
+        .then(categories => {
+            response.json(categories)
+        });
 }
 //#endregion get
 
 //#region post
+
 router.post('/', async (request, response) => {
     response.set('Cache-control', 'public, max-age =300, s-maxage=600');
     console.log("post category method function called");
@@ -121,10 +122,11 @@ function postDecition(request, response) {
     }
 
 }
-
 /**
- * this function returns the category list from
- * firebase and then returns it to the client
+ * this function controls the product add request
+ * @param {*} fields contains the fields that has being
+ * sendded form the client
+ * @param {*} files contains the files related to the product
  * @param {*} response a server response object
  */
 async function addCategories(fields, files, response) {
@@ -142,12 +144,12 @@ async function addCategories(fields, files, response) {
         if (files.inputFile != undefined) {
             if (serverFiles.checkImageFileType(files.inputFile)) {
                 var fileType = files.inputFile.type;
-                await categories.addCategory(firebaseAdmin.db, fields);
+                await categories.category.addCategory(fields);
                 console.log("adding file to firebase");
                 fields.idCategory == "" ?
                     console.log("idCategory undefined or null") :
                     await firestoreFiles
-                    .uploadFile(files.inputFile.path, firebaseAdmin, fields.idCategory, fileType);
+                    .uploadFile(files.inputFile.path, fields.idCategory, fileType);
                 result.success = true;
             } else {
                 console.log("no available file, process aborted!");
@@ -163,6 +165,14 @@ async function addCategories(fields, files, response) {
         response.json(result);
     }
 }
+
+/**
+ * this function controls the product update request
+ * @param {*} fields contains the fields that has being
+ * sendded form the client
+ * @param {*} files contains the files related to the product
+ * @param {*} response a server response object
+ */
 async function updateCategories(fields, files, response) {
     response.set('Cache-control', 'public, max-age =300, s-maxage=600');
     console.log("method update category called");
@@ -179,18 +189,18 @@ async function updateCategories(fields, files, response) {
             if (serverFiles.checkImageFileType(files.inputFile)) {
 
                 var fileType = files.inputFile.type;
-                await categories.updateCategory(firebaseAdmin.db, fields);
+                await categories.category.updateCategory(fields);
                 console.log("adding file to firebase");
                 fields.idCategory == "" ?
                     console.log("idCategory undefined or null") :
                     await firestoreFiles
-                    .uploadFile(files.inputFile.path, firebaseAdmin, fields.idCategory, fileType);
+                    .uploadFile(files.inputFile.path, fields.idCategory, fileType);
                 result.success = true;
             } else {
                 console.log("no available file, process aborted!");
             }
         } else {
-            await categories.updateCategory(firebaseAdmin.db, fields);
+            await categories.category.updateCategory(fields);
             result.success = true;
         }
         result.category = fields;
@@ -202,7 +212,9 @@ async function updateCategories(fields, files, response) {
     }
 }
 /**
- * 
+ * this function controls the product delete request
+ * @param {*} request a server request object
+ * @param {*} response a server response object
  */
 async function deleteCategory(request, response) {
     response.set('Cache-control', 'public, max-age =300, s-maxage=600');
@@ -215,9 +227,9 @@ async function deleteCategory(request, response) {
     };
     try {
         await firestoreFiles
-            .deleteFile(cat.idCategory, firebaseAdmin);
+            .deleteFile(cat.idCategory);
         await categories
-            .deleteCategory(firebaseAdmin.db, cat.idCategory);
+            .category.deleteCategory(cat.idCategory);
         result.success = true;
         response.json(result);
     } catch (error) {

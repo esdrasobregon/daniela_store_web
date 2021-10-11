@@ -1,9 +1,7 @@
 //#region variables
 const express = require("express");
-const products = require('../../js/products');
-const firebaseAdmin = require("../../firebaseFunctions/firebaseSettings");
+const products = require('../../js/models/products');
 const firestoreFiles = require("../../firebaseFunctions/firestoreFiles.js");
-const commonFunction = require('../../serverFunctions/commonFunctions.js');
 const serverFiles = require("../../serverFunctions/serverFiles.js");
 const cokieParser = require("cookie-parser");
 const cookiesFunction = require('../../serverFunctions/serverCookies');
@@ -70,7 +68,7 @@ function getDecition(request, response) {
  */
 async function getAllProducts(response) {
     console.log("all products loading...");
-    await products.allProducts(firebaseAdmin.db).then(prods => {
+    await products.product.allProducts().then(prods => {
         response.json(prods);
     });
 }
@@ -133,18 +131,18 @@ async function addProduct(response, fields, files) {
         console.log("image to firebse: " + fields.imageToFirebase);
 
         //it needs to be reviewd
-        //result.success = !products.validateProduc(fields, commonFunction);
+        //result.success = !products.validateProduc(fields);
 
         if (result.success) {
             if (files.inputfile != undefined) {
                 if (serverFiles.checkImageFileType(files.inputfile)) {
                     var fileType = files.inputfile.type;
-                    await products.addProduct(firebaseAdmin.db, fields);
+                    await products.product.addProduct(fields);
                     console.log("adding file to firebase");
                     await firestoreFiles
-                        .uploadFile(files.inputfile.path, firebaseAdmin, fields.idProduct, fileType);
+                        .uploadFile(files.inputfile.path, fields.idProduct, fileType);
                     console.log("preparing product result");
-                    result.product = products.product(fields);
+                    result.product = products.product.getCostummProduct(fields);
 
                 } else {
                     console.log("no available file, process aborted!");
@@ -218,15 +216,16 @@ async function updateProduct(response, fields, files) {
     try {
         console.log("is updating: " + fields.isUpdating);
         console.log("image to firebse: " + fields.imageToFirebase);
-        result.success = !products.validateProduc(fields, commonFunction);
+        result.success = !products.product
+            .validateProduc(fields);
         if (result.success) {
-            await products.updateProduct(firebaseAdmin.db, fields);
-            result.product = products.product(fields);
+            await products.product.updateProduct(fields);
+            result.product = products.product.getCostummProduct(fields);
             if (files.inputfile != undefined) {
                 if (serverFiles.checkImageFileType(files.inputfile)) {
                     var fileType = files.inputfile.type;
                     console.log("adding file to firebase");
-                    firestoreFiles.uploadFile(files.inputfile.path, firebaseAdmin, fields.idProduct, fileType);
+                    firestoreFiles.uploadFile(files.inputfile.path, fields.idProduct, fileType);
 
                 } else {
                     console.log("no available file, process aborted!");
@@ -254,9 +253,9 @@ router.delete('/', async (request, response) => {
     console.log("method delete product called");
     try {
         await firestoreFiles
-            .deleteFile(request.body.idProduct, firebaseAdmin);
-        await products
-            .deleteProduct(firebaseAdmin.db, request.body.idProduct);
+            .deleteFile(request.body.idProduct);
+        await products.product
+            .deleteProduct(request.body.idProduct);
         var result = {
             success: true,
             productToDelete: request.body
