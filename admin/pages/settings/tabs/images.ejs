@@ -1,0 +1,43 @@
+<div id="imagesDiv" class="container-fluid" style="display: block;">
+  <h1>images</h1>
+  <div class="form-group">
+    <form id="add-images-form" class="container" style="margin: 20px">
+      <div class="form-group">
+        <label for="activ" id="imagesStateMessage">
+          Imageners para banner
+        </label>
+        <select class="form-control" name="bannerImages" id="ImagesOptions"></select>
+      </div>
+      <div class="input-group mb-3">
+        <div class="input-group-prepend">
+          <span class="input-group-text">Upload</span>
+        </div>
+        <div class="custom-file">
+          <input type='file' accept=".jpg, .jpeg|image/*" class='custom-file-input' id='inputGroupFile01'
+            name="inputGroupFile01" onchange="readURL(this);" />
+          <label id="inputImage" class="custom-file-label" for="inputGroupFile01">
+            <%= keys.key.chooseFileMessage%>
+          </label>
+        </div>
+      </div>
+      <div class="d-md-flex">
+        <div class="overflow-auto p-3 mb-3 mb-md-0 mr-md-3 bg-light" style="max-width: 100%; max-height: 350px;">
+          <img class="img-fluid" alt="Responsive image" id="imageFirebase" src="#" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="actionsToDo">Select:</label>
+
+        <select class="form-control" name="actionsToDo" id="actionsToDo">
+          <option value="0">Select an option</option>
+          <option value="1">Set as banner image</option>
+          <option value="2">Upload</option>
+          <option value="3">Delete</option>
+        </select>
+      </div>
+    </form>
+  </div>
+</div>
+<script src="../admin/pages/settings/tabs/images.js"></script>
+</script>

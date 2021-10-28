@@ -1,6 +1,5 @@
 const express = require("express");
 const user = require('../../js/models/user.js');
-const firebaseAdmin = require("../../firebaseFunctions/firebaseSettings");
 const commonFunction = require('../../serverFunctions/commonFunctions.js');
 const cookiesFunction = require('../../serverFunctions/serverCookies');
 var keys = require('../../shared/serverKeys.js');
@@ -12,13 +11,14 @@ router.use(express.urlencoded({
 }));
 
 //#region get
-//#end region get
 
 router.get('/', async (request, response) => {
     response.set('Cache-control', 'public, max-age =300, s-maxage=600');
     console.log("get product method called");
     getDecition(request, response);
 });
+
+//#endregion get
 router.post('/', async (request, response) => {
     response.set('Cache-control', 'public, max-age =300, s-maxage=600');
     console.log("post user method called");

@@ -1,0 +1,44 @@
+<html>
+
+<head>
+    <%- include('../../../shared/parsials/head')%>
+        <title>
+            <%= keys.pagesNames.adminCategoriesText%>
+        </title>
+</head>
+
+<body style="background-color: #e3f2fd;">
+    <!-- header -->
+    <%- include('../../../shared/header')%>
+        <!-- end header -->
+
+        <div class="container">
+            <div class="overflow-auto p-3 mb-3 mb-md-0 mr-md-3 bg-light"
+                style="max-width: 100%; min-height: 520px;max-height: 520px;">
+                <div class="card border-success mb-10">
+                    <h5 class="text-info" id="categoryListH1">
+                        Page settings
+                    </h5>
+                </div>
+                <div class="card border-success mb-10">
+                    <%- include('../../../admin/pages/settings/tabsMenu')%>
+                    <%- include('../../../admin/pages/settings/tabs/images')%>
+                    <%- include('../../../admin/pages/settings/tabs/letter')%>
+                    <%- include('../../../admin/pages/settings/tabs/downloads')%>
+                </div>
+            </div>
+        </div>
+        <!-- footer -->
+        <%- include('../../../shared/footer')%>
+            <!-- end footer -->
+            <script src="../admin/js/app.js"></script>
+            <script>
+                window.rootFile = '../../';
+            </script>
+            <script src="../js/serverCalls/profile.js"></script>
+            <script src="../js/serverCalls/files.js"></script>
+            <script src="../admin/pages/settings/settings.js"></script>
+            <script src="../admin/js/filesFunctions.js"></script>
+</body>
+
+</html>

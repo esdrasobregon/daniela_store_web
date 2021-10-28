@@ -193,6 +193,8 @@ function setSalesIdReceipt(receipt) {
  * an the returns the result 
  */
 function createFormDataSaleReceipt() {
+    const receiptTipe = receipTypetList
+        .find((r) => r.description == "Sales invoice");
     formdata = new FormData();
     formdata
         .append('description', salesForm
@@ -200,7 +202,7 @@ function createFormDataSaleReceipt() {
     //this needs to be updated,
     //the value is not still dynamic
     formdata
-        .append('idReceiptType', "YFIgavH6vUIHmONFTpa0");
+        .append('idReceiptType', receiptTipe.idReceiptType);
     formdata
         .append('paymentState', salesForm
             .salePaymentState.value);

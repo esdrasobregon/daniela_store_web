@@ -1,6 +1,7 @@
 //#region variables
 
 var receiptList = [];
+var receipTypetList = [];
 
 //#endregion variables
 
@@ -190,6 +191,18 @@ function clearPurchList(list) {
             p.notAvailableUnits = 0;
         });
     });
+}
+
+/**
+ * this function gets all the receipt type
+ * available
+ */
+async function getAllReceipType() {
+    showPleaseWait();
+    receipTypetList = await getReceipType();
+    console.log(receipTypetList);
+    sessionStorage.setItem('allReceiptType', JSON.stringify(receipTypetList));
+    hidePleaseWait();
 }
 
 //#endregion functions

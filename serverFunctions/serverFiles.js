@@ -1,6 +1,8 @@
 //#region variables
 
 const fs = require("fs");
+const uploadLocation = "./public/upload/";
+const rootLocation = "./public/";
 
 //#endregion variables
 
@@ -18,7 +20,7 @@ async function addFile(fields, files) {
         if (checkImageFileType(files.inputfile)) {
             var extension = files.inputfile.name.substr(files.inputfile
                 .name.lastIndexOf("."));
-            var newPath = "./upload/" + fields.name + extension;
+            var newPath = uploadLocation + fields.name + extension;
             var fileNewName = fields.name;
             console.log("adding file to the server");
             await uploadImgeFile(files, extension, newPath, fileNewName);
@@ -29,6 +31,49 @@ async function addFile(fields, files) {
     }
     return result;
 }
+
+/**
+ * this fuction set up the file to be upload
+ * @param {*} fields inconming form fields
+ * @param {*} files incomming form files
+ * @returns a bool type confirmation
+ */
+async function addSharedFile(fields, files) {
+    var result = false;
+    console.log("method add file called");
+    if (files.inputfile != undefined) {
+        if (checkImageFileType(files.inputfile)) {
+            var extension = files.inputfile.name.substr(files.inputfile
+                .name.lastIndexOf("."));
+            var newPath = "./public/shared/images/" + fields.name + extension;
+            var fileNewName = fields.name;
+            console.log("adding file to the server");
+            await uploadImgeFile(files, extension, newPath, fileNewName);
+            result = true;
+        } else {
+            console.log("no available file, process aborted!");
+        }
+    }
+    return result;
+}
+
+/**
+ * this fuction deletes a server file
+ * @param {*} fileName file name
+ * @returns a bool type confirmation
+ */
+async function deleteFile(fileName) {
+    var result = true;
+    console.log("method delete file called");
+    try {
+        fs.unlinkSync(uploadLocation + fileName);
+    } catch (error) {
+        console.log("error deleting file: " + error);
+        result = false;
+    }
+    return result;
+}
+
 /**
  * this function checks if the file is indeed a
  * image type
@@ -53,8 +98,41 @@ function checkImageFileType(file) {
  */
 function uploadImgeFile(files, extension, newPath, name) {
     fs.rename(files.inputfile.path, newPath, async function (errorRename) {
-        console.log("./upload/" + name + extension);
+        console.log(uploadLocation + name + extension);
     });
+}
+/**
+ * this function gets the file list of a given directory
+ * @param {*} folderName a file type array
+ * @returns {*} the file list
+ */
+async function getFileList(folderName) {
+    var result = [];
+    console.log(rootLocation + folderName + "/");
+    fs.readdirSync(rootLocation + folderName + "/")
+        .forEach(file => {
+            console.log(file);
+            result.push(file);
+        });
+    return result;
+}
+/**
+ * this function write on the given file
+ * @param {*} newSettings to be write
+ * @returns {*} the file list
+ */
+async function writeSettings(newSettings) {
+    var result = false;
+    const location = rootLocation + "shared/settings/page.js";
+    try {
+        fs.writeFileSync(location, 'const settings = ' +
+            JSON.stringify(newSettings) + ";\n" +
+            'module.exports = settings;');
+        result = true;
+    } catch (error) {
+        console.log("Error writting settings: " + error);
+    }
+    return result;
 }
 //#endregion functions
 
@@ -62,6 +140,10 @@ function uploadImgeFile(files, extension, newPath, name) {
 module.exports = {
     uploadImgeFile: uploadImgeFile,
     checkImageFileType: checkImageFileType,
-    addFile: addFile
+    addFile: addFile,
+    deleteFile: deleteFile,
+    getFileList: getFileList,
+    writeSettings: writeSettings,
+    addSharedFile: addSharedFile
 }
 //#endregion exports

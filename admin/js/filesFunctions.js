@@ -21,7 +21,12 @@ function readPurchaseURL(input) {
         reader.readAsDataURL(input.files[0]);
     }
 }
-//this function works for anyone
+/**
+ * this function reads a file from any input html tag
+ * @param {*} input the input tag where the file is located
+ * @param {*} idInput the input tag id
+ * @param {*} idImageTag the id of the tag to show the image 
+ */
 function readImageURL(input, idInput, idImageTag) {
     if (input.files && input.files[0]) {
         var reader = new FileReader();
@@ -52,7 +57,10 @@ async function uploadImage(imageName) {
 
         }).catch(console.error);
 }
-//deleting a firebase file
+/**
+ *this function deletes a firebase store file
+ * @param {*} fileName request call object
+ */
 async function deleteFile(fileName) {
     // Create a reference to the file to delete
     const ref = firebase.storage().ref();

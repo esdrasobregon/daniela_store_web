@@ -226,12 +226,14 @@ async function serverReceipt() {
  * an the returns the result 
  */
 function createFormDataPurchaseReceipt() {
+    const receiptTipe = receipTypetList
+        .find((r) => r.description == "Purchase invoice");
     formdata = new FormData();
     formdata
         .append('description', purchaseForm
             .purchseDescription.value);
     formdata
-        .append('idReceiptType', "u2eoqv01OnYaf8BxwDwQ");
+        .append('idReceiptType', receiptTipe.idReceiptType);
     formdata
         .append('paymentState', purchaseForm
             .paymentState.value);

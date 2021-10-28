@@ -65,12 +65,16 @@ var pagesNames = {
     storeText: "Tienda",
     adminProductText: "Administrar productos",
     adminCategoriesText: "Administrar categorías",
+    aAdminProfileMenu:"Profile",
+    aSettings:"Settings",
     adminPurchaseText: "Administrar compras"
 }
+var settings = null;
 var currentUser = null;
 //new from the 85 line on
 module.exports = {
     key: key,
     pagesNames: pagesNames,
-    currentUser: currentUser
+    currentUser: currentUser,
+    settings: settings
 }

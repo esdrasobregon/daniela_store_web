@@ -2,8 +2,12 @@
 const express = require("express");
 const session = require('express-session');
 var keys = require('../../shared/serverKeys.js');
+var pageSettings = require('../../shared/settings/page.js');
 const cokieParser = require("cookie-parser");
 const cookiesFunction = require('../../serverFunctions/serverCookies');
+const {
+    pagesNames
+} = require("../../shared/serverKeys.js");
 const router = express.Router();
 router.use(session({
     secret: "key that will sign cokie",
@@ -18,6 +22,7 @@ router.use(session({
 router.use(cokieParser());
 
 router.get("/", function (req, res) {
+    keys.settings = pageSettings;
     cookiesFunction.getUserCookie(req, keys);
     res.render('index', {
         keys: keys

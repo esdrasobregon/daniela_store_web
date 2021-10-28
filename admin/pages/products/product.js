@@ -391,8 +391,10 @@ async function getInformation() {
     if (sessionStorage.getItem('allReceipts') == null) {
         console.log("getting purchases");
         await getAllPurchasesReceipts();
+        await getAllReceipType();
     } else {
         receiptList = JSON.parse(sessionStorage.getItem('allReceipts'));
+        receipTypetList = JSON.parse(sessionStorage.getItem('allReceiptType'));
     }
     if (categoryList != null) {
         indexCategorySelected = categoryList[0].idCategory;

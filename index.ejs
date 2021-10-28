@@ -1,28 +1,10 @@
 <html>
 
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
-        integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
-
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-        crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
-        integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut"
-        crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
-        integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
-        crossorigin="anonymous"></script>
-
-    <link rel="stylesheet" href="./css/styles.css">
-    <script src="./shared/viewKeys.js"></script>
-    <title>
-        <%=keys.pagesNames.homeText%>
-    </title>
+    <%- include('./shared/parsials/head')%>
+        <title>
+            <%=keys.pagesNames.homeText%>
+        </title>
 </head>
 
 <body style="background-color: #e3f2fd;">
@@ -32,7 +14,8 @@
         <div class="container" style="margin-bottom: 50px; margin-top: 50px;">
             <div class="overflow-auto p-3 mb-3 mb-md-0 mr-md-3 bg-light" style="max-width: 100%; max-height: 450px;">
                 <div class="row">
-                    <img class="img-fluid" alt="Lights" style="width:100%" src="./../shared/images/homebanne.jpeg">
+                    <img class="img-fluid" alt="Lights" style="width:100%"
+                        src='<%="./shared/images/"+keys.settings.fileName%>'>
 
                 </div>
                 <div class="page-header">
@@ -72,17 +55,12 @@
         <!--footer-->
         <%- include('./shared/footer') %>
             <!--end footer-->
-            <script src="./shared/customFormControllers.js"></script>
-            <script src="./shared/pleaseWait.js"></script>
             <script src="./js/ajax/category.js"></script>
             <script src="./js/ajax/product.js"></script>
             <script src="./js/ajax/user.js"></script>
             <script src="./js/appClient.js"></script>
             <script>
-                // window.onload = async function () {
-                //     await getClientInfo();
-                //     document.location.replace(localHost+"/pages/categories/categories");
-                // }
+                window.location.replace(localHost+"/pages/categories/categories");
             </script>
 </body>
 

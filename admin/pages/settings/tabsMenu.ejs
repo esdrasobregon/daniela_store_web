@@ -1,0 +1,61 @@
+<ul class="nav nav-tabs">
+    <li class="nav-item">
+        <a id="images" class="nav-link active" aria-current="page" href="#">images</a>
+    </li>
+    <li class="nav-item">
+        <a id="letter" class="nav-link" href="#">letter</a>
+    </li>
+    <li class="nav-item">
+        <a id="downloads" class="nav-link" href="#">downloads</a>
+    </li>
+</ul>
+<script>
+    var selectedTab = "images";
+    var images = document.getElementById("images");
+    var letter = document.getElementById("letter");
+    var downloads = document.getElementById("downloads");
+
+    var allTabs = [images, letter, downloads];
+    allTabs.forEach((element) => {
+        element.addEventListener('click', (e) => {
+            selectedTab = element.id;
+            switchTab();
+        });
+    });
+    function switchTab() {
+        closeDivs();
+        switch (selectedTab) {
+            case "images":
+                console.log(selectedTab);
+                showTab();
+                break;
+            case "letter":
+                console.log(selectedTab);
+                showTab();
+                break;
+            case "downloads":
+                console.log(selectedTab);
+                showTab();
+                break;
+
+            default:
+                console.log("other");
+                break;
+        }
+        function showTab() {
+            allTabs.forEach(element => {
+                element.id == selectedTab
+                    ? element.setAttribute("class", "nav-link active")
+                    : element.setAttribute("class", "nav-link");
+            });
+            document.getElementById(selectedTab + "Div")
+                .style.display = "block";
+        }
+        function closeDivs() {
+            allTabs.forEach(element => {
+                document.getElementById(element.id + "Div")
+                    .style.display = "none";
+            });
+        }
+    }
+</script>
