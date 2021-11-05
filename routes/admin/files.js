@@ -1,28 +1,22 @@
-//#region variables
 const express = require("express");
-const profile = require('../../js/models/profile.js');
-const firestoreFiles = require("../../firebaseFunctions/firestoreFiles.js");
 const serverFiles = require("../../serverFunctions/serverFiles.js");
 const cokieParser = require("cookie-parser");
 const cookiesFunction = require('../../serverFunctions/serverCookies');
-var keys = require('../../shared/serverKeys.js');
-var formidable = require('formidable');
+const formidable = require('formidable');
 const {
-    json
-} = require("body-parser");
+    Result
+} = require("express-validator");
 const router = express.Router();
 router.use(cokieParser());
 router.use(express.json());
-
 router.use(express.urlencoded({
     extended: false
 }));
-//#endregion variables
-
 //#region get
+
 router.get('/', async (request, response) => {
     response.set('Cache-control', 'public, max-age =300, s-maxage=600');
-    console.log("get profile method called");
+    console.log("get file method called");
     getDecition(request, response);
 });
 
@@ -35,7 +29,7 @@ router.get('/', async (request, response) => {
 function getDecition(request, response) {
     console.log("deciding which function call");
     const req = request.url.substring(2, 10);
-    console.log("profile: " + req);
+    console.log("request: " + req);
     var result = {
         success: true,
         profile: [],
@@ -43,11 +37,9 @@ function getDecition(request, response) {
     }
     try {
         switch (req) {
-            case "profile":
-                //this has to be change
-                response.render("./admin/pages/settings/settings", {
-                    keys: keys
-                });
+
+            case "fileList":
+                getFolderFileList(request, response);
                 break;
             default:
                 response.render("./admin/pages/settings/settings", {
@@ -61,6 +53,32 @@ function getDecition(request, response) {
         result.error = error;
         response.json(result);
     }
+}
+
+/**
+ * this function decide which get request
+ * is call
+ * @param {*} request request call object
+ * @param {*} response response object from the server
+ */
+async function getFolderFileList(request, response) {
+    const folder = request.url.substring(12, request.url.length);
+    console.log("folder:" + folder);
+    console.log("folder list called");
+    var result = {
+        success: false,
+        list: [],
+        error: null
+    }
+    try {
+        result.list = await serverFiles.getFileList(folder);
+        result.success = true;
+        response.json(result);
+    } catch (error) {
+        console.log("Error getting list: " + error);
+        response.json(result);
+    }
+
 }
 
 //#endregion get
@@ -94,6 +112,9 @@ async function postDecition(request, response) {
                 case "addSharedImage":
                     addImageToServer(response, fields, files);
                     break;
+                case "addDownloadFile":
+                    addImageToServer(response, fields, files);
+                    break;
                 default:
                     response.json(result);
                     break;
@@ -107,7 +128,7 @@ async function postDecition(request, response) {
 }
 
 /**
- * this fuction add a product object to firebase
+ * this fuction add a product object to the server
  * @param {*} response response server object
  * @param {*} fields incoming form fields
  * @param {*} files incoming form files
@@ -125,7 +146,12 @@ async function addImageToServer(response, fields, files) {
             if (files.inputfile != undefined) {
                 if (serverFiles.checkImageFileType(files.inputfile)) {
                     console.log("file to the server: " + files.inputfile);
-                    await serverFiles.addSharedFile(fields, files);
+                    if (fields.case == "addSharedImage") {
+                        await serverFiles.addSharedFile(fields, files);
+                    } else {
+                        await serverFiles.addDownloadFile(fields, files);
+                    }
+
                     result.fields = fields;
                 } else {
                     console.log("no available file, process aborted!");
@@ -144,11 +170,18 @@ async function addImageToServer(response, fields, files) {
 }
 //#endregion post
 
-//#region put
-router.put('/', async (request, response) => {
+//#region delete
+
+/**
+ * this function decide which get request
+ * is call
+ * @param {*} request request call object
+ * @param {*} response response object from the server
+ */
+router.delete('/', async (request, response) => {
     response.set('Cache-control', 'public, max-age =300, s-maxage=600');
-    console.log("put profile method called");
-    putDecition(request, response);
+    console.log("method delete file called");
+    deleteDecition(request, response);
 });
 
 /**
@@ -157,20 +190,24 @@ router.put('/', async (request, response) => {
  * @param {*} request request call object
  * @param {*} response response object from the server
  */
-async function putDecition(request, response) {
+async function deleteDecition(request, response) {
     console.log("deciding which function call");
     var result = {
         success: false,
-        products: [],
+        fileObject: request.body,
         error: null
-    }
+    };
     try {
         console.log(request.body);
-        const req = request.body.case;
-        switch (req) {
-            case "writeSettings":
+        const folderCase = request.body.case;
+        switch (folderCase) {
+            case "shared":
                 result.success = await serverFiles
-                    .writeSettings(request.body);
+                    .deleteShareFile(folderCase + "/images/" + result.fileObject.fileName);
+                break;
+            case "downloads":
+                result.success = await serverFiles
+                    .deleteShareFile(folderCase + "/" + result.fileObject.fileName);
                 break;
             default:
                 response.json(result);
@@ -184,6 +221,6 @@ async function putDecition(request, response) {
         response.json(result);
     }
 }
-//#endregion put
+//#endregion delete
 
 module.exports = router;

@@ -13,6 +13,9 @@ const receiptRoute = require("./admin/receipt.js");
 const receiptTypeRoute = require("./admin/receiptType.js");
 const profileRoute = require("./admin/profile.js");
 const settingsRoute = require("./admin/settings.js");
+const filesRoute = require("./admin/files.js");
+const downloadsRoute = require("./admin/downloads.js");
+
 
 const appRouterSettings = function (app) {
     app.use("/", homeRoute);
@@ -30,6 +33,8 @@ const appRouterSettings = function (app) {
     app.use("/receiptType", receiptTypeRoute);
     app.use("/profile", profileRoute);
     app.use("/settings", settingsRoute);
+    app.use("/files", filesRoute);
+    app.use("/downloads", downloadsRoute);
 }
 
 module.exports = {

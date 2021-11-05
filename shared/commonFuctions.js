@@ -100,3 +100,24 @@ async function giveSomeTime(sometime) {
     }, sometime * 1500);
 
 }
+
+/**
+ * this function clear the select
+ * image option, 
+ * use it after add or delete one
+ */
+function resetSelectTag(sellectTag) {
+    while (sellectTag.length > 0) {
+        sellectTag.remove(0)
+    }
+}
+/**
+ * this function shows the selected image name
+ * form the select list
+ * @param {*} imageVisor the image visor tag
+ * @param {*} imageName the image name
+ */
+function showImage(imageVisor,imageName) {
+    imageVisor
+        .setAttribute("src",imageName);
+}
