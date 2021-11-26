@@ -275,6 +275,4 @@ class Purchase {
 }
 const purchases = new Purchase();
 
-module.exports = {
-    purchases: purchases
-}
+module.exports =  purchases;

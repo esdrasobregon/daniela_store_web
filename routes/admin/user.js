@@ -5,7 +5,6 @@ const cookiesFunction = require('../../serverFunctions/serverCookies');
 var keys = require('../../shared/serverKeys.js');
 const router = express.Router();
 router.use(express.json());
-
 router.use(express.urlencoded({
     extended: false
 }));
@@ -106,14 +105,13 @@ async function getCurrentUser(request, response) {
             userCredentials.error = "the call failed";
             response.json(userCredentials);
         } else {
-            user.user.getUser(userCredentials).then(us => {
-                result.user = us;
-                us == null ?
-                    result.success = false :
-                    console.log(us);
+            var us = await user.getUser(userCredentials);
+            console.log("user result: " + us);
+            us == null ?
+                result.success = false :
                 cookiesFunction.setUserCookie(response, us);
-                response.json(result);
-            });
+            result.user = us;
+            response.json(result);
         }
     } else {
         console.log('warning');

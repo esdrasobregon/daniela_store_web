@@ -117,6 +117,4 @@ class Category {
   }
 }
 const category = new Category();
-module.exports = {
-  category: category
-}
+module.exports = category;

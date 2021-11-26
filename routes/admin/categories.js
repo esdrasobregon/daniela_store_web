@@ -42,8 +42,8 @@ function getDecition(request, response) {
             break;
         case "admCategoryPage":
 
-            if (cookiesFunction.userCookieExist(request)) {
-                cookiesFunction.getUserCookie(request, keys);
+            if (cookiesFunction.userCookieExist(request.cookies)) {
+                cookiesFunction.getUserCookie(request.cookies, keys);
                 console.log(__dirname);
                 response.set('Cache-control', `no-cache, no-store, must-revalidate`, );
                 response.render("./admin/pages/categories/categories", {
@@ -67,10 +67,9 @@ function getDecition(request, response) {
  */
 async function getAllCategories(response) {
     console.log("all categories loading...");
-    await categories.category.allCategories()
-        .then(categories => {
-            response.json(categories)
-        });
+    var cats =
+        await categories.allCategories();
+    response.json(cats)
 }
 //#endregion get
 
@@ -144,7 +143,7 @@ async function addCategories(fields, files, response) {
         if (files.inputFile != undefined) {
             if (serverFiles.checkImageFileType(files.inputFile)) {
                 var fileType = files.inputFile.type;
-                await categories.category.addCategory(fields);
+                await categories.addCategory(fields);
                 console.log("adding file to firebase");
                 fields.idCategory == "" ?
                     console.log("idCategory undefined or null") :
@@ -189,7 +188,7 @@ async function updateCategories(fields, files, response) {
             if (serverFiles.checkImageFileType(files.inputFile)) {
 
                 var fileType = files.inputFile.type;
-                await categories.category.updateCategory(fields);
+                await categories.updateCategory(fields);
                 console.log("adding file to firebase");
                 fields.idCategory == "" ?
                     console.log("idCategory undefined or null") :
@@ -200,7 +199,7 @@ async function updateCategories(fields, files, response) {
                 console.log("no available file, process aborted!");
             }
         } else {
-            await categories.category.updateCategory(fields);
+            await categories.updateCategory(fields);
             result.success = true;
         }
         result.category = fields;
@@ -229,7 +228,7 @@ async function deleteCategory(request, response) {
         await firestoreFiles
             .deleteFile(cat.idCategory);
         await categories
-            .category.deleteCategory(cat.idCategory);
+            .deleteCategory(cat.idCategory);
         result.success = true;
         response.json(result);
     } catch (error) {

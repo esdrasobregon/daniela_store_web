@@ -3,9 +3,9 @@
 
 <head>
     <%- include('../../../shared/parsials/head')%>
-    <title>
-        <%= keys.pagesNames.adminProductText%>
-    </title>
+        <title>
+            <%= keys.pagesNames.adminProductText%>
+        </title>
 
 </head>
 
@@ -117,7 +117,8 @@
                                     </div>
                                     <div class="custom-file">
                                         <input type='file' accept=".jpg, .jpeg|image/*" class='custom-file-input'
-                                            id='inputGroupFile01' name="inputGroupFile01" onchange="readURL(this);" />
+                                            id='inputGroupFile01' name="inputGroupFile01"
+                                            onchange="readImageURL(this, 'imageFirebase');" />
                                         <label id="inputImage" class="custom-file-label" for="inputGroupFile01">
                                             <%= keys.key.chooseFileMessage%>
                                         </label>
@@ -164,7 +165,6 @@
         <!-- footer -->
         <%- include('../../../shared/footer')%>
             <!-- end footer -->
-            <script src="../admin/js/app.js"></script>
             <script src="../js/ajax/category.js"></script>
             <script src="../js/ajax/product.js"></script>
             <script src="../admin/js/filesFunctions.js"></script>

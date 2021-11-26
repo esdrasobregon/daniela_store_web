@@ -49,7 +49,7 @@ function getDecition(request, response) {
  */
 async function getAll(response) {
     console.log("all receipt types loading...");
-    await receiptType.receiptType.getAll()
+    await receiptType.getAll()
         .then(receiptType => {
             response.json(receiptType)
         });
@@ -149,7 +149,7 @@ async function deleteR(request, response) {
     };
     try {
         await receiptType
-            .receiptType.delete(cat.idCategory);
+            .delete(cat.idCategory);
         result.success = true;
         response.json(result);
     } catch (error) {

@@ -41,8 +41,9 @@ function getDecition(request, response) {
             getAllProducts(response);
             break;
         case "admProductPage":
-            if (cookiesFunction.userCookieExist(request)) {
-                cookiesFunction.getUserCookie(request, keys);
+            console.log("req cookies: " + request.cookies.currentUser);
+            if (cookiesFunction.userCookieExist(request.cookies)) {
+                cookiesFunction.getUserCookie(request.cookies, keys);
                 console.log(__dirname);
                 response.set('Cache-control', `no-cache, no-store, must-revalidate`, );
                 response.render("./admin/pages/products/product", {
@@ -68,9 +69,9 @@ function getDecition(request, response) {
  */
 async function getAllProducts(response) {
     console.log("all products loading...");
-    await products.product.allProducts().then(prods => {
-        response.json(prods);
-    });
+    var prods =
+        await products.allProducts();
+    response.json(prods);
 }
 //#endregion get
 
@@ -137,12 +138,12 @@ async function addProduct(response, fields, files) {
             if (files.inputfile != undefined) {
                 if (serverFiles.checkImageFileType(files.inputfile)) {
                     var fileType = files.inputfile.type;
-                    await products.product.addProduct(fields);
+                    await products.addProduct(fields);
                     console.log("adding file to firebase");
                     await firestoreFiles
                         .uploadFile(files.inputfile.path, fields.idProduct, fileType);
                     console.log("preparing product result");
-                    result.product = products.product.getCostummProduct(fields);
+                    result.product = products.getCostummProduct(fields);
 
                 } else {
                     console.log("no available file, process aborted!");
@@ -216,11 +217,11 @@ async function updateProduct(response, fields, files) {
     try {
         console.log("is updating: " + fields.isUpdating);
         console.log("image to firebse: " + fields.imageToFirebase);
-        result.success = !products.product
+        result.success = !products
             .validateProduc(fields);
         if (result.success) {
-            await products.product.updateProduct(fields);
-            result.product = products.product.getCostummProduct(fields);
+            await products.updateProduct(fields);
+            result.product = products.getCostummProduct(fields);
             if (files.inputfile != undefined) {
                 if (serverFiles.checkImageFileType(files.inputfile)) {
                     var fileType = files.inputfile.type;
@@ -254,7 +255,7 @@ router.delete('/', async (request, response) => {
     try {
         await firestoreFiles
             .deleteFile(request.body.idProduct);
-        await products.product
+        await products
             .deleteProduct(request.body.idProduct);
         var result = {
             success: true,

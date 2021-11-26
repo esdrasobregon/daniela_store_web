@@ -416,6 +416,7 @@ function afterDeletingSettings(productDeleted) {
     sessionStorage.setItem('allProducts', JSON.stringify(productList));
     const prodli = document.getElementById("card" + productDeleted.idProduct);
     document.getElementById(productDeleted.category).removeChild(prodli);
+    clearForm();
     alert("Product deleted");
 }
 /**

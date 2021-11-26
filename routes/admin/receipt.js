@@ -57,7 +57,7 @@ function getDecition(request, response) {
  */
 async function getAllProducts(response) {
     console.log("all products loading...");
-    await receipt.receipt.allProducts().then(prods => {
+    await receipt.getAllProducts().then(prods => {
         response.json(prods);
     });
 }
@@ -126,7 +126,7 @@ async function addReceiptList(response, fields, files) {
             if (files.inputFile != undefined) {
                 if (serverFiles.checkImageFileType(files.inputFile)) {
                     var fileType = files.inputFile.type;
-                    await receipt.receipt.addReceipt(fields);
+                    await receipt.addReceipt(fields);
                     console.log("adding file to firebase");
                     await firestoreFiles
                         .uploadFile(files.inputFile.path,
@@ -213,8 +213,8 @@ async function updateProduct(response, fields, files) {
         console.log("image to firebse: " + fields.imageToFirebase);
         result.success = !receipt.receipt.validateProduc(fields, commonFunction);
         if (result.success) {
-            await receipt.receipt.updateProduct(firebaseAdmin.db, fields);
-            result.product = receipt.receipt.product(fields);
+            await receipt.updateProduct(firebaseAdmin.db, fields);
+            result.product = receipt.product(fields);
             if (files.inputfile != undefined) {
                 if (serverFiles.checkImageFileType(files.inputfile)) {
                     var fileType = files.inputfile.type;
@@ -248,7 +248,7 @@ router.delete('/', async (request, response) => {
     try {
         await firestoreFiles
             .deleteFile(request.body.idProduct, firebaseAdmin);
-        await receipt.receipt
+        await receipt
             .deleteProduct(request.body.idProduct);
         var result = {
             success: true,

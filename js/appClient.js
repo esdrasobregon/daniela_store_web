@@ -14,7 +14,7 @@ categories = JSON.parse(categories);
  * needded in the app
  */
 async function getClientInfo() {
-
+	console.log("loading client info");
 	if (prods == null || categories == null) {
 		showPleaseWait();
 		prods = await getAsyncProducts();

@@ -59,7 +59,7 @@ async function getPurchaseList(request, response) {
     }
     try {
 
-        result.purchases = await sale.sales
+        result.purchases = await sale
             .getAllAvailablePurchasesForReceipt(result.idReceipt);
         console.log(result.purchases);
         response.json(result);
@@ -78,10 +78,10 @@ async function getPurchaseList(request, response) {
 async function allAvaliableMonthPurchasesReceipts(request, response) {
     response.set('Cache-control', 'public, max-age =300, s-maxage=600');
     console.log("function all purchases called");
-    var purchases = await sale.sales
+    var purchases = await sale
         .getAllAvailablePurchases();
     var receipts =
-        await receipt.receipt.getActualMonthReceipts();
+        await receipt.getActualMonthReceipts();
     receipts.forEach(element => {
         purchases.forEach(p => {
             if (element.idReceipt == p.idReceipt) {
@@ -99,7 +99,7 @@ async function allAvaliableMonthPurchasesReceipts(request, response) {
 async function getAllPurchasesByIdProduct(request, response) {
     console.log("function all product purchases called");
     console.log("Purchases for: " + request.body.idProduct);
-    await sale.sales
+    await sale
         .getAllPurchasesByIdProduct(request.body.idProduct)
         .then(purchaces => {
             response.json(purchaces)
@@ -161,7 +161,7 @@ async function addSaleList(request, response) {
     try {
         request.body.salesList.forEach((item) => {
             item.sales.forEach(async (element) => {
-                sale.sales.addSale(element);
+                sale.addSale(element);
                 result.sales.push(element);
             });
         });
@@ -230,7 +230,7 @@ async function updatePuchaseList(request, response) {
     try {
         result.purchases.forEach(async (item) => {
             console.log(item);
-            await sale.sales.updatePurchase(item);
+            await sale.updatePurchase(item);
         });
         response.json(result);
     } catch (error) {
@@ -251,7 +251,7 @@ router.delete('/', async (request, response) => {
     response.set('Cache-control', 'public, max-age =300, s-maxage=600');
     console.log("method add delete called");
     console.log(request.body);
-    await sale.sales
+    await sale
         .deletePurchase(request.body.idPurchase);
     var result = {
         idPurchase: request.body.idPurchase,

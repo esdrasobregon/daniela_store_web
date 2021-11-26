@@ -205,6 +205,5 @@ class Product {
 
 }
 const product = new Product();
-module.exports = {
-    product: product
-}
+
+module.exports = product;

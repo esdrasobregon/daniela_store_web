@@ -144,6 +144,4 @@ class Sales {
 
 const sales = new Sales();
 
-module.exports = {
-    sales: sales
-}
+module.exports = sales;

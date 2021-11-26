@@ -207,6 +207,4 @@ class Receipt {
 }
 const receipt = new Receipt();
 
-module.exports = {
-    receipt: receipt
-}
+module.exports =  receipt;

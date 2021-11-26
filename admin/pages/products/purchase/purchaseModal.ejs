@@ -53,7 +53,8 @@
                         </div>
                         <div class="custom-file">
                             <input type='file' accept=".jpg, .jpeg|image/*" class='custom-file-input'
-                                id='inputPurchaseFile' name="inputPurchaseFile" onchange="readPurchaseURL(this);" />
+                                id='inputPurchaseFile' name="inputPurchaseFile"
+                                onchange="readImageURL(this, 'purchaseImage');" />
                             <label id="inputImage" class="custom-file-label" for="inputPurchaseFile">
                                 <%= keys.key.chooseFileMessage%>
                             </label>

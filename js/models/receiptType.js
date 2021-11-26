@@ -108,6 +108,4 @@ class ReceiptType {
   }
 }
 const receiptType = new ReceiptType();
-module.exports = {
-  receiptType: receiptType
-}
+module.exports = receiptType;

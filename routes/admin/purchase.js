@@ -60,7 +60,7 @@ async function getPurchaseList(request, response) {
     }
     try {
 
-        result.purchases = await purchase.purchases
+        result.purchases = await purchase
             .getAllAvailablePurchasesForReceipt(
                 result.idReceipt);
         console.log(result.purchases);
@@ -80,9 +80,9 @@ async function getPurchaseList(request, response) {
 async function allAvaliableMonthPurchasesReceipts(request, response) {
     response.set('Cache-control', 'public, max-age =300, s-maxage=600');
     console.log("function all purchases called");
-    var purchases = await purchase.purchases.getAllAvailablePurchases();
+    var purchases = await purchase.getAllAvailablePurchases();
     var receipts =
-        await receipt.receipt.getActualMonthReceipts(firebaseAdmin, commonFunction);
+        await receipt.getActualMonthReceipts(firebaseAdmin, commonFunction);
     receipts.forEach(element => {
         purchases.forEach(p => {
             if (element.idReceipt == p.idReceipt) {
@@ -100,7 +100,7 @@ async function allAvaliableMonthPurchasesReceipts(request, response) {
 async function getAllPurchasesByIdProduct(request, response) {
     console.log("function all product purchases called");
     console.log("Purchases for: " + request.body.idProduct);
-    await purchase.purchases
+    await purchase
         .getAllPurchasesByIdProduct(request.body.idProduct)
         .then(purchaces => {
             response.json(purchaces)
@@ -162,7 +162,7 @@ async function addPurchaseList(request, response) {
     }
     try {
         request.body.purchaseList.forEach(async (element) => {
-            await purchase.purchases.addPurchases(element);
+            await purchase.addPurchases(element);
         });
         result.purchase = request.body.purchaseList;
         response.json(result);
@@ -230,7 +230,7 @@ async function updatePuchaseList(request, response) {
     try {
         result.purchases.forEach(async (item) => {
             console.log(item);
-            await purchase.purchases.updatePurchase(item);
+            await purchase.updatePurchase(item);
         });
         response.json(result);
     } catch (error) {
@@ -251,7 +251,7 @@ router.delete('/', async (request, response) => {
     response.set('Cache-control', 'public, max-age =300, s-maxage=600');
     console.log("method add delete called");
     console.log(request.body);
-    await purchase.purchases
+    await purchase
         .deletePurchase(request.body.idPurchase);
     var result = {
         idPurchase: request.body.idPurchase,

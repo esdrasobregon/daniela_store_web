@@ -69,29 +69,37 @@
     </nav>
 </div>
 <script>
-    var currentUser = sessionStorage.getItem('currentUser');
     document.getElementById("aheaderContactLink").href
         == document.location.href != true
         ? console.log("no es contact")
-        : document.getElementById("headerContactLink").setAttribute("class", "nav-link disabled");
+        : document.getElementById("headerContactLink")
+            .setAttribute("class", "nav-link disabled");
     document.getElementById("aheaderLoginLink").href
         == document.location.href != true
         ? console.log("no es login")
-        : document.getElementById("headerLoginLink").setAttribute("class", "nav-link disabled");
+        : document.getElementById("headerLoginLink")
+            .setAttribute("class", "nav-link disabled");
     document.getElementById("aheaderAboutLink").href
         == document.location.href != true
         ? console.log("no es about")
-        : document.getElementById("headerAboutLink").setAttribute("class", "nav-link disabled");
+        : document.getElementById("headerAboutLink")
+            .setAttribute("class", "nav-link disabled");
     document.getElementById("aheaderHomeLink").href
         == document.location.href != true ? console.log("no es Home")
-        : document.getElementById("headerHomeLink").setAttribute("class", "nav-link disabled");
-    document.getElementById("aheaderStoreLink").href == document.location.href != true ? console.log("no es Home") : document.getElementById("headerStoreLink").setAttribute("class", "nav-link disabled");
+        : document.getElementById("headerHomeLink")
+            .setAttribute("class", "nav-link disabled");
+    document.getElementById("aheaderStoreLink").href ==
+        document.location.href != true ? console.log("no es Home")
+        : document.getElementById("headerStoreLink")
+            .setAttribute("class", "nav-link disabled");
     if (document.getElementById("adminMenu") != null) {
         document.getElementById("adminProductMenu").href
-            == document.location.href != true ? console.log("no es product")
+            == document.location.href != true
+            ? console.log("no es product")
             : document.getElementById("adminProductMenu").href = "#";
         document.getElementById("adminCategoryMenu").href
-            == document.location.href != true ? console.log("no es category")
+            == document.location.href != true
+            ? console.log("no es category")
             : document.getElementById("adminCategoryMenu").href = "#";
 
         var userOptions = document.getElementById("navbarDropdownMenuLink-4");

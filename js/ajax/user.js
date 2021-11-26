@@ -4,7 +4,7 @@
  * like email and password
  * to login
  */
-function loginCall(userCredentials) {
+async function loginCall(userCredentials) {
     const options = {
         method: 'POST',
         headers: {
@@ -12,18 +12,15 @@ function loginCall(userCredentials) {
         },
         body: JSON.stringify(userCredentials)
     }
-    fetch(localHost + "/user", options).then(
-        result => result.json()
-    ).then((result) => {
-        console.log(result);
-        if (result.success) {
-            loginForm.reset();
-            //sessionStorage.setItem('currentUser', JSON.stringify(result.user));
-            document.location.replace("/products/?admProductPage");
-        } else {
-            alert(credentialsErrorMessage);
-        }
-    });
-    hidePleaseWait();
+    var result =
+        await fetch(localHost + "/user", options).then(
+            result => result.json()
+        ).then((result) => {
+            return result.user;
+        }).catch(error => {
+            console.error('Error:', error);
+            return null;
+        });;
+    return result;
 
 }

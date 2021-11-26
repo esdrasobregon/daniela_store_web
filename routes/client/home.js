@@ -23,7 +23,7 @@ router.use(cokieParser());
 
 router.get("/", function (req, res) {
     keys.settings = pageSettings;
-    cookiesFunction.getUserCookie(req, keys);
+    cookiesFunction.getUserCookie(req.cookies, keys);
     res.render('index', {
         keys: keys
     });

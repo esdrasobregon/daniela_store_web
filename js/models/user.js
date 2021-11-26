@@ -37,6 +37,4 @@ class User {
 }
 const user = new User();
 
-module.exports = {
-    user: user
-}
+module.exports = user;
