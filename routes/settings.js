@@ -11,10 +11,12 @@ const purchaseRoute = require("./admin/purchase.js");
 const saleRoute = require("./admin/sales.js");
 const receiptRoute = require("./admin/receipt.js");
 const receiptTypeRoute = require("./admin/receiptType.js");
+const conteosRoute = require("./admin/conteos.js");
 const profileRoute = require("./admin/profile.js");
 const settingsRoute = require("./admin/settings.js");
 const filesRoute = require("./admin/files.js");
 const downloadsRoute = require("./admin/downloads.js");
+const conteos = require("../js/models/conteos.js");
 
 
 const appRouterSettings = function (app) {
@@ -31,6 +33,7 @@ const appRouterSettings = function (app) {
     app.use("/sale", saleRoute);
     app.use("/receipt", receiptRoute);
     app.use("/receiptType", receiptTypeRoute);
+    app.use("/conteos", conteosRoute);
     app.use("/profile", profileRoute);
     app.use("/settings", settingsRoute);
     app.use("/files", filesRoute);

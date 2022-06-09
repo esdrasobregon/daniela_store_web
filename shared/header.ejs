@@ -1,11 +1,11 @@
 <div class="pos-f-t">
     <nav class="navbar navbar-dark bg-dark">
-        <a class="navbar-brand collapsed" href="#" data-toggle="collapse" data-target="#header" aria-controls="header"
-            aria-expanded="false" aria-label="Toggle navigation">
+        <a id="aHeadNab" class="navbar-brand collapsed" href="#" data-toggle="collapse" data-target="#header"
+            aria-controls="header" aria-expanded="false" aria-label="Toggle navigation">
             <%= keys.key.headerMenuText%>
         </a>
-        <button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#header"
-            aria-controls="header" aria-expanded="false" aria-label="Toggle navigation">
+        <button id="btnHeadNab" class="navbar-toggler collapsed" type="button" data-toggle="collapse"
+            data-target="#header" aria-controls="header" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
 
@@ -110,5 +110,27 @@
                 .innerHTML = logOutMessage;
         }
 
+    }
+</script>
+
+<script>
+    let btnHeadNab = document.getElementById('btnHeadNab');
+    let aHeadNab = document.getElementById('aHeadNab');
+    navState = false;
+    btnHeadNab.addEventListener("click", () => {
+        navState = !navState;
+    });
+    aHeadNab.addEventListener("click", () => {
+        navState = !navState;
+    });
+    function toggleNav() {
+        navState
+            ? changeNavState() :
+            console.log("no need");
+    }
+    function changeNavState() {
+        document.getElementById('header')
+            .classList.toggle('show');
+        navState = !navState;
     }
 </script>

@@ -12,7 +12,7 @@
                 <!--header-->
                 <%- include('./../shared/header')%>
                     <!--end header-->
-                    <div class="container" style="margin-bottom: 50px; margin-top: 50px;">
+                    <div class="container" style="margin-bottom: 50px; margin-top: 50px;" onclick="toggleNav()">
                         <div class="overflow-auto p-3 mb-3 mb-md-0 mr-md-3 bg-light"
                             style="max-width: 100%; max-height: 450px;">
                             <div class="card border-success mb-10" style="margin-top: 20px">
@@ -94,8 +94,8 @@
                                             loginForm.reset();
                                             hidePleaseWait();
                                             result == null
-                                                ? console.log(result)
-                                                : alert("you are know in");
+                                                ? alert("you are know in")
+                                                : document.location.href = localHost;
                                         } else {
                                             alert('Error in email or password')
                                         }

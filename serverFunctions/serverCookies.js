@@ -51,7 +51,7 @@ class localCookies {
 
         try {
             if (req.cookies.hasOwnProperty("currentUser")) {
-                deleteCookies(res);
+                this.deleteCookies(res);
                 keys.currentUser = null;
             }
         } catch (error) {
